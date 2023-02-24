@@ -1,0 +1,90 @@
+/* With this CSS rule in place, 700px means 700px,
+and any borders and padding will form on the inside,
+reducing the content area’s width instead of being
+added onto the outside of the element. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* prevents images from blowing up their containers */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* remove list markers */
+menu:not(article menu),
+ol:not(article ol),
+ul:not(article ul) {
+  list-style: none;
+}
+
+/* remove paddings */
+menu,
+ol,
+ul {
+  padding-left: 0;
+}
+
+/* since list markers appear on the outside of lists,
+removing the padding using the snippet above can cause 
+the list markers (the ones used in articles that we’re
+not resetting) to overlap neighboring content or overflow
+the viewport, so you’ll want to switch them to the
+inside instead */
+article ol,
+article ul {
+  list-style-position: inside;
+}
+
+a {
+  /* Places underlines below the descenders */
+  text-underline-position: under;
+
+  /* Sets the thickness as a percentage of the font size */
+  text-decoration-thickness: 8;
+}
+
+html {
+  /* If you prefer using rem units (which are better for accessibility),
+1rem is equal to 16px (the default root font size).
+Naturally, it’s much easier to convert px to rem when
+1rem is equal to 10px, but to do that, you’ll need to change
+the root font size to 62.5%, like so: */
+  /* <html> = the root */
+  font-size: 62.5%; /* (62.5/100) * 16px = 10px */
+
+  /* Disable auto font size change by browsers */
+  -webkit-text-size-adjust: none; /* for iOS Safari */
+  text-size-adjust: none; /* for other mobile browsers */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* adds pointer cursors to interactive elements that
+ don’t already have an alternative cursor */
+label,
+button,
+select,
+summary,
+[type="radio"],
+[type="submit"],
+[type="checkbox"] {
+  cursor: pointer;
+}
