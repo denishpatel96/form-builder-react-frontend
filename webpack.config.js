@@ -24,27 +24,11 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
-        test: /\.less$/,
-        use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" },
-          {
-            loader: "less-loader",
-            options: {
-              lessOptions: {
-                javascriptEnabled: true,
-              },
-            },
-          },
-        ],
-      },
-      {
         test: /\.jsx$/,
         loader: "babel-loader",
         exclude: /node_modules/,
         options: {
           cacheDirectory: true,
-          plugins: [["import", { libraryName: "antd", style: true }]],
         },
       },
     ],

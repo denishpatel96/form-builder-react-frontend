@@ -49,14 +49,6 @@ a {
 }
 
 html {
-  /* If you prefer using rem units (which are better for accessibility),
-1rem is equal to 16px (the default root font size).
-Naturally, it’s much easier to convert px to rem when
-1rem is equal to 10px, but to do that, you’ll need to change
-the root font size to 62.5%, like so: */
-  /* <html> = the root */
-  font-size: 62.5%; /* (62.5/100) * 16px = 10px */
-
   /* Disable auto font size change by browsers */
   -webkit-text-size-adjust: none; /* for iOS Safari */
   text-size-adjust: none; /* for other mobile browsers */
