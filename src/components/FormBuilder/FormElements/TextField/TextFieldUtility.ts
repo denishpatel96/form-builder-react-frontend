@@ -1,13 +1,15 @@
 import { ITextProps } from "../..";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 
-export const getTextFieldProps: Function = (
+export const getProps: Function = (
   elementId: UniqueIdentifier,
   elementCount: number
 ): ITextProps => {
   return {
     fieldType: elementId,
-    fieldProps: {
+    hidden: false,
+    props: {
+      title: "",
       name: `input-${elementCount}`,
       label: "Question Label",
       required: false,
@@ -17,7 +19,7 @@ export const getTextFieldProps: Function = (
       fullWidth: true,
       helperText: "",
       id: `input-${elementCount}`,
-      placeholder: "Example answer here",
+      placeholder: "",
       multiline: false,
       minRows: 1,
       rows: 2,
@@ -28,22 +30,48 @@ export const getTextFieldProps: Function = (
       type: "text", // 'text','url','email','search','password'
       variant: "outlined", // 'filled','outlined','standard'
     },
+    validations: {
+      lengthValidation: {
+        required: false,
+        min: 0,
+        max: 0,
+        message: "Please enter minimum or maximun length",
+      },
+      patternValidation: {
+        required: false,
+        pattern: "",
+        message: "Please enter valid text",
+      },
+    },
   };
 };
 
-export const getTextFieldChangeProps: Function = (
+export const handlePropsChange: Function = (
   selectedFormFieldIndex: number | null,
   setFormFields: React.Dispatch<React.SetStateAction<any[]>>
 ) => {
   // Field Change Methods
-  const handleChange = (name: string, value: string | number | boolean | null) => {
+  return (name: string, value: string | number | boolean | null) => {
     setFormFields((prev) => {
       if (selectedFormFieldIndex === null) return prev;
       const updated = [...prev];
-      updated[selectedFormFieldIndex].fieldProps[name] = value;
+      updated[selectedFormFieldIndex].props[name] = value;
       return updated;
     });
   };
+};
 
-  return handleChange;
+export const handleValidationsChange: Function = (
+  selectedFormFieldIndex: number | null,
+  setFormFields: React.Dispatch<React.SetStateAction<any[]>>
+) => {
+  // Field Change Methods
+  return (validationType: string, name: string, value: string | number | boolean | null) => {
+    setFormFields((prev) => {
+      if (selectedFormFieldIndex === null) return prev;
+      const updated = [...prev];
+      updated[selectedFormFieldIndex].validations[validationType][name] = value;
+      return updated;
+    });
+  };
 };

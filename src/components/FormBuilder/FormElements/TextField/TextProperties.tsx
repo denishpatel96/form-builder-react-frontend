@@ -1,3 +1,4 @@
+import { Clear } from "@mui/icons-material";
 import {
   TextField,
   Switch,
@@ -8,17 +9,15 @@ import {
   Typography,
   ToggleButtonGroup,
   ToggleButton,
+  IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { IFieldPropertiesChange, ITextProps } from "../..";
+import { IFieldPropertiesChange, IFieldValidationsChange, ITextProps } from "../..";
+import { NumericFormat } from "react-number-format";
 
-// disabled: false,
-// error: false,
-// fullWidth: true,
-// id: `input-${elementCount}`,
-// sx: {}, // additional CSS
-// type: "text", // 'text','url','email','search','password'
+// Additional CSS
+// Length and Pattern Validation
 // Duplicate field button
 // Entry limit - char/words
 // Editor mode
@@ -26,7 +25,8 @@ import { IFieldPropertiesChange, ITextProps } from "../..";
 
 interface ITextPropertiesProps {
   field: ITextProps;
-  onFieldPropsChange: IFieldPropertiesChange;
+  onPropsChange: IFieldPropertiesChange;
+  onValidationsChange: IFieldValidationsChange;
 }
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
@@ -36,8 +36,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   },
 }));
 
-const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => {
-  const { fieldProps } = field;
+const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextPropertiesProps) => {
+  const { props, validations } = field;
 
   const Title = ({ text }: { text: string }) => {
     return (
@@ -47,7 +47,7 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
     );
   };
   return (
-    <List>
+    <List sx={{ overflowY: "auto" }}>
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
@@ -58,10 +58,27 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               name={"label"}
               variant="standard"
               size="small"
-              value={fieldProps.label}
+              value={props.label}
               required
               fullWidth
-              onChange={(e) => onFieldPropsChange(e.target.name, e.target.value)}
+              error={!props.label}
+              helperText={!props.label && "Field label is required"}
+              InputProps={{
+                endAdornment: props.label && (
+                  <IconButton
+                    color="primary"
+                    size="small"
+                    onClick={() => {
+                      onPropsChange("label", "");
+                    }}
+                  >
+                    <Clear sx={{ height: 15, width: 15 }} />
+                  </IconButton>
+                ),
+              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                onPropsChange(e.target.name, e.target.value)
+              }
             />
           </Grid>
         </Grid>
@@ -76,9 +93,24 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               name={"placeholder"}
               variant="standard"
               size="small"
-              value={fieldProps.placeholder}
+              value={props.placeholder}
               fullWidth
-              onChange={(e) => onFieldPropsChange(e.target.name, e.target.value)}
+              InputProps={{
+                endAdornment: props.placeholder && (
+                  <IconButton
+                    color="primary"
+                    size="small"
+                    onClick={() => {
+                      onPropsChange("placeholder", "");
+                    }}
+                  >
+                    <Clear sx={{ height: 15, width: 15 }} />
+                  </IconButton>
+                ),
+              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                onPropsChange(e.target.name, e.target.value)
+              }
             />
           </Grid>
         </Grid>
@@ -93,9 +125,11 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               name={"helperText"}
               variant="standard"
               size="small"
-              value={fieldProps.helperText}
+              value={props.helperText}
               fullWidth
-              onChange={(e) => onFieldPropsChange(e.target.name, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                onPropsChange(e.target.name, e.target.value)
+              }
             />
           </Grid>
         </Grid>
@@ -110,11 +144,11 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               name={"defaultValue"}
               variant="standard"
               size="small"
-              value={fieldProps.defaultValue}
+              value={props.defaultValue}
               fullWidth
-              onChange={(e) => {
-                onFieldPropsChange("value", e.target.value);
-                onFieldPropsChange(e.target.name, e.target.value);
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                onPropsChange("value", e.target.value);
+                onPropsChange(e.target.name, e.target.value);
               }}
             />
           </Grid>
@@ -127,14 +161,13 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name={"hoverText"}
+              name={"title"}
               variant="standard"
               size="small"
-              value={fieldProps.defaultValue}
+              value={props.title}
               fullWidth
-              onChange={(e) => {
-                onFieldPropsChange("value", e.target.value);
-                onFieldPropsChange(e.target.name, e.target.value);
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                onPropsChange(e.target.name, e.target.value);
               }}
             />
           </Grid>
@@ -148,8 +181,10 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
           <Grid item xs={12}>
             <Switch
               name={"required"}
-              checked={fieldProps.required}
-              onChange={(e) => onFieldPropsChange(e.target.name, e.target.checked)}
+              checked={props.required}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onPropsChange(e.target.name, e.target.checked)
+              }
               inputProps={{ "aria-label": "text-required-property" }}
             />
           </Grid>
@@ -166,8 +201,13 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
           <Grid item xs={12}>
             <Switch
               name={"multiline"}
-              checked={fieldProps.multiline}
-              onChange={(e) => onFieldPropsChange(e.target.name, e.target.checked)}
+              checked={props.multiline}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                if (e.target.checked) {
+                  onValidationsChange("patternValidation", "required", false);
+                }
+                onPropsChange(e.target.name, e.target.checked);
+              }}
               inputProps={{ "aria-label": "text-required-property" }}
             />
           </Grid>
@@ -175,42 +215,53 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
             <FormHelperText>Create textarea with multiple lines</FormHelperText>
           </Grid>
           <Grid item>
-            {fieldProps.multiline && (
+            {props.multiline && (
               <Grid container spacing={1} pt={2}>
                 <Grid item xs={12}>
-                  <TextField
+                  <NumericFormat
                     size="small"
                     name={"rows"}
                     label={"Rows"}
-                    value={fieldProps.rows}
                     fullWidth
-                    onChange={(e) => onFieldPropsChange(e.target.name, +e.target.value)}
+                    allowNegative={false}
+                    variant="standard"
+                    value={props.rows}
+                    customInput={TextField}
+                    onValueChange={({ value }) => {
+                      onPropsChange("rows", +value);
+                    }}
                     helperText={"Fix number of rows"}
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                  <NumericFormat
                     size="small"
                     name={"minRows"}
                     label={"Min"}
-                    value={fieldProps.minRows}
                     fullWidth
-                    onChange={(e) => {
-                      onFieldPropsChange("rows", 0);
-                      onFieldPropsChange(e.target.name, +e.target.value);
+                    allowNegative={false}
+                    variant="standard"
+                    value={props.minRows}
+                    customInput={TextField}
+                    onValueChange={({ value }) => {
+                      onPropsChange("rows", 0);
+                      onPropsChange("minRows", +value);
                     }}
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                  <NumericFormat
                     size="small"
                     name={"maxRows"}
                     label={"Max"}
-                    value={fieldProps.maxRows}
                     fullWidth
-                    onChange={(e) => {
-                      onFieldPropsChange("rows", 0);
-                      onFieldPropsChange(e.target.name, +e.target.value);
+                    allowNegative={false}
+                    variant="standard"
+                    value={props.maxRows}
+                    customInput={TextField}
+                    onValueChange={({ value }) => {
+                      onPropsChange("rows", 0);
+                      onPropsChange("maxRows", +value);
                     }}
                   />
                 </Grid>
@@ -225,6 +276,138 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
+            <Title text="Length Validation" />
+          </Grid>
+          <Grid item xs={12}>
+            <Switch
+              name={"lengthValidation"}
+              checked={validations?.lengthValidation?.required}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onValidationsChange("lengthValidation", "required", e.target.checked)
+              }
+              inputProps={{ "aria-label": "text-required-property" }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormHelperText>Validate input for length before submission</FormHelperText>
+          </Grid>
+          <Grid item xs={12}>
+            {validations?.lengthValidation?.required && (
+              <Grid container spacing={1} pt={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    size="small"
+                    name={"message"}
+                    label={"Message"}
+                    variant="standard"
+                    value={validations?.lengthValidation?.message}
+                    fullWidth
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                      onValidationsChange("lengthValidation", "message", e.target.value)
+                    }
+                    helperText={"Message to display when validation fails."}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <NumericFormat
+                    size="small"
+                    name={"min"}
+                    label={"Min"}
+                    fullWidth
+                    allowNegative={false}
+                    variant="standard"
+                    value={validations?.lengthValidation?.min}
+                    customInput={TextField}
+                    onValueChange={({ value }) => {
+                      onValidationsChange("lengthValidation", "min", +value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <NumericFormat
+                    size="small"
+                    name={"max"}
+                    label={"Max"}
+                    fullWidth
+                    allowNegative={false}
+                    variant="standard"
+                    value={validations?.lengthValidation?.max}
+                    customInput={TextField}
+                    onValueChange={({ value }) => {
+                      onValidationsChange("lengthValidation", "max", +value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormHelperText>Or you can define min rows and max rows.</FormHelperText>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+      </StyledListItem>
+
+      {!props.multiline && (
+        <StyledListItem>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Title text="Pattern Validation" />
+            </Grid>
+            <Grid item xs={12}>
+              <Switch
+                name={"patternValidation"}
+                checked={validations?.patternValidation?.required}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onValidationsChange("patternValidation", "required", e.target.checked)
+                }
+                inputProps={{ "aria-label": "pattern-validation-required-property" }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormHelperText>
+                Validate input for regular expression (regex) pattern.
+              </FormHelperText>
+            </Grid>
+            <Grid item xs={12}>
+              {validations?.patternValidation?.required && (
+                <Grid container spacing={1} pt={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      size="small"
+                      name={"message"}
+                      label={"Message"}
+                      variant="standard"
+                      value={validations?.patternValidation?.message}
+                      fullWidth
+                      onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                        onValidationsChange("patternValidation", "message", e.target.value)
+                      }
+                      helperText={"Message to display when validation fails."}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      size="small"
+                      name={"pattern"}
+                      label={"Pattern"}
+                      variant="standard"
+                      value={validations?.patternValidation?.pattern}
+                      fullWidth
+                      onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                        onValidationsChange("patternValidation", "pattern", e.target.value)
+                      }
+                    />
+                  </Grid>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        </StyledListItem>
+      )}
+
+      <StyledListItem>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
             <Title text="Variant" />
           </Grid>
           <Grid item xs={12}>
@@ -232,9 +415,9 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               fullWidth
               size="small"
               color="primary"
-              value={fieldProps.variant}
+              value={props.variant}
               exclusive
-              onChange={(e, value) => onFieldPropsChange("variant", value)}
+              onChange={(_, value: any) => onPropsChange("variant", value)}
               aria-label="Platform"
             >
               <ToggleButton value="standard">Standard</ToggleButton>
@@ -257,9 +440,9 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               fullWidth
               size="small"
               color="primary"
-              value={fieldProps.size}
+              value={props.size}
               exclusive
-              onChange={(e, value) => onFieldPropsChange("size", value)}
+              onChange={(_, value: any) => onPropsChange("size", value)}
               aria-label="Platform"
             >
               <ToggleButton value="small">Compact</ToggleButton>
@@ -281,9 +464,9 @@ const TextProperties = ({ field, onFieldPropsChange }: ITextPropertiesProps) => 
               fullWidth
               size="small"
               color="primary"
-              value={fieldProps.margin}
+              value={props.margin}
               exclusive
-              onChange={(e, value) => onFieldPropsChange("margin", value)}
+              onChange={(_, value: any) => onPropsChange("margin", value)}
               aria-label="Platform"
             >
               <ToggleButton value="none">None</ToggleButton>
