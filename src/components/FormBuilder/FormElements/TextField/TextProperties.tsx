@@ -10,10 +10,11 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   IconButton,
+  Slider,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { IFieldPropertiesChange, IFieldValidationsChange, ITextProps } from "../..";
+import { IFieldPropertiesChangeFunc, ITextProps } from "../..";
 import { NumericFormat } from "react-number-format";
 
 // Additional CSS
@@ -25,8 +26,7 @@ import { NumericFormat } from "react-number-format";
 
 interface ITextPropertiesProps {
   field: ITextProps;
-  onPropsChange: IFieldPropertiesChange;
-  onValidationsChange: IFieldValidationsChange;
+  onPropsChange: IFieldPropertiesChangeFunc;
 }
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
@@ -36,8 +36,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   },
 }));
 
-const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextPropertiesProps) => {
-  const { props, validations } = field;
+const TextProperties = ({ field, onPropsChange }: ITextPropertiesProps) => {
+  const { colSpan, hidden, props, validations } = field;
 
   const Title = ({ text }: { text: string }) => {
     return (
@@ -69,7 +69,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     color="primary"
                     size="small"
                     onClick={() => {
-                      onPropsChange("label", "");
+                      onPropsChange("default", "label", "");
                     }}
                   >
                     <Clear sx={{ height: 15, width: 15 }} />
@@ -77,7 +77,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                 ),
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                onPropsChange(e.target.name, e.target.value)
+                onPropsChange("default", e.target.name, e.target.value)
               }
             />
           </Grid>
@@ -101,7 +101,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     color="primary"
                     size="small"
                     onClick={() => {
-                      onPropsChange("placeholder", "");
+                      onPropsChange("default", "placeholder", "");
                     }}
                   >
                     <Clear sx={{ height: 15, width: 15 }} />
@@ -109,7 +109,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                 ),
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                onPropsChange(e.target.name, e.target.value)
+                onPropsChange("default", e.target.name, e.target.value)
               }
             />
           </Grid>
@@ -128,7 +128,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               value={props.helperText}
               fullWidth
               onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                onPropsChange(e.target.name, e.target.value)
+                onPropsChange("default", e.target.name, e.target.value)
               }
             />
           </Grid>
@@ -147,8 +147,8 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               value={props.defaultValue}
               fullWidth
               onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                onPropsChange("value", e.target.value);
-                onPropsChange(e.target.name, e.target.value);
+                onPropsChange("default", "value", e.target.value);
+                onPropsChange("default", e.target.name, e.target.value);
               }}
             />
           </Grid>
@@ -167,8 +167,29 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               value={props.title}
               fullWidth
               onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                onPropsChange(e.target.name, e.target.value);
+                onPropsChange("default", e.target.name, e.target.value);
               }}
+            />
+          </Grid>
+        </Grid>
+      </StyledListItem>
+      <StyledListItem>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Title text="Width" />
+          </Grid>
+          <Grid item xs={12}>
+            <Slider
+              aria-label="Form element width"
+              value={colSpan}
+              valueLabelDisplay="auto"
+              onChange={(_, value: number | number[]) => {
+                onPropsChange("general", "colSpan", value);
+              }}
+              step={null}
+              marks={[3, 4, 6, 8, 9, 12].map((el) => ({ value: el, label: el }))}
+              min={0}
+              max={12}
             />
           </Grid>
         </Grid>
@@ -183,13 +204,29 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               name={"required"}
               checked={props.required}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onPropsChange(e.target.name, e.target.checked)
+                onPropsChange("default", e.target.name, e.target.checked)
               }
               inputProps={{ "aria-label": "text-required-property" }}
             />
           </Grid>
           <Grid item xs={12}>
             <FormHelperText>Prevent submission if this field is empty</FormHelperText>
+          </Grid>
+        </Grid>
+      </StyledListItem>
+      <StyledListItem>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Title text="Hidden" />
+          </Grid>
+          <Grid item xs={12}>
+            <Switch
+              name={"hidden"}
+              checked={hidden}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onPropsChange("general", e.target.name, e.target.checked)
+              }
+            />
           </Grid>
         </Grid>
       </StyledListItem>
@@ -204,9 +241,9 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               checked={props.multiline}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.checked) {
-                  onValidationsChange("patternValidation", "required", false);
+                  onPropsChange("patternValidation", "required", false);
                 }
-                onPropsChange(e.target.name, e.target.checked);
+                onPropsChange("default", e.target.name, e.target.checked);
               }}
               inputProps={{ "aria-label": "text-required-property" }}
             />
@@ -228,7 +265,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     value={props.rows}
                     customInput={TextField}
                     onValueChange={({ value }) => {
-                      onPropsChange("rows", +value);
+                      onPropsChange("default", "rows", +value);
                     }}
                     helperText={"Fix number of rows"}
                   />
@@ -244,8 +281,8 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     value={props.minRows}
                     customInput={TextField}
                     onValueChange={({ value }) => {
-                      onPropsChange("rows", 0);
-                      onPropsChange("minRows", +value);
+                      onPropsChange("default", "rows", 0);
+                      onPropsChange("default", "minRows", +value);
                     }}
                   />
                 </Grid>
@@ -260,8 +297,8 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     value={props.maxRows}
                     customInput={TextField}
                     onValueChange={({ value }) => {
-                      onPropsChange("rows", 0);
-                      onPropsChange("maxRows", +value);
+                      onPropsChange("default", "rows", 0);
+                      onPropsChange("default", "maxRows", +value);
                     }}
                   />
                 </Grid>
@@ -283,7 +320,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               name={"lengthValidation"}
               checked={validations?.lengthValidation?.required}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onValidationsChange("lengthValidation", "required", e.target.checked)
+                onPropsChange("lengthValidation", "required", e.target.checked)
               }
               inputProps={{ "aria-label": "text-required-property" }}
             />
@@ -303,7 +340,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     value={validations?.lengthValidation?.message}
                     fullWidth
                     onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                      onValidationsChange("lengthValidation", "message", e.target.value)
+                      onPropsChange("lengthValidation", "message", e.target.value)
                     }
                     helperText={"Message to display when validation fails."}
                   />
@@ -319,7 +356,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     value={validations?.lengthValidation?.min}
                     customInput={TextField}
                     onValueChange={({ value }) => {
-                      onValidationsChange("lengthValidation", "min", +value);
+                      onPropsChange("lengthValidation", "min", +value);
                     }}
                   />
                 </Grid>
@@ -334,7 +371,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                     value={validations?.lengthValidation?.max}
                     customInput={TextField}
                     onValueChange={({ value }) => {
-                      onValidationsChange("lengthValidation", "max", +value);
+                      onPropsChange("lengthValidation", "max", +value);
                     }}
                   />
                 </Grid>
@@ -358,7 +395,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                 name={"patternValidation"}
                 checked={validations?.patternValidation?.required}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  onValidationsChange("patternValidation", "required", e.target.checked)
+                  onPropsChange("patternValidation", "required", e.target.checked)
                 }
                 inputProps={{ "aria-label": "pattern-validation-required-property" }}
               />
@@ -380,7 +417,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                       value={validations?.patternValidation?.message}
                       fullWidth
                       onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                        onValidationsChange("patternValidation", "message", e.target.value)
+                        onPropsChange("patternValidation", "message", e.target.value)
                       }
                       helperText={"Message to display when validation fails."}
                     />
@@ -394,7 +431,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
                       value={validations?.patternValidation?.pattern}
                       fullWidth
                       onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                        onValidationsChange("patternValidation", "pattern", e.target.value)
+                        onPropsChange("patternValidation", "pattern", e.target.value)
                       }
                     />
                   </Grid>
@@ -417,7 +454,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               color="primary"
               value={props.variant}
               exclusive
-              onChange={(_, value: any) => onPropsChange("variant", value)}
+              onChange={(_, value: any) => onPropsChange("default", "variant", value)}
               aria-label="Platform"
             >
               <ToggleButton value="standard">Standard</ToggleButton>
@@ -442,7 +479,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               color="primary"
               value={props.size}
               exclusive
-              onChange={(_, value: any) => onPropsChange("size", value)}
+              onChange={(_, value: any) => onPropsChange("default", "size", value)}
               aria-label="Platform"
             >
               <ToggleButton value="small">Compact</ToggleButton>
@@ -466,7 +503,7 @@ const TextProperties = ({ field, onPropsChange, onValidationsChange }: ITextProp
               color="primary"
               value={props.margin}
               exclusive
-              onChange={(_, value: any) => onPropsChange("margin", value)}
+              onChange={(_, value: any) => onPropsChange("default", "margin", value)}
               aria-label="Platform"
             >
               <ToggleButton value="none">None</ToggleButton>

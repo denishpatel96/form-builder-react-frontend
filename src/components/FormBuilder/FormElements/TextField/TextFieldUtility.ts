@@ -1,24 +1,25 @@
 import { ITextProps } from "../..";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 
-export const getProps: Function = (
+export const getTextProps: Function = (
   elementId: UniqueIdentifier,
   elementCount: number
 ): ITextProps => {
   return {
     fieldType: elementId,
+    colSpan: 12,
     hidden: false,
     props: {
       title: "",
-      name: `input-${elementCount}`,
-      label: "Question Label",
+      name: `input_${elementCount}`,
+      label: `Question_${elementCount}`,
       required: false,
       defaultValue: "",
       disabled: false,
       error: false,
       fullWidth: true,
       helperText: "",
-      id: `input-${elementCount}`,
+      id: `input_${elementCount}`,
       placeholder: "",
       multiline: false,
       minRows: 1,
@@ -46,31 +47,25 @@ export const getProps: Function = (
   };
 };
 
-export const handlePropsChange: Function = (
+export const handleTextPropsChange: Function = (
   selectedFormFieldIndex: number | null,
   setFormFields: React.Dispatch<React.SetStateAction<any[]>>
 ) => {
-  // Field Change Methods
-  return (name: string, value: string | number | boolean | null) => {
+  return (
+    propType: "general" | "default" | "lengthValidation" | "patternValidation",
+    name: string,
+    value: string | number | boolean | null
+  ) => {
     setFormFields((prev) => {
       if (selectedFormFieldIndex === null) return prev;
       const updated = [...prev];
-      updated[selectedFormFieldIndex].props[name] = value;
-      return updated;
-    });
-  };
-};
-
-export const handleValidationsChange: Function = (
-  selectedFormFieldIndex: number | null,
-  setFormFields: React.Dispatch<React.SetStateAction<any[]>>
-) => {
-  // Field Change Methods
-  return (validationType: string, name: string, value: string | number | boolean | null) => {
-    setFormFields((prev) => {
-      if (selectedFormFieldIndex === null) return prev;
-      const updated = [...prev];
-      updated[selectedFormFieldIndex].validations[validationType][name] = value;
+      if (propType === "default") {
+        updated[selectedFormFieldIndex].props[name] = value;
+      } else if (propType === "lengthValidation" || propType === "patternValidation") {
+        updated[selectedFormFieldIndex].validations[propType][name] = value;
+      } else {
+        updated[selectedFormFieldIndex][name] = value;
+      }
       return updated;
     });
   };

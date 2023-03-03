@@ -26,9 +26,7 @@ const RemoveFieldDialog = ({ isOpen, fieldName, onClose, onConfirm }: IRemoveFie
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose}>
-          CANCEL
-        </Button>
+        <Button onClick={onClose}>CANCEL</Button>
         <Button color="error" onClick={onConfirm} autoFocus>
           DELETE
         </Button>

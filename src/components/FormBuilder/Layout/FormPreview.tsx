@@ -40,8 +40,12 @@ const FormElement = ({ field }: FormElementProps) => {
     setMessage(errorMessage);
   };
 
+  if (field.hidden) {
+    return <></>;
+  }
+
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} md={field.colSpan}>
       {field.fieldType === FORM_ELEMENTS.TEXT && (
         <TextField
           inputRef={valueRef}
