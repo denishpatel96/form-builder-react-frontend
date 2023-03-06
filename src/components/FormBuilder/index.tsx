@@ -5,56 +5,25 @@ import BuildArea from "./Layout/BuildArea";
 import FormElementsSidebar from "./Layout/FormElementsSidebar";
 import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, FORM_ELEMENTS } from "../../constants";
 import FormElementPropertiesSidebar from "./Layout/FormElementPropertiesSidebar";
-import { Box, Typography, Divider, Button, Drawer, Container, TextFieldProps } from "@mui/material";
-import { handleTextPropsChange, getTextProps } from "./FormElements/TextField/TextFieldUtility";
+import { Box, Typography, Divider, Button, Drawer, Container } from "@mui/material";
+import { getTextProps } from "./FormElements/TextField/TextFieldUtility";
 import FormPreviewModal from "./Layout/FormPreviewModal";
-
-export interface IFieldPropertiesChangeFunc {
-  (
-    // default - present by default in field
-    // general - extra which are not there by default like hidden, colSpan etc..
-    // lengthValidation - max and min length, message
-    // patternValidation - pattern and message
-    propType: "general" | "default" | "lengthValidation" | "patternValidation",
-    name: string,
-    value: string | number | number[] | boolean | null
-  ): void;
-}
-
-export interface ITextProps {
-  fieldType: UniqueIdentifier;
-  hidden: boolean;
-  colSpan: 3 | 4 | 6 | 8 | 9 | 12;
-  props: TextFieldProps;
-  validations?: {
-    // Length Validation
-    lengthValidation?: {
-      required: boolean;
-      min: number;
-      max: number;
-      message: string;
-    };
-    // Pattern Validation
-    patternValidation?: {
-      required: boolean;
-      pattern: string;
-      message: string;
-    };
-  };
-}
+import { handlePropsChange } from "./FormElements/Common/Utility";
+import { getRadioProps } from "./FormElements/Radio/RadioFieldUtility";
+import { FieldProps } from "./FormElements/Common/Types";
 
 const FormBuilder = () => {
-  const [activeId, setActiveId] = React.useState<UniqueIdentifier | null>(null);
-  const [selectedFormFieldIndex, setSelectedFormFieldIndex] = React.useState<number | null>(0);
+  const [activeId, setActiveId] = React.useState<string>("");
+  const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
   const [elementCount, setElementCount] = React.useState<number>(0);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isPropertiesPinned, setIsPropertiesPinned] = React.useState<boolean>(true);
-  const [formFields, setFormFields] = React.useState<any[]>([
+  const [formFields, setFormFields] = React.useState<FieldProps[]>([
     getTextProps("text", 999),
-    getTextProps("text", 998),
+    getRadioProps("radio", 998),
   ]);
 
-  const onTextFieldPropsChange = handleTextPropsChange(selectedFormFieldIndex, setFormFields);
+  const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
 
   const handleAddFormField = (elementId: UniqueIdentifier) => {
     if (!elementId) return;
@@ -63,21 +32,23 @@ const FormBuilder = () => {
         setFormFields((prev) => [...prev, getTextProps(elementId, elementCount)]);
         setElementCount((prev) => prev + 1);
         break;
+      case FORM_ELEMENTS.RADIO:
+        setFormFields((prev) => [...prev, getRadioProps(elementId, elementCount)]);
+        setElementCount((prev) => prev + 1);
+        break;
     }
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    // console.log("Drag start:", event);
-    setActiveId(event.active.id);
+    setActiveId(event.active.id.toString());
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    // console.log("Drag end:", event);
     const { active, over } = event;
     if (over) {
       handleAddFormField(active.id);
     }
-    setActiveId(null);
+    setActiveId("");
   };
 
   const handleFieldRemove = (fieldIndex: number) => {
@@ -113,20 +84,22 @@ const FormBuilder = () => {
           <Divider />
           <FormElementsSidebar activeId={activeId} />
         </Drawer>
-        <Box style={{ flexGrow: 1 }}>
+        <Box style={{ flexGrow: 1, display: "flex" }}>
           <Container style={{ height: "100%" }}>
             <Box style={{ padding: 10, height: 60 }}>
               <Button color="secondary">Save</Button>
               <FormPreviewModal formFields={formFields} />
             </Box>
-            <BuildArea
-              formFields={formFields}
-              setFormFields={setFormFields}
-              onFieldRemove={handleFieldRemove}
-              selectedFormFieldIndex={selectedFormFieldIndex}
-              onFieldSelect={setSelectedFormFieldIndex}
-              onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
-            />
+            <Box style={{ padding: 10, height: `calc(100vh - 60px)`, overflow: "auto" }}>
+              <BuildArea
+                formFields={formFields}
+                setFormFields={setFormFields}
+                onFieldRemove={handleFieldRemove}
+                selectedFieldId={selectedFieldId}
+                onFieldSelect={setSelectedFieldId}
+                onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
+              />
+            </Box>
           </Container>
         </Box>
         <Drawer
@@ -148,8 +121,8 @@ const FormBuilder = () => {
           }}
         >
           <FormElementPropertiesSidebar
-            field={selectedFormFieldIndex !== null ? formFields[selectedFormFieldIndex] : null}
-            onPropsChange={onTextFieldPropsChange}
+            field={formFields.find((f) => f.id === selectedFieldId)}
+            onPropsChange={onPropsChange}
             onClosePropertiesDrawer={() => setIsPropertiesOpen(false)}
             isPinned={isPropertiesPinned}
             onTogglePin={() => {

@@ -1,12 +1,15 @@
-import { Close, InfoOutlined, PushPinOutlined } from "@mui/icons-material";
+import { Close, InfoOutlined, PushPinOutlined, SettingsOutlined } from "@mui/icons-material";
 import { Typography, Divider, Box, IconButton, Tooltip, ToggleButton } from "@mui/material";
 import React from "react";
 import { FORM_ELEMENTS } from "../../../constants";
 import TextProperties from "../FormElements/TextField/TextProperties";
-import { ITextProps, IFieldPropertiesChangeFunc } from "..";
+import { FieldProps, IFieldPropertiesChangeFunc } from "../FormElements/Common/Types";
+import { ITextProps } from "../FormElements/TextField/Text";
+import RadioProperties from "../FormElements/Radio/RadioProperties";
+import { IRadioProps } from "../FormElements/Radio/Radio";
 
 type IFormElementProps = {
-  field: ITextProps;
+  field: FieldProps | undefined;
   onPropsChange: IFieldPropertiesChangeFunc;
   onClosePropertiesDrawer: () => void;
   onTogglePin: () => void;
@@ -24,15 +27,15 @@ const FormElementPropertiesSidebar = ({
     <>
       <Box
         sx={{
-          height: 50,
+          maxHeight: 50,
+          minHeight: 50,
           display: "flex",
           alignItems: "center",
-          pl: 2,
         }}
       >
         <Tooltip title={isPinned ? "Unpin" : "Pin"}>
           <ToggleButton
-            sx={{ height: 25, width: 25 }}
+            sx={{ height: 25, width: 25, m: 1 }}
             value={true}
             selected={isPinned}
             onChange={onTogglePin}
@@ -40,9 +43,13 @@ const FormElementPropertiesSidebar = ({
             <PushPinOutlined sx={{ height: 20, width: 20 }} />
           </ToggleButton>
         </Tooltip>
-        <Typography variant="overline" ml={1}>
-          {field ? `${field.fieldType} Properties` : "Element Properties"}{" "}
-        </Typography>
+        <Divider orientation="vertical" />
+        <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <SettingsOutlined sx={{ height: 20, width: 20, ml: 2 }} />
+          <Typography variant="overline" ml={1}>
+            {field ? `${field.fieldType} Properties` : "Element Properties"}{" "}
+          </Typography>
+        </Box>
         {!isPinned && (
           <Tooltip title={"close"} sx={{ ml: "auto" }}>
             <IconButton size="small" onClick={() => onClosePropertiesDrawer()}>
@@ -69,7 +76,10 @@ const FormElementPropertiesSidebar = ({
         </Box>
       )}
       {field && field.fieldType === FORM_ELEMENTS.TEXT && (
-        <TextProperties field={field} onPropsChange={onPropsChange} />
+        <TextProperties field={field as ITextProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.RADIO && (
+        <RadioProperties field={field as IRadioProps} onPropsChange={onPropsChange} />
       )}
     </>
   );

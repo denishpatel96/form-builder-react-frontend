@@ -1,25 +1,14 @@
-import {
-  Stack,
-  Typography,
-  TextField,
-  Box,
-  IconButton,
-  Grid,
-  Badge,
-  Alert,
-  Chip,
-  Tooltip,
-} from "@mui/material";
+import { Stack, Typography, Box, IconButton, Grid } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { FORM_ELEMENTS, FORM_ELEMENTS_LIST } from "../../../constants";
 import Droppable from "../../Reusable/Droppable";
 import {
-  Delete,
   DeleteOutlined,
   DragIndicator,
   OpenWithOutlined,
   SettingsOutlined,
-  VisibilityOffOutlined,
+  WarningAmberOutlined,
 } from "@mui/icons-material";
 import RemoveFieldDialog from "../Dialogs/RemoveFieldDialog";
 import {
@@ -27,7 +16,6 @@ import {
   rectSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {
   DragOverlay,
@@ -37,21 +25,29 @@ import {
   PointerSensor,
   DndContext,
   closestCenter,
+  defaultDropAnimationSideEffects,
+  Active,
+  Over,
 } from "@dnd-kit/core";
 import Sortable from "../../Reusable/Sortable";
 import {
+  DragCancelEvent,
   DragEndEvent,
-  DragMoveEvent,
+  DragOverEvent,
   DragStartEvent,
-  UniqueIdentifier,
 } from "@dnd-kit/core/dist/types";
+import TextFieldBuilder from "../FormElements/TextField/TextFieldBuilder";
+import RadioFieldBuilder from "../FormElements/Radio/RadioFieldBuilder";
+import { ITextProps } from "../FormElements/TextField/Text";
+import { IRadioProps } from "../FormElements/Radio/Radio";
+import { FieldProps } from "../FormElements/Common/Types";
 
 interface IBuildAreaProps {
-  formFields: any[];
-  setFormFields: React.Dispatch<React.SetStateAction<any[]>>;
+  formFields: FieldProps[];
+  setFormFields: React.Dispatch<React.SetStateAction<FieldProps[]>>;
   onFieldRemove: (index: number) => void;
-  onFieldSelect: React.Dispatch<React.SetStateAction<number | null>>;
-  selectedFormFieldIndex: number | null;
+  onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
+  selectedFieldId: string;
   onTogglePropertiesDrawer: () => void;
 }
 
@@ -60,14 +56,15 @@ const BuildArea = ({
   setFormFields,
   onFieldRemove,
   onFieldSelect,
-  selectedFormFieldIndex,
+  selectedFieldId,
   onTogglePropertiesDrawer,
 }: IBuildAreaProps) => {
+  const theme = useTheme();
   const [hoveredFieldIndex, setHoveredFieldIndex] = React.useState<number | null>(null);
   const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
     React.useState<boolean>(false);
 
-  const buttons = (index: number): JSX.Element => (
+  const buttons = (id: string): JSX.Element => (
     <Stack>
       <IconButton
         title="Remove"
@@ -87,7 +84,7 @@ const BuildArea = ({
         sx={{ width: 25, height: 25 }}
         onClick={(e) => {
           e.stopPropagation();
-          onFieldSelect(index);
+          onFieldSelect(id);
           onTogglePropertiesDrawer();
         }}
       >
@@ -96,26 +93,41 @@ const BuildArea = ({
     </Stack>
   );
 
-  const [activeId, setActiveId] = React.useState<UniqueIdentifier>("");
-  const activeField = formFields.find((el) => el.props.id === activeId);
+  const [active, setActive] = React.useState<Active | null>(null);
+  const [over, setOver] = React.useState<Over | null>(null);
+  const activeField = React.useMemo(
+    () => formFields.find((el) => el.id === active?.id),
+    [formFields, active]
+  );
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setActiveId(active.id);
+    setActive(active);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { over } = event;
+    console.log("over ", over?.id);
+    setOver(over);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      let newIndex = null;
       setFormFields((prev) => {
-        const oldIndex = prev.findIndex((el) => el.props.id === active.id);
-        newIndex = prev.findIndex((el) => el.props.id === over.id);
+        const oldIndex = prev.findIndex((el) => el.id === active.id);
+        const newIndex = prev.findIndex((el) => el.id === over.id);
         return arrayMove(prev, oldIndex, newIndex);
       });
-
-      onFieldSelect(newIndex);
+      onFieldSelect(active.id.toString());
+      setActive(null);
+      setOver(null);
     }
+  };
+
+  const handleDragCancel = (event: DragCancelEvent) => {
+    setActive(null);
+    setOver(null);
   };
 
   const sensors = useSensors(
@@ -123,6 +135,50 @@ const BuildArea = ({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
+  );
+
+  const renderElement = (field?: FieldProps) => {
+    if (!field) return <></>;
+    const { fieldType } = field;
+    return (
+      <>
+        {fieldType === FORM_ELEMENTS.TEXT && <TextFieldBuilder field={field as ITextProps} />}
+        {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
+      </>
+    );
+  };
+
+  const renderDragHandle = (index: number) => {
+    return (
+      hoveredFieldIndex === index && (
+        <IconButton sx={{ cursor: "move", height: 25, width: 25 }}>
+          <DragIndicator sx={{ height: 20, width: 20 }} />
+        </IconButton>
+      )
+    );
+  };
+
+  const renderRemoveFieldDialog = (index: number, fieldName: string) => {
+    return (
+      <RemoveFieldDialog
+        isOpen={confirmDeleteFieldDialogOpen}
+        fieldName={fieldName}
+        onClose={() => setConfirmDeleteFieldDialogOpen(false)}
+        onConfirm={() => {
+          setConfirmDeleteFieldDialogOpen(false);
+          onFieldRemove(index);
+        }}
+      />
+    );
+  };
+
+  const hiddenWarning = (
+    <Box sx={{ width: "100%", display: "flex", alignItems: "center", p: 1 }}>
+      <WarningAmberOutlined color="warning" sx={{ width: 15, height: 15 }} />
+      <Typography pl={1} variant="caption" color={"warning.main"}>
+        This field is hidden so it will not appear in the form.
+      </Typography>
+    </Box>
   );
 
   return (
@@ -146,96 +202,108 @@ const BuildArea = ({
             collisionDetection={closestCenter}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            onDragCancel={handleDragCancel}
           >
-            <Grid container spacing={1}>
-              <SortableContext items={formFields} strategy={rectSortingStrategy}>
+            <Grid component={"ul"} container spacing={1}>
+              <SortableContext items={formFields.map((f) => f.id)} strategy={rectSortingStrategy}>
                 {formFields.map((field, index) => {
-                  const { hidden, colSpan, fieldType, props } = field;
+                  const { colSpan, fieldType, label, id, name } = field;
                   const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
-                  const fieldName = `${props.label} (${type})`;
+                  const fieldName = `${label} (${type})`;
+
                   return (
                     <Grid
+                      component="li"
                       item
                       xs={12}
                       md={colSpan}
-                      key={props.id}
-                      component="div"
-                      id={`${props.name}-container`}
+                      key={id}
+                      id={`${name}-container`}
                       onMouseOver={() => {
                         setHoveredFieldIndex(index);
                       }}
                       onMouseLeave={() => {
                         setHoveredFieldIndex(null);
                       }}
-                      style={{
+                      sx={{
                         width: "100%",
-                        height: "100%",
+                        height: "auto",
                         position: "relative",
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
+                        ...(hoveredFieldIndex === index && {
+                          backgroundColor: theme.palette.action.hover,
+                        }),
+                        ...(selectedFieldId === id && {
+                          borderLeftColor: theme.palette.secondary.light,
+                          borderLeftWidth: 4,
+                          borderLeftStyle: "solid",
+                          boxShadow: theme.shadows[2],
+                        }),
+                        ...(id === over?.id &&
+                          (formFields.findIndex((el) => el.id === active?.id) < index
+                            ? {
+                                borderBottomColor: theme.palette.secondary.light,
+                                borderBottomWidth: 4,
+                                borderBottomStyle: "dotted",
+                              }
+                            : {
+                                borderTopColor: theme.palette.secondary.light,
+                                borderTopWidth: 4,
+                                borderTopStyle: "dotted",
+                              })),
                       }}
                     >
-                      <Sortable id={props.id}>
-                        {hoveredFieldIndex === index && (
-                          <IconButton sx={{ cursor: "move", height: 25, width: 25 }}>
-                            <DragIndicator sx={{ height: 20, width: 20 }} />
-                          </IconButton>
-                        )}
-                      </Sortable>
                       <Box
-                        pt={1}
-                        flexGrow={1}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onFieldSelect(index);
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          display: "flex",
+                          alignItems: "center",
                         }}
                       >
-                        {fieldType === FORM_ELEMENTS.TEXT && (
-                          <TextField
-                            InputLabelProps={{ shrink: true }}
-                            {...props}
-                            InputProps={{
-                              readOnly: true,
-                              startAdornment: hidden && (
-                                <Tooltip title="Hidden : This will not be visible in the form.">
-                                  <VisibilityOffOutlined color="disabled" />
-                                </Tooltip>
-                              ),
-                            }}
-                            error={!props.label}
-                            focused={selectedFormFieldIndex === index}
-                          />
-                        )}
+                        <Sortable id={id}>{renderDragHandle(index)}</Sortable>
+                        <Stack
+                          sx={{
+                            flexGrow: 1,
+                            p: 1,
+                            ...(field.hidden && selectedFieldId !== id && { opacity: 0.5 }),
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onFieldSelect(id);
+                          }}
+                        >
+                          {renderElement(field)}
+                        </Stack>
+
+                        {hoveredFieldIndex === index && buttons(id)}
+
+                        {renderRemoveFieldDialog(index, fieldName)}
                       </Box>
 
-                      {hoveredFieldIndex === index && buttons(index)}
-
-                      <RemoveFieldDialog
-                        isOpen={confirmDeleteFieldDialogOpen}
-                        fieldName={fieldName}
-                        onClose={() => setConfirmDeleteFieldDialogOpen(false)}
-                        onConfirm={() => {
-                          setConfirmDeleteFieldDialogOpen(false);
-                          onFieldRemove(index);
-                        }}
-                      />
+                      {selectedFieldId === id && field.hidden && hiddenWarning}
                     </Grid>
                   );
                 })}
               </SortableContext>
             </Grid>
-            <DragOverlay dropAnimation={null}>
-              {activeId ? (
+            <DragOverlay
+              dropAnimation={{
+                sideEffects: defaultDropAnimationSideEffects({
+                  styles: {
+                    active: {
+                      opacity: "0.4",
+                    },
+                  },
+                }),
+              }}
+            >
+              {active?.id ? (
                 <Box p={1} width={400}>
-                  {activeField?.fieldType === FORM_ELEMENTS.TEXT && (
-                    <TextField
-                      InputLabelProps={{ shrink: true }}
-                      {...activeField?.props}
-                      focused
-                      InputProps={{ readOnly: true }}
-                      error={!activeField?.props.label}
-                    />
-                  )}
+                  {renderElement(activeField)}
                 </Box>
               ) : null}
             </DragOverlay>

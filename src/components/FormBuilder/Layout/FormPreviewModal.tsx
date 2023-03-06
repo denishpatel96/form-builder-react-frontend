@@ -1,5 +1,6 @@
-import { Close, LaptopOutlined, PhoneIphoneOutlined, TvOutlined } from "@mui/icons-material";
+import { Close, LaptopOutlined, PhoneIphoneOutlined } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -8,17 +9,17 @@ import {
   Grid,
   IconButton,
   Modal,
-  TextField,
+  SxProps,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
-import { FORM_ELEMENTS } from "../../../constants";
+import { FieldProps } from "../FormElements/Common/Types";
 import FormPreview from "./FormPreview";
 
-const modalStyle = {
+const modalStyle: SxProps = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
@@ -30,19 +31,19 @@ const modalStyle = {
   p: 2,
 };
 
-const cardContentStyle = {
-  maxHeight: "calc(100vh - 140px)",
+const cardContentStyle: SxProps = {
+  maxHeight: "calc(100% - 70px)",
   overflow: "auto",
 };
 
 type FormPreviewModalProps = {
-  formFields: any[];
+  formFields: FieldProps[];
 };
 
 const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
   const [open, setOpen] = React.useState(false);
 
-  const [device, setDevice] = React.useState(() => ["laptop"]);
+  const [device, setDevice] = React.useState("phone");
   const handleOpen = () => {
     setOpen(true);
   };
@@ -50,9 +51,9 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
     setOpen(false);
   };
 
-  const handleDevice = (event: React.MouseEvent<HTMLElement>, newDevices: string[]) => {
-    if (newDevices.length) {
-      setDevice(newDevices);
+  const handleDevice = (event: React.MouseEvent<HTMLElement>, newDevice: string) => {
+    if (newDevice) {
+      setDevice(newDevice);
     }
   };
 
@@ -67,7 +68,12 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
         aria-labelledby="Form Preview Modal"
         aria-describedby="You can see the preview of the form you have made in form builder area here."
       >
-        <Card sx={modalStyle}>
+        <Card
+          sx={{
+            ...modalStyle,
+            ...(device === "phone" && { width: 390, height: 844, maxHeight: "100%" }),
+          }}
+        >
           <CardHeader
             title={
               <Grid container alignItems={"center"}>
@@ -97,8 +103,9 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
               </Tooltip>
             }
           />
+
           <CardContent sx={cardContentStyle}>
-            <FormPreview formFields={formFields} />
+            <FormPreview formFields={formFields} device={device} />
           </CardContent>
           <CardActions sx={{ justifyContent: "end" }}></CardActions>
         </Card>
