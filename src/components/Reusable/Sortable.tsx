@@ -1,6 +1,5 @@
 import React from "react";
-import { useSortable, defaultAnimateLayoutChanges, AnimateLayoutChanges } from "@dnd-kit/sortable";
-import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface ISortableProps {

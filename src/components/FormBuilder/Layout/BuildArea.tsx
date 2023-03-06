@@ -1,16 +1,8 @@
-import { Stack, Typography, Box, IconButton, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Stack, Typography, Box, Grid } from "@mui/material";
 import React from "react";
-import { FORM_ELEMENTS, FORM_ELEMENTS_LIST } from "../../../constants";
+import { FORM_ELEMENTS } from "../../../constants";
 import Droppable from "../../Reusable/Droppable";
-import {
-  DeleteOutlined,
-  DragIndicator,
-  OpenWithOutlined,
-  SettingsOutlined,
-  WarningAmberOutlined,
-} from "@mui/icons-material";
-import RemoveFieldDialog from "../Dialogs/RemoveFieldDialog";
+import { OpenWithOutlined } from "@mui/icons-material";
 import {
   arrayMove,
   rectSortingStrategy,
@@ -27,9 +19,7 @@ import {
   closestCenter,
   defaultDropAnimationSideEffects,
   Active,
-  Over,
 } from "@dnd-kit/core";
-import Sortable from "../../Reusable/Sortable";
 import {
   DragCancelEvent,
   DragEndEvent,
@@ -41,6 +31,7 @@ import RadioFieldBuilder from "../FormElements/Radio/RadioFieldBuilder";
 import { ITextProps } from "../FormElements/TextField/Text";
 import { IRadioProps } from "../FormElements/Radio/Radio";
 import { FieldProps } from "../FormElements/Common/Types";
+import SortableItem from "./SortableItem";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
@@ -59,42 +50,11 @@ const BuildArea = ({
   selectedFieldId,
   onTogglePropertiesDrawer,
 }: IBuildAreaProps) => {
-  const theme = useTheme();
   const [hoveredFieldIndex, setHoveredFieldIndex] = React.useState<number | null>(null);
   const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
     React.useState<boolean>(false);
 
-  const buttons = (id: string): JSX.Element => (
-    <Stack>
-      <IconButton
-        title="Remove"
-        size="small"
-        color="error"
-        sx={{ width: 25, height: 25 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          setConfirmDeleteFieldDialogOpen(true);
-        }}
-      >
-        <DeleteOutlined sx={{ width: 20, height: 20 }} />
-      </IconButton>
-      <IconButton
-        title="Properties"
-        size="small"
-        sx={{ width: 25, height: 25 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          onFieldSelect(id);
-          onTogglePropertiesDrawer();
-        }}
-      >
-        <SettingsOutlined sx={{ width: 20, height: 20 }} />
-      </IconButton>
-    </Stack>
-  );
-
   const [active, setActive] = React.useState<Active | null>(null);
-  const [over, setOver] = React.useState<Over | null>(null);
   const activeField = React.useMemo(
     () => formFields.find((el) => el.id === active?.id),
     [formFields, active]
@@ -107,7 +67,6 @@ const BuildArea = ({
   const handleDragOver = (event: DragOverEvent) => {
     const { over } = event;
     console.log("over ", over?.id);
-    setOver(over);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -121,13 +80,11 @@ const BuildArea = ({
       });
       onFieldSelect(active.id.toString());
       setActive(null);
-      setOver(null);
     }
   };
 
   const handleDragCancel = (event: DragCancelEvent) => {
     setActive(null);
-    setOver(null);
   };
 
   const sensors = useSensors(
@@ -147,39 +104,6 @@ const BuildArea = ({
       </>
     );
   };
-
-  const renderDragHandle = (index: number) => {
-    return (
-      hoveredFieldIndex === index && (
-        <IconButton sx={{ cursor: "move", height: 25, width: 25 }}>
-          <DragIndicator sx={{ height: 20, width: 20 }} />
-        </IconButton>
-      )
-    );
-  };
-
-  const renderRemoveFieldDialog = (index: number, fieldName: string) => {
-    return (
-      <RemoveFieldDialog
-        isOpen={confirmDeleteFieldDialogOpen}
-        fieldName={fieldName}
-        onClose={() => setConfirmDeleteFieldDialogOpen(false)}
-        onConfirm={() => {
-          setConfirmDeleteFieldDialogOpen(false);
-          onFieldRemove(index);
-        }}
-      />
-    );
-  };
-
-  const hiddenWarning = (
-    <Box sx={{ width: "100%", display: "flex", alignItems: "center", p: 1 }}>
-      <WarningAmberOutlined color="warning" sx={{ width: 15, height: 15 }} />
-      <Typography pl={1} variant="caption" color={"warning.main"}>
-        This field is hidden so it will not appear in the form.
-      </Typography>
-    </Box>
-  );
 
   return (
     <Droppable id="form-builder" style={{ width: "100%", height: "calc(100% - 60px)" }}>
@@ -205,87 +129,23 @@ const BuildArea = ({
             onDragOver={handleDragOver}
             onDragCancel={handleDragCancel}
           >
-            <Grid component={"ul"} container spacing={1}>
-              <SortableContext items={formFields.map((f) => f.id)} strategy={rectSortingStrategy}>
+            <Grid container spacing={1}>
+              <SortableContext items={formFields.map((f) => f.id)}>
                 {formFields.map((field, index) => {
-                  const { colSpan, fieldType, label, id, name } = field;
-                  const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
-                  const fieldName = `${label} (${type})`;
-
                   return (
-                    <Grid
-                      component="li"
-                      item
-                      xs={12}
-                      md={colSpan}
-                      key={id}
-                      id={`${name}-container`}
-                      onMouseOver={() => {
-                        setHoveredFieldIndex(index);
-                      }}
-                      onMouseLeave={() => {
-                        setHoveredFieldIndex(null);
-                      }}
-                      sx={{
-                        width: "100%",
-                        height: "auto",
-                        position: "relative",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        ...(hoveredFieldIndex === index && {
-                          backgroundColor: theme.palette.action.hover,
-                        }),
-                        ...(selectedFieldId === id && {
-                          borderLeftColor: theme.palette.secondary.light,
-                          borderLeftWidth: 4,
-                          borderLeftStyle: "solid",
-                          boxShadow: theme.shadows[2],
-                        }),
-                        ...(id === over?.id &&
-                          (formFields.findIndex((el) => el.id === active?.id) < index
-                            ? {
-                                borderBottomColor: theme.palette.secondary.light,
-                                borderBottomWidth: 4,
-                                borderBottomStyle: "dotted",
-                              }
-                            : {
-                                borderTopColor: theme.palette.secondary.light,
-                                borderTopWidth: 4,
-                                borderTopStyle: "dotted",
-                              })),
-                      }}
-                    >
-                      <Box
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Sortable id={id}>{renderDragHandle(index)}</Sortable>
-                        <Stack
-                          sx={{
-                            flexGrow: 1,
-                            p: 1,
-                            ...(field.hidden && selectedFieldId !== id && { opacity: 0.5 }),
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onFieldSelect(id);
-                          }}
-                        >
-                          {renderElement(field)}
-                        </Stack>
-
-                        {hoveredFieldIndex === index && buttons(id)}
-
-                        {renderRemoveFieldDialog(index, fieldName)}
-                      </Box>
-
-                      {selectedFieldId === id && field.hidden && hiddenWarning}
-                    </Grid>
+                    <SortableItem
+                      index={index}
+                      field={field}
+                      renderElement={renderElement}
+                      hoveredFieldIndex={hoveredFieldIndex}
+                      setHoveredFieldIndex={setHoveredFieldIndex}
+                      selectedFieldId={selectedFieldId}
+                      onFieldSelect={onFieldSelect}
+                      onFieldRemove={onFieldRemove}
+                      confirmDeleteFieldDialogOpen={confirmDeleteFieldDialogOpen}
+                      setConfirmDeleteFieldDialogOpen={setConfirmDeleteFieldDialogOpen}
+                      onTogglePropertiesDrawer={onTogglePropertiesDrawer}
+                    />
                   );
                 })}
               </SortableContext>
@@ -302,7 +162,7 @@ const BuildArea = ({
               }}
             >
               {active?.id ? (
-                <Box p={1} width={400}>
+                <Box p={1} width={200}>
                   {renderElement(activeField)}
                 </Box>
               ) : null}
