@@ -94,7 +94,7 @@ const RadioElement = ({ field }: { field: IRadioProps }) => {
           return (
             <FormControlLabel
               key={index}
-              value={op.value}
+              value={op.label}
               label={op.label}
               control={<Radio size={size} required={required} />}
             />
@@ -131,11 +131,9 @@ const FormPreview = ({ formFields, device }: FormPreviewProps) => {
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
+
         const updatedFormFields = formFields.map((field) => {
-          const updatedField = cloneDeep(field);
-          const fieldValue = formData.get(updatedField.name);
-          updatedField.value = fieldValue;
-          return updatedField;
+          return { question: field.label, response: formData.get(field.name) };
         });
         console.log(updatedFormFields);
       }}
