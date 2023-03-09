@@ -14,36 +14,33 @@ import {
 import RemoveFieldDialog from "../Dialogs/RemoveFieldDialog";
 
 interface ISortableItemProps {
-  index: number;
   field: FieldProps;
   renderElement: (field?: FieldProps) => JSX.Element;
-  setHoveredFieldIndex: React.Dispatch<React.SetStateAction<number | null>>;
-  hoveredFieldIndex: number | null;
-  onFieldRemove: (index: number) => void;
+  setHoveredFieldId: React.Dispatch<React.SetStateAction<string>>;
+  hoveredFieldId: string;
+  onFieldRemove: (id: string) => void;
   onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
-  setConfirmDeleteFieldDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   selectedFieldId: string;
-  confirmDeleteFieldDialogOpen: boolean;
   onTogglePropertiesDrawer: () => void;
 }
 
 const SortableItem = ({
-  index,
   field,
   renderElement,
-  hoveredFieldIndex,
-  setHoveredFieldIndex,
+  hoveredFieldId,
+  setHoveredFieldId,
   onFieldRemove,
   onFieldSelect,
   selectedFieldId,
-  confirmDeleteFieldDialogOpen,
-  setConfirmDeleteFieldDialogOpen,
   onTogglePropertiesDrawer,
 }: ISortableItemProps) => {
   const theme = useTheme();
   const { colSpan, fieldType, label, id, name } = field;
   const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
   const fieldName = `${label} (${type})`;
+
+  const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
+    React.useState<boolean>(false);
 
   const { isDragging, attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id,
@@ -55,17 +52,25 @@ const SortableItem = ({
 
   const containerStyle = { transform: CSS.Translate.toString(transform), transition };
 
-  const renderDragHandle = (index: number) => {
-    return hoveredFieldIndex === index ? (
-      <IconButton {...listeners} sx={{ cursor: "move", height: 25, width: 25 }}>
-        <DragIndicator sx={{ height: 20, width: 20 }} />
-      </IconButton>
-    ) : (
-      <></>
+  const renderDragHandle = () => {
+    return (
+      <Box
+        {...listeners}
+        sx={{
+          cursor: "move",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 25,
+        }}
+      >
+        <DragIndicator color="secondary" sx={{ height: 20, width: 20 }} />
+      </Box>
     );
   };
 
-  const renderRemoveFieldDialog = (index: number, fieldName: string) => {
+  const renderRemoveFieldDialog = () => {
     return (
       <RemoveFieldDialog
         isOpen={confirmDeleteFieldDialogOpen}
@@ -73,13 +78,13 @@ const SortableItem = ({
         onClose={() => setConfirmDeleteFieldDialogOpen(false)}
         onConfirm={() => {
           setConfirmDeleteFieldDialogOpen(false);
-          onFieldRemove(index);
+          onFieldRemove(id);
         }}
       />
     );
   };
 
-  const renderButtons = (id: string): JSX.Element => (
+  const renderButtons = (): JSX.Element => (
     <Stack>
       <IconButton
         title="Remove"
@@ -128,10 +133,10 @@ const SortableItem = ({
       key={id}
       id={`${name}-container`}
       onMouseOver={() => {
-        setHoveredFieldIndex(index);
+        setHoveredFieldId(id);
       }}
       onMouseLeave={() => {
-        setHoveredFieldIndex(null);
+        setHoveredFieldId("");
       }}
       sx={{
         width: "100%",
@@ -140,7 +145,7 @@ const SortableItem = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        ...(hoveredFieldIndex === index && {
+        ...(hoveredFieldId === id && {
           backgroundColor: theme.palette.action.hover,
         }),
         ...(selectedFieldId === id && {
@@ -160,7 +165,7 @@ const SortableItem = ({
           alignItems: "center",
         }}
       >
-        {renderDragHandle(index)}
+        {(selectedFieldId === id || hoveredFieldId === id) && renderDragHandle()}
         <Box
           sx={{
             flexGrow: 1,
@@ -171,13 +176,17 @@ const SortableItem = ({
             e.stopPropagation();
             onFieldSelect(id);
           }}
+          onDoubleClick={(e) => {
+            e.stopPropagation();
+            onTogglePropertiesDrawer();
+          }}
         >
           {renderElement(field)}
         </Box>
 
-        {hoveredFieldIndex === index && renderButtons(id)}
+        {(selectedFieldId === id || hoveredFieldId === id) && renderButtons()}
 
-        {renderRemoveFieldDialog(index, fieldName)}
+        {renderRemoveFieldDialog()}
       </Box>
 
       {selectedFieldId === id && field.hidden && hiddenWarning}

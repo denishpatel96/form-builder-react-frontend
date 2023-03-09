@@ -15,7 +15,7 @@ export const getRadioProps: Function = (
     helperText: "",
     row: false,
     defaultValue: "",
-    label: "Choose option",
+    label: `Single Choice ${elementCount}`,
     required: false,
     useCalcValues: false,
     size: "medium", // 'medium','small'

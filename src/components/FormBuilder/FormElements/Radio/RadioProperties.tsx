@@ -178,7 +178,6 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
               <Grid item xs={12}>
                 <Button
                   size="small"
-                  variant="outlined"
                   startIcon={<Add />}
                   onClick={() => {
                     onPropsChange(`options`, [...options, { label: "", value: "" }]);

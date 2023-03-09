@@ -1,11 +1,12 @@
-import { DragOverlay } from "@dnd-kit/core";
+import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 
 import React from "react";
 import { ListItem, ListItemIcon, ListItemText, List } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Draggable from "../../Reusable/Draggable";
 import { FORM_ELEMENTS_LIST } from "../../../constants";
+import { CSS } from "@dnd-kit/utilities";
+import { StyledFormElementItem, StyledListItem } from "../FormElements/Common/Styles";
 
 interface IFormElementsProps {
   activeId?: UniqueIdentifier | null;
@@ -13,17 +14,19 @@ interface IFormElementsProps {
 
 const FormElementsSidebar = ({ activeId }: IFormElementsProps) => {
   const theme = useTheme();
+
   return (
     <React.Fragment>
-      <List>
+      <List disablePadding>
         {FORM_ELEMENTS_LIST.map((element) => {
+          const { attributes, listeners, setNodeRef, transform } = useDraggable({
+            id: element.id,
+          });
           return (
-            <Draggable style={{ width: "100%" }} key={element.id} id={element.id}>
-              <ListItem divider>
-                <ListItemIcon>{element.icon}</ListItemIcon>
-                <ListItemText>{element.label}</ListItemText>
-              </ListItem>
-            </Draggable>
+            <StyledFormElementItem key={element.id} ref={setNodeRef} {...listeners} {...attributes}>
+              <ListItemIcon>{element.icon}</ListItemIcon>
+              <ListItemText>{element.label}</ListItemText>
+            </StyledFormElementItem>
           );
         })}
       </List>

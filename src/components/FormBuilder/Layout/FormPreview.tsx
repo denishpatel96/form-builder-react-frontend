@@ -1,24 +1,22 @@
 import {
+  Box,
   Button,
   FormControl,
   FormControlLabel,
   FormHelperText,
   FormLabel,
   Grid,
-  InputBaseProps,
   Radio,
   RadioGroup,
   TextField,
-  TextFieldProps,
-  Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { FORM_ELEMENTS } from "../../../constants";
 import { FieldProps } from "../FormElements/Common/Types";
 import { IRadioProps } from "../FormElements/Radio/Radio";
 import { ITextProps } from "../FormElements/TextField/Text";
 import { validateText } from "../FormElements/TextField/TextFieldUtility";
-import { cloneDeep } from "lodash";
 
 type FormPreviewProps = {
   formFields: FieldProps[];
@@ -126,6 +124,7 @@ const renderFormFields = (formFields: FieldProps[], device: string) => {
 };
 
 const FormPreview = ({ formFields, device }: FormPreviewProps) => {
+  const theme = useTheme();
   return (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -138,7 +137,11 @@ const FormPreview = ({ formFields, device }: FormPreviewProps) => {
         console.log(updatedFormFields);
       }}
     >
-      {renderFormFields(formFields, device)}
+      <Box
+        sx={{ py: 4, px: 2, bgcolor: theme.palette.background.paper, boxShadow: theme.shadows[1] }}
+      >
+        {renderFormFields(formFields, device)}
+      </Box>
     </form>
   );
 };

@@ -10,7 +10,7 @@ export const getTextProps: Function = (
     hidden: false,
     title: "",
     name: `input_text_${elementCount}`,
-    label: `Question_${elementCount}`,
+    label: `Question ${elementCount}`,
     required: false,
     helperText: "",
     id: `input_text_${elementCount}`,

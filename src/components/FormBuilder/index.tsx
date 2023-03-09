@@ -1,6 +1,20 @@
 import React from "react";
-import { closestCenter, DndContext } from "@dnd-kit/core";
-import { DragEndEvent, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core/dist/types";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+  DragCancelEvent,
+  UniqueIdentifier,
+  Over,
+} from "@dnd-kit/core";
 import BuildArea from "./Layout/BuildArea";
 import FormElementsSidebar from "./Layout/FormElementsSidebar";
 import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, FORM_ELEMENTS } from "../../constants";
@@ -11,36 +25,54 @@ import FormPreviewModal from "./Layout/FormPreviewModal";
 import { handlePropsChange } from "./FormElements/Common/Utility";
 import { getRadioProps } from "./FormElements/Radio/RadioFieldUtility";
 import { FieldProps } from "./FormElements/Common/Types";
+import { useTheme } from "@mui/material/styles";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 const FormBuilder = () => {
+  const theme = useTheme();
+  const [over, setOver] = React.useState<Over | null>(null);
   const [activeId, setActiveId] = React.useState<string>("");
   const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
-  const [elementCount, setElementCount] = React.useState<number>(0);
+  const [elementCount, setElementCount] = React.useState<number>(1);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isPropertiesPinned, setIsPropertiesPinned] = React.useState<boolean>(true);
   const [formFields, setFormFields] = React.useState<FieldProps[]>([
-    getTextProps("text", 999),
-    getRadioProps("radio", 998),
+    getTextProps(FORM_ELEMENTS.TEXT, 999),
+    getRadioProps(FORM_ELEMENTS.RADIO, 998),
   ]);
 
   const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
 
   const handleAddFormField = (elementId: UniqueIdentifier) => {
     if (!elementId) return;
+    let fieldToAdd: FieldProps | null = null;
     switch (elementId) {
       case FORM_ELEMENTS.TEXT:
-        setFormFields((prev) => [...prev, getTextProps(elementId, elementCount)]);
-        setElementCount((prev) => prev + 1);
+        fieldToAdd = getTextProps(elementId, elementCount);
         break;
       case FORM_ELEMENTS.RADIO:
-        setFormFields((prev) => [...prev, getRadioProps(elementId, elementCount)]);
-        setElementCount((prev) => prev + 1);
+        fieldToAdd = getRadioProps(elementId, elementCount);
         break;
+    }
+    if (fieldToAdd !== null) {
+      const fieldId = fieldToAdd.id;
+      console.log("id", fieldId);
+      setFormFields((prev) => [...prev, fieldToAdd as FieldProps]);
+      setElementCount((prev) => prev + 1);
+      setSelectedFieldId(fieldId);
     }
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id.toString());
+    console.log("hello from 1");
+    const { active } = event;
+    const activeId = active.id.toString();
+    setActiveId(activeId);
+  };
+
+  const handleDragCancel = (event: DragCancelEvent) => {
+    setActiveId("");
+    setOver(null);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -49,26 +81,47 @@ const FormBuilder = () => {
       handleAddFormField(active.id);
     }
     setActiveId("");
+    setOver(null);
   };
 
-  const handleFieldRemove = (fieldIndex: number) => {
+  const handleDragOver = (event: DragOverEvent) => {
+    setOver(event?.over);
+  };
+
+  const handleFieldRemove = (fieldId: string) => {
     setFormFields((prev) => {
       let updated = [...prev];
-      updated.splice(fieldIndex, 1);
+      updated = updated.filter((f) => f.id !== fieldId);
       return updated;
     });
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   return (
     <DndContext
+      sensors={sensors}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      autoScroll={false}
+      onDragOver={handleDragOver}
+      onDragCancel={handleDragCancel}
+      autoScroll={!!over}
       collisionDetection={closestCenter}
     >
       <Box style={{ minHeight: 500, height: "100vh", display: "flex" }}>
         <Drawer
           open
+          onClick={() => setSelectedFieldId("")}
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+            if (e?.key === "Escape" || e?.code === "Escape") {
+              setSelectedFieldId("");
+            }
+          }}
           anchor={"left"}
           variant="persistent"
           PaperProps={{
@@ -90,7 +143,21 @@ const FormBuilder = () => {
               <Button color="secondary">Save</Button>
               <FormPreviewModal formFields={formFields} />
             </Box>
-            <Box style={{ padding: 10, height: `calc(100vh - 60px)`, overflow: "auto" }}>
+            <Box
+              sx={{
+                p: 2,
+                height: `calc(100vh - 70px)`,
+                overflow: "auto",
+                bgcolor: theme.palette.background.paper,
+                boxShadow: theme.shadows[1],
+              }}
+              onClick={() => setSelectedFieldId("")}
+              onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+                if (e?.key === "Escape" || e?.code === "Escape") {
+                  setSelectedFieldId("");
+                }
+              }}
+            >
               <BuildArea
                 formFields={formFields}
                 setFormFields={setFormFields}

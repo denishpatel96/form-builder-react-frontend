@@ -3,23 +3,8 @@ import React from "react";
 import { FORM_ELEMENTS } from "../../../constants";
 import Droppable from "../../Reusable/Droppable";
 import { OpenWithOutlined } from "@mui/icons-material";
-import {
-  arrayMove,
-  rectSortingStrategy,
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import {
-  DragOverlay,
-  useSensor,
-  useSensors,
-  KeyboardSensor,
-  PointerSensor,
-  DndContext,
-  closestCenter,
-  defaultDropAnimationSideEffects,
-  Active,
-} from "@dnd-kit/core";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import {
   DragCancelEvent,
   DragEndEvent,
@@ -36,7 +21,7 @@ import SortableItem from "./SortableItem";
 interface IBuildAreaProps {
   formFields: FieldProps[];
   setFormFields: React.Dispatch<React.SetStateAction<FieldProps[]>>;
-  onFieldRemove: (index: number) => void;
+  onFieldRemove: (id: string) => void;
   onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
   selectedFieldId: string;
   onTogglePropertiesDrawer: () => void;
@@ -50,10 +35,7 @@ const BuildArea = ({
   selectedFieldId,
   onTogglePropertiesDrawer,
 }: IBuildAreaProps) => {
-  const [hoveredFieldIndex, setHoveredFieldIndex] = React.useState<number | null>(null);
-  const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
-    React.useState<boolean>(false);
-
+  const [hoveredFieldId, setHoveredFieldId] = React.useState<string>("");
   const [active, setActive] = React.useState<Active | null>(null);
   const activeField = React.useMemo(
     () => formFields.find((el) => el.id === active?.id),
@@ -78,7 +60,10 @@ const BuildArea = ({
         const newIndex = prev.findIndex((el) => el.id === over.id);
         return arrayMove(prev, oldIndex, newIndex);
       });
-      onFieldSelect(active.id.toString());
+      // avoid field selection if field is being added by dragging.
+      if (!(active?.id as string)?.includes("ctrl_")) {
+        onFieldSelect(active.id.toString());
+      }
       setActive(null);
     }
   };
@@ -86,13 +71,6 @@ const BuildArea = ({
   const handleDragCancel = (event: DragCancelEvent) => {
     setActive(null);
   };
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   const renderElement = (field?: FieldProps) => {
     if (!field) return <></>;
@@ -105,72 +83,66 @@ const BuildArea = ({
     );
   };
 
-  return (
+  useDndMonitor({
+    onDragCancel: handleDragCancel,
+    onDragStart: handleDragStart,
+    onDragEnd: handleDragEnd,
+    onDragOver: handleDragOver,
+  });
+
+  return formFields.length === 0 ? (
     <Droppable id="form-builder" style={{ width: "100%", height: "calc(100% - 60px)" }}>
-      {formFields.length === 0 ? (
-        <Stack
-          style={{
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <OpenWithOutlined />
-          <Typography>Drag element here</Typography>
-        </Stack>
-      ) : (
-        <form>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDragOver={handleDragOver}
-            onDragCancel={handleDragCancel}
-          >
-            <Grid container spacing={1}>
-              <SortableContext items={formFields.map((f) => f.id)}>
-                {formFields.map((field, index) => {
-                  return (
-                    <SortableItem
-                      index={index}
-                      field={field}
-                      renderElement={renderElement}
-                      hoveredFieldIndex={hoveredFieldIndex}
-                      setHoveredFieldIndex={setHoveredFieldIndex}
-                      selectedFieldId={selectedFieldId}
-                      onFieldSelect={onFieldSelect}
-                      onFieldRemove={onFieldRemove}
-                      confirmDeleteFieldDialogOpen={confirmDeleteFieldDialogOpen}
-                      setConfirmDeleteFieldDialogOpen={setConfirmDeleteFieldDialogOpen}
-                      onTogglePropertiesDrawer={onTogglePropertiesDrawer}
-                    />
-                  );
-                })}
-              </SortableContext>
-            </Grid>
-            <DragOverlay
-              dropAnimation={{
-                sideEffects: defaultDropAnimationSideEffects({
-                  styles: {
-                    active: {
-                      opacity: "0.4",
-                    },
-                  },
-                }),
-              }}
-            >
-              {active?.id ? (
-                <Box p={1} width={200}>
-                  {renderElement(activeField)}
-                </Box>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
-        </form>
-      )}
+      <Stack
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <OpenWithOutlined />
+        <Typography>Drag element here</Typography>
+      </Stack>
     </Droppable>
+  ) : (
+    <form>
+      <Grid container spacing={1}>
+        <SortableContext items={formFields.map((f) => f.id)}>
+          {formFields.map((field, index) => {
+            return (
+              <SortableItem
+                key={index}
+                field={field}
+                renderElement={renderElement}
+                hoveredFieldId={hoveredFieldId}
+                setHoveredFieldId={setHoveredFieldId}
+                selectedFieldId={selectedFieldId}
+                onFieldSelect={onFieldSelect}
+                onFieldRemove={onFieldRemove}
+                onTogglePropertiesDrawer={onTogglePropertiesDrawer}
+              />
+            );
+          })}
+        </SortableContext>
+      </Grid>
+      <DragOverlay
+        dropAnimation={{
+          sideEffects: defaultDropAnimationSideEffects({
+            styles: {
+              active: {
+                opacity: "0.4",
+              },
+            },
+          }),
+        }}
+      >
+        {active?.id ? (
+          <Box p={1} width={200}>
+            {renderElement(activeField)}
+          </Box>
+        ) : null}
+      </DragOverlay>
+    </form>
   );
 };
 

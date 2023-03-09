@@ -26,9 +26,8 @@ const modalStyle: SxProps = {
   transform: "translate(-50%, -50%)",
   width: "100%",
   height: "100%",
-  bgcolor: "background.paper",
+  bgcolor: "background.default",
   boxShadow: 24,
-  p: 2,
 };
 
 const cardContentStyle: SxProps = {
@@ -42,7 +41,6 @@ type FormPreviewModalProps = {
 
 const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
   const [open, setOpen] = React.useState(false);
-
   const [device, setDevice] = React.useState("phone");
   const handleOpen = () => {
     setOpen(true);
@@ -77,7 +75,7 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
           <CardHeader
             title={
               <Grid container alignItems={"center"}>
-                <Typography variant="subtitle1">Preview</Typography>
+                <Typography variant="subtitle1">Live Preview</Typography>
                 <ToggleButtonGroup
                   exclusive
                   value={device}
@@ -86,10 +84,10 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
                   size="small"
                   sx={{ pl: 2 }}
                 >
-                  <ToggleButton value="laptop" aria-label="laptop">
+                  <ToggleButton size="small" value="laptop" aria-label="laptop">
                     <LaptopOutlined />
                   </ToggleButton>
-                  <ToggleButton value="phone" aria-label="phone">
+                  <ToggleButton size="small" value="phone" aria-label="phone">
                     <PhoneIphoneOutlined />
                   </ToggleButton>
                 </ToggleButtonGroup>
@@ -104,9 +102,9 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
             }
           />
 
-          <CardContent sx={cardContentStyle}>
+          <Box sx={cardContentStyle}>
             <FormPreview formFields={formFields} device={device} />
-          </CardContent>
+          </Box>
           <CardActions sx={{ justifyContent: "end" }}></CardActions>
         </Card>
       </Modal>
