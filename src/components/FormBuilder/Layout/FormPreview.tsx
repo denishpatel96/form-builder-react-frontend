@@ -3,16 +3,19 @@ import {
   Button,
   FormControl,
   FormControlLabel,
+  FormGroup,
   FormHelperText,
   FormLabel,
   Grid,
   Radio,
   RadioGroup,
   TextField,
+  Checkbox,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { FORM_ELEMENTS } from "../../../constants";
+import { ICheckboxProps } from "../FormElements/Checkbox/Checkbox";
 import { FieldProps } from "../FormElements/Common/Types";
 import { IRadioProps } from "../FormElements/Radio/Radio";
 import { ITextProps } from "../FormElements/TextField/Text";
@@ -85,7 +88,7 @@ const RadioElement = ({ field }: { field: IRadioProps }) => {
     field;
 
   return (
-    <FormControl fullWidth error={error} required={required}>
+    <FormControl component={"fieldset"} fullWidth error={error} required={required}>
       <FormLabel>{label}</FormLabel>
       <RadioGroup row={row} title={title} defaultValue={defaultValue} name={name}>
         {options.map((op, index) => {
@@ -104,6 +107,53 @@ const RadioElement = ({ field }: { field: IRadioProps }) => {
   );
 };
 
+const CheckboxElement = ({ field }: { field: ICheckboxProps }) => {
+  if (!field || field.hidden) {
+    return <></>;
+  }
+
+  const { error, helperText, label, options, required, row, size, title } = field;
+
+  return field.options.length === 1 ? (
+    <FormControlLabel
+      label={`${field.options[0].label}${field.required ? " *" : ""}`}
+      name={field.name}
+      control={
+        <Checkbox
+          defaultChecked={field.options[0].defaultChecked}
+          value={field.options[0].label}
+          size={field.size}
+          required={field.required}
+        />
+      }
+    />
+  ) : (
+    <FormControl component={"fieldset"} fullWidth error={error} required={required}>
+      <FormLabel>{label}</FormLabel>
+      <FormGroup row={row} title={title}>
+        {options.map((op, index) => {
+          return (
+            <FormControlLabel
+              name={field.name}
+              key={index}
+              label={op.label}
+              control={
+                <Checkbox
+                  defaultChecked={op.defaultChecked}
+                  value={op.label}
+                  size={size}
+                  required={required}
+                />
+              }
+            />
+          );
+        })}
+      </FormGroup>
+      <FormHelperText>{helperText}</FormHelperText>
+    </FormControl>
+  );
+};
+
 const renderFormFields = (formFields: FieldProps[], device: string) => {
   return (
     <Grid container spacing={1}>
@@ -113,6 +163,9 @@ const renderFormFields = (formFields: FieldProps[], device: string) => {
           <Grid item key={index} xs={12} sm={12} md={device === "phone" ? 12 : colSpan}>
             {fieldType === FORM_ELEMENTS.TEXT && <TextElement field={field as ITextProps} />}
             {fieldType === FORM_ELEMENTS.RADIO && <RadioElement field={field as IRadioProps} />}
+            {fieldType === FORM_ELEMENTS.CHECKBOX && (
+              <CheckboxElement field={field as ICheckboxProps} />
+            )}
           </Grid>
         );
       })}

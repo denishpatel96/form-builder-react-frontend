@@ -27,18 +27,20 @@ import { getRadioProps } from "./FormElements/Radio/RadioFieldUtility";
 import { FieldProps } from "./FormElements/Common/Types";
 import { useTheme } from "@mui/material/styles";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { getCheckboxProps } from "./FormElements/Checkbox/CheckboxFieldUtility";
 
 const FormBuilder = () => {
   const theme = useTheme();
   const [over, setOver] = React.useState<Over | null>(null);
   const [activeId, setActiveId] = React.useState<string>("");
   const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
-  const [elementCount, setElementCount] = React.useState<number>(1);
+  const [elementCount, setElementCount] = React.useState<number>(4);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isPropertiesPinned, setIsPropertiesPinned] = React.useState<boolean>(true);
   const [formFields, setFormFields] = React.useState<FieldProps[]>([
-    getTextProps(FORM_ELEMENTS.TEXT, 999),
-    getRadioProps(FORM_ELEMENTS.RADIO, 998),
+    getTextProps(FORM_ELEMENTS.TEXT, 1),
+    getRadioProps(FORM_ELEMENTS.RADIO, 2),
+    getCheckboxProps(FORM_ELEMENTS.CHECKBOX, 3),
   ]);
 
   const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
@@ -52,6 +54,9 @@ const FormBuilder = () => {
         break;
       case FORM_ELEMENTS.RADIO:
         fieldToAdd = getRadioProps(elementId, elementCount);
+        break;
+      case FORM_ELEMENTS.CHECKBOX:
+        fieldToAdd = getCheckboxProps(elementId, elementCount);
         break;
     }
     if (fieldToAdd !== null) {

@@ -17,6 +17,8 @@ import { ITextProps } from "../FormElements/TextField/Text";
 import { IRadioProps } from "../FormElements/Radio/Radio";
 import { FieldProps } from "../FormElements/Common/Types";
 import SortableItem from "./SortableItem";
+import CheckboxFieldBuilder from "../FormElements/Checkbox/CheckboxFieldBuilder";
+import { ICheckboxProps } from "../FormElements/Checkbox/Checkbox";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
@@ -79,6 +81,9 @@ const BuildArea = ({
       <>
         {fieldType === FORM_ELEMENTS.TEXT && <TextFieldBuilder field={field as ITextProps} />}
         {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
+        {fieldType === FORM_ELEMENTS.CHECKBOX && (
+          <CheckboxFieldBuilder field={field as ICheckboxProps} />
+        )}
       </>
     );
   };

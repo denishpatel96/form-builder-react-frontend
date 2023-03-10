@@ -1,25 +1,25 @@
-import { IRadioProps } from "./Radio";
+import { ICheckboxProps } from "./Checkbox";
 
-export const getRadioProps: Function = (
+export const getCheckboxProps: Function = (
   elementId: string | number,
   elementCount: number
-): IRadioProps => {
+): ICheckboxProps => {
   return {
     fieldType: elementId,
     colSpan: 12,
     hidden: false,
-    id: `input_radio_${elementCount}`,
+    id: `input_checkbox_${elementCount}`,
     title: "",
-    name: `input_radio_${elementCount}`,
+    name: `input_checkbox_${elementCount}`,
     error: false,
     helperText: "",
     row: false,
-    defaultValue: "",
-    label: `Radio Group ${elementCount}`,
+    label: `Checkbox Group ${elementCount}`,
     required: false,
     useCalcValues: false,
     size: "medium", // 'medium','small'
     options: ["option 1", "option 2", "option 3", "option 4"].map((o) => ({
+      defaultChecked: false,
       value: "",
       label: o,
     })),

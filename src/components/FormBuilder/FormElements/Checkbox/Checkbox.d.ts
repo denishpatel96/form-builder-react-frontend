@@ -1,32 +1,30 @@
 import {
-  FormControlLabelProps,
+  CheckboxProps,
   FormControlProps,
+  FormGroupProps,
   FormHelperTextProps,
   FormLabelProps,
-  RadioGroupProps,
-  RadioProps,
 } from "@mui/material";
 
-export interface IRadioOptionProps {
+export interface ICheckboxOptionProps {
+  defaultChecked: boolean;
   value: string | number;
   label: string;
 }
 
-export interface IRadioProps {
+export interface ICheckboxProps {
   fieldType: string | number;
   hidden: boolean;
   colSpan: 3 | 4 | 6 | 8 | 9 | 12;
   id: string;
-  title: RadioGroupProps["title"];
+  title: FormControlProps["title"];
   name: string;
   error: FormControlProps["error"];
   helperText: FormHelperTextProps["children"];
-  row: RadioGroupProps["row"];
-  defaultValue?: RadioGroupProps["defaultValue"];
-  value?: RadioGroupProps["value"];
+  row: FormGroupProps["row"];
   label: FormLabelProps["children"];
   required: FormControlProps["required"];
-  size: RadioProps["size"];
-  options: IRadioOptionProps[];
+  size: CheckboxProps["size"];
+  options: ICheckboxOptionProps[];
   useCalcValues: boolean;
 }

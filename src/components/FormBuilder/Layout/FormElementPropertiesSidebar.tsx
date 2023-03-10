@@ -7,6 +7,8 @@ import { FieldProps, IFieldPropertiesChangeFunc } from "../FormElements/Common/T
 import { ITextProps } from "../FormElements/TextField/Text";
 import RadioProperties from "../FormElements/Radio/RadioProperties";
 import { IRadioProps } from "../FormElements/Radio/Radio";
+import { ICheckboxProps } from "../FormElements/Checkbox/Checkbox";
+import CheckboxProperties from "../FormElements/Checkbox/CheckboxProperties";
 
 type IFormElementProps = {
   field: FieldProps | undefined;
@@ -80,6 +82,9 @@ const FormElementPropertiesSidebar = ({
       )}
       {field && field.fieldType === FORM_ELEMENTS.RADIO && (
         <RadioProperties field={field as IRadioProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.CHECKBOX && (
+        <CheckboxProperties field={field as ICheckboxProps} onPropsChange={onPropsChange} />
       )}
     </>
   );

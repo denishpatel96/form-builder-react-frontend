@@ -16,38 +16,24 @@ import {
   Typography,
   Checkbox,
   Button,
+  ListItemText,
 } from "@mui/material";
 import React from "react";
 import { IFieldPropertiesChangeFunc } from "../Common/Types";
-import { IRadioOptionProps, IRadioProps } from "./Radio";
+import { ICheckboxOptionProps, ICheckboxProps } from "./Checkbox";
 import { StyledListItem } from "../Common/Styles";
 import PropTitle from "../Common/PropTitle";
 
-interface IRadioPropertiesProps {
-  field: IRadioProps;
+interface ICheckboxPropertiesProps {
+  field: ICheckboxProps;
   onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
-  const {
-    colSpan,
-    hidden,
-    label,
-    error,
-    fieldType,
-    helperText,
-    id,
-    name,
-    required,
-    options,
-    row,
-    size,
-    title,
-    useCalcValues,
-    defaultValue,
-    value,
-  } = field;
+const CheckboxProperties = ({ field, onPropsChange }: ICheckboxPropertiesProps) => {
+  const { colSpan, hidden, label, helperText, required, options, row, size, title, useCalcValues } =
+    field;
 
+  const defaultValue = options.filter((op) => op.defaultChecked).map((op) => op.label);
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
       <StyledListItem>
@@ -190,21 +176,32 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <PropTitle text="Default Choice" />
+            <PropTitle text="Default Choices" />
           </Grid>
           <Grid item xs={12}>
             <Select
               fullWidth
+              multiple
               variant="standard"
               name="defaultValue"
               id="radio-default-value-select"
               value={defaultValue}
+              renderValue={() => defaultValue.join(", ")}
               onChange={(e: SelectChangeEvent<any>, _) => {
-                onPropsChange("defaultValue", e.target.value);
+                const value = e.target.value;
+                console.log("value", value);
+                const updatedOptions = options.map((op) => {
+                  let updatedOp = { ...op };
+                  let valueArray = typeof value === "string" ? value.split(",") : value;
+                  updatedOp.defaultChecked =
+                    valueArray.findIndex((v: string) => v === updatedOp.label) > -1;
+                  return updatedOp;
+                });
+                onPropsChange("options", updatedOptions);
               }}
               IconComponent={() => <></>}
               endAdornment={
-                defaultValue && (
+                defaultValue?.length > 0 && (
                   <IconButton
                     sx={{ width: 25, height: 25 }}
                     onMouseDown={(event) => {
@@ -212,7 +209,14 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
                       event.stopPropagation();
                     }}
                     onClick={() => {
-                      onPropsChange("defaultValue", "");
+                      onPropsChange(
+                        "options",
+                        options.map((op) => {
+                          let updatedOp = { ...op };
+                          updatedOp.defaultChecked = false;
+                          return updatedOp;
+                        })
+                      );
                     }}
                   >
                     <Clear sx={{ width: 15, height: 15 }} />
@@ -223,7 +227,8 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
               {options.map((op, index) => {
                 return (
                   <MenuItem key={index} value={op.label}>
-                    {op.label}
+                    <Checkbox checked={defaultValue.indexOf(op.label) > -1} />
+                    <ListItemText primary={op.label} />
                   </MenuItem>
                 );
               })}
@@ -302,7 +307,6 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 onPropsChange("required", e.target.checked)
               }
-              inputProps={{ "aria-label": "text-required-property" }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -340,7 +344,6 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
               value={size}
               exclusive
               onChange={(_, value: any) => onPropsChange("size", value)}
-              aria-label="Platform"
             >
               <ToggleButton value="small">Compact</ToggleButton>
               <ToggleButton value="medium">Normal</ToggleButton>
@@ -355,4 +358,4 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
   );
 };
 
-export default RadioProperties;
+export default CheckboxProperties;
