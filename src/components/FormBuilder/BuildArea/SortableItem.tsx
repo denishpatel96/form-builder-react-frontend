@@ -42,15 +42,20 @@ const SortableItem = ({
   const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
     React.useState<boolean>(false);
 
-  const { isDragging, attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id,
-    transition: {
-      duration: 600, // milliseconds
-      easing: "cubic-bezier(0.25, 1, 0.5, 1)",
-    },
-  });
+  const { isOver, isDragging, attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id,
+      transition: {
+        duration: 600, // milliseconds
+        easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+      },
+    });
 
-  const containerStyle = { transform: CSS.Translate.toString(transform), transition };
+  // This is used to move other elements as you drag the element.
+  // This is not stable currently for variable size of elements so avoiding it.
+  // TODO : Try to use it in future if necessary support is added.
+  // transform: CSS.Translate.toString(transform),
+  const containerStyle = { transition };
 
   const renderDragHandle = () => {
     return (
@@ -154,7 +159,8 @@ const SortableItem = ({
           borderLeftStyle: "solid",
           boxShadow: theme.shadows[2],
         }),
-        opacity: isDragging ? 0 : 1,
+        ...(isOver && { border: `4px dotted ${theme.palette.secondary.light}` }),
+        opacity: isDragging ? 0.3 : 1,
       }}
     >
       <Box

@@ -22,6 +22,20 @@ interface IBuildAreaProps {
   onTogglePropertiesDrawer: () => void;
 }
 
+export const renderElement = (field?: FieldProps) => {
+  if (!field) return <></>;
+  const { fieldType } = field;
+  return (
+    <>
+      {fieldType === FORM_ELEMENTS.TEXT && <TextFieldBuilder field={field as ITextProps} />}
+      {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
+      {fieldType === FORM_ELEMENTS.CHECKBOX && (
+        <CheckboxFieldBuilder field={field as ICheckboxProps} />
+      )}
+    </>
+  );
+};
+
 const BuildArea = ({
   formFields,
   setFormFields,
@@ -62,20 +76,6 @@ const BuildArea = ({
 
   const handleDragCancel = (event: DragCancelEvent) => {
     setActive(null);
-  };
-
-  const renderElement = (field?: FieldProps) => {
-    if (!field) return <></>;
-    const { fieldType } = field;
-    return (
-      <>
-        {fieldType === FORM_ELEMENTS.TEXT && <TextFieldBuilder field={field as ITextProps} />}
-        {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
-        {fieldType === FORM_ELEMENTS.CHECKBOX && (
-          <CheckboxFieldBuilder field={field as ICheckboxProps} />
-        )}
-      </>
-    );
   };
 
   useDndMonitor({
@@ -125,14 +125,21 @@ const BuildArea = ({
             sideEffects: defaultDropAnimationSideEffects({
               styles: {
                 active: {
-                  opacity: "0.4",
+                  opacity: "0.6",
                 },
               },
             }),
           }}
         >
-          {active?.id ? (
-            <Box p={1} width={200}>
+          {active?.id && !active.id.toString().includes("ctrl_") ? (
+            <Box
+              sx={{
+                p: 2,
+                minWidth: 200,
+                backgroundColor: "white",
+                border: `1px solid ${theme.palette.primary.light}`,
+              }}
+            >
               {renderElement(activeField)}
             </Box>
           ) : null}

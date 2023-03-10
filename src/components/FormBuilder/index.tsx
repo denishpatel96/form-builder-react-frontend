@@ -13,19 +13,18 @@ import {
   DragCancelEvent,
   UniqueIdentifier,
   Over,
+  pointerWithin,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
 import { FORM_ELEMENTS } from "../../constants";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
-import { Box, Button, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import { getCheckboxProps, getTextProps, getRadioProps } from "./Utility";
-import FormPreviewModal from "./BuildArea/BuildAreaHeader/FormPreviewModal";
 import { handlePropsChange } from "./Utility/Common.Utility";
 import { FieldProps } from "./Types";
 import { useTheme } from "@mui/material/styles";
-import BuildAreaHeader from "./BuildArea/BuildAreaHeader";
 
 const FormBuilder = () => {
   const theme = useTheme();
@@ -66,20 +65,20 @@ const FormBuilder = () => {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    console.log("drag started");
+    //console.log("drag started");
     const { active } = event;
     const activeId = active.id.toString();
     setActiveId(activeId);
   };
 
   const handleDragCancel = (event: DragCancelEvent) => {
-    console.log("drag cancelled");
+    //console.log("drag cancelled");
     setActiveId("");
     setOver(null);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log("drag ended", event);
+    //console.log("drag ended", event);
     const { active, over } = event;
     if (over) {
       handleAddFormField(active.id);
@@ -89,7 +88,7 @@ const FormBuilder = () => {
   };
 
   const handleDragOver = (event: DragOverEvent) => {
-    console.log("drag over", event);
+    //console.log("drag over", event);
     setOver(event?.over);
   };
 
@@ -116,7 +115,7 @@ const FormBuilder = () => {
       onDragOver={handleDragOver}
       onDragCancel={handleDragCancel}
       autoScroll={!!over}
-      collisionDetection={activeId.includes("ctrl_") ? rectIntersection : closestCenter}
+      collisionDetection={pointerWithin}
     >
       <Box style={{ minHeight: 500, height: "100vh", display: "flex" }}>
         <FormFieldsSidebar activeId={activeId} setSelectedFieldId={setSelectedFieldId} />
