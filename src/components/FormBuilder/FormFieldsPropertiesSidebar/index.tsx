@@ -1,32 +1,60 @@
 import { Close, InfoOutlined, PushPinOutlined, SettingsOutlined } from "@mui/icons-material";
-import { Typography, Divider, Box, IconButton, Tooltip, ToggleButton } from "@mui/material";
+import { Typography, Divider, Box, IconButton, Tooltip, ToggleButton, Drawer } from "@mui/material";
 import React from "react";
-import { FORM_ELEMENTS } from "../../../constants";
-import TextProperties from "../FormElements/TextField/TextProperties";
-import { FieldProps, IFieldPropertiesChangeFunc } from "../FormElements/Common/Types";
-import { ITextProps } from "../FormElements/TextField/Text";
-import RadioProperties from "../FormElements/Radio/RadioProperties";
-import { IRadioProps } from "../FormElements/Radio/Radio";
-import { ICheckboxProps } from "../FormElements/Checkbox/Checkbox";
-import CheckboxProperties from "../FormElements/Checkbox/CheckboxProperties";
+import {
+  DRAWER_WIDTH_DESKTOP,
+  DRAWER_WIDTH_TABLET,
+  FORM_ELEMENTS,
+  FORM_ELEMENTS_LIST,
+} from "../../../constants";
+import { TextProperties, CheckboxProperties, RadioProperties } from "./Properties";
+import {
+  FieldProps,
+  IFieldPropertiesChangeFunc,
+  ITextProps,
+  IRadioProps,
+  ICheckboxProps,
+} from "../Types";
 
-type IFormElementProps = {
+type IFormFieldProps = {
   field: FieldProps | undefined;
   onPropsChange: IFieldPropertiesChangeFunc;
   onClosePropertiesDrawer: () => void;
   onTogglePin: () => void;
   isPinned: boolean;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const FormElementPropertiesSidebar = ({
+const FormFieldPropertiesSidebar = ({
   field,
   onPropsChange,
   onClosePropertiesDrawer,
   onTogglePin,
   isPinned,
-}: IFormElementProps) => {
+  isOpen,
+  setIsOpen,
+}: IFormFieldProps) => {
+  const type = FORM_ELEMENTS_LIST.find((el) => el.id === field?.fieldType)?.label;
   return (
-    <>
+    <Drawer
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+      anchor={"right"}
+      variant={isPinned ? "permanent" : "temporary"}
+      PaperProps={{
+        sx: {
+          width: { xs: DRAWER_WIDTH_TABLET, md: DRAWER_WIDTH_DESKTOP },
+          overflow: "hidden",
+          ...(isPinned && { position: "relative" }),
+        },
+      }}
+      sx={{
+        ".MuiBackdrop-root": {
+          backgroundColor: "transparent",
+        },
+      }}
+    >
       <Box
         sx={{
           maxHeight: 50,
@@ -49,7 +77,7 @@ const FormElementPropertiesSidebar = ({
         <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
           <SettingsOutlined sx={{ height: 20, width: 20, ml: 2 }} />
           <Typography variant="overline" ml={1}>
-            {field ? `${field.fieldType} Properties` : "Element Properties"}{" "}
+            {field ? `${type} Properties` : "Field Properties"}
           </Typography>
         </Box>
         {!isPinned && (
@@ -86,8 +114,8 @@ const FormElementPropertiesSidebar = ({
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX && (
         <CheckboxProperties field={field as ICheckboxProps} onPropsChange={onPropsChange} />
       )}
-    </>
+    </Drawer>
   );
 };
 
-export default FormElementPropertiesSidebar;
+export default FormFieldPropertiesSidebar;

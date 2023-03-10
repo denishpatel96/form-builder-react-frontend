@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Button,
@@ -13,13 +14,9 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React from "react";
-import { FORM_ELEMENTS } from "../../../constants";
-import { ICheckboxProps } from "../FormElements/Checkbox/Checkbox";
-import { FieldProps } from "../FormElements/Common/Types";
-import { IRadioProps } from "../FormElements/Radio/Radio";
-import { ITextProps } from "../FormElements/TextField/Text";
-import { validateText } from "../FormElements/TextField/TextFieldUtility";
+import { FORM_ELEMENTS } from "../../../../constants";
+import { ITextProps, FieldProps, IRadioProps, ICheckboxProps } from "../../Types";
+import { validateText } from "../../Utility/Text.Utility";
 
 type FormPreviewProps = {
   formFields: FieldProps[];

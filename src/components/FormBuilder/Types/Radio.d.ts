@@ -1,5 +1,4 @@
 import {
-  FormControlLabelProps,
   FormControlProps,
   FormHelperTextProps,
   FormLabelProps,

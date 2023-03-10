@@ -1,3 +1,4 @@
+import React from "react";
 import { Close, LaptopOutlined, PhoneIphoneOutlined } from "@mui/icons-material";
 import {
   Box,
@@ -15,8 +16,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { FieldProps } from "../FormElements/Common/Types";
+import { FieldProps } from "../../Types";
 import FormPreview from "./FormPreview";
 
 const modalStyle: SxProps = {

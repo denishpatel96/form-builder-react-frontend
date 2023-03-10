@@ -4,14 +4,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { Box, Grid, IconButton, Stack, Typography } from "@mui/material";
 import { FORM_ELEMENTS_LIST } from "../../../constants";
 import { useTheme } from "@mui/material/styles";
-import { FieldProps } from "../FormElements/Common/Types";
+import { FieldProps } from "../Types";
 import {
   DeleteOutlined,
   DragIndicator,
   SettingsOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
-import RemoveFieldDialog from "../Dialogs/RemoveFieldDialog";
+import RemoveFieldDialog from "./RemoveFieldDialog";
 
 interface ISortableItemProps {
   field: FieldProps;

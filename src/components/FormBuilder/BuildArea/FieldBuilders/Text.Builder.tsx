@@ -1,12 +1,12 @@
 import { TextField } from "@mui/material";
 import React from "react";
-import { ITextProps } from "./Text";
+import { ITextProps } from "../../Types/Text";
 
-interface ITextFieldBuilderProps {
+export interface ITextFieldBuilderProps {
   field: ITextProps;
 }
 
-const TextFieldBuilder = ({ field }: ITextFieldBuilderProps) => {
+export const TextFieldBuilder = ({ field }: ITextFieldBuilderProps) => {
   const {
     name,
     id,
@@ -48,5 +48,3 @@ const TextFieldBuilder = ({ field }: ITextFieldBuilderProps) => {
     />
   );
 };
-
-export default TextFieldBuilder;

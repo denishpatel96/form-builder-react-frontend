@@ -1,4 +1,4 @@
-import { ITextProps } from "./Text";
+import { ITextProps } from "../Types";
 
 export const getTextProps: Function = (
   elementId: string | number,

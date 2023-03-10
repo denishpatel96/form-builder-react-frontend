@@ -7,13 +7,13 @@ import {
   RadioGroup,
 } from "@mui/material";
 import React from "react";
-import { IRadioProps } from "./Radio";
+import { IRadioProps } from "../../Types/Radio";
 
-interface IRadioFieldBuilderProps {
+export interface IRadioFieldBuilderProps {
   field: IRadioProps;
 }
 
-const RadioFieldBuilder = ({ field }: IRadioFieldBuilderProps) => {
+export const RadioFieldBuilder = ({ field }: IRadioFieldBuilderProps) => {
   return (
     <FormControl component={"fieldset"} fullWidth error={field.error} required={field.required}>
       <FormLabel>{field.label}</FormLabel>
@@ -33,5 +33,3 @@ const RadioFieldBuilder = ({ field }: IRadioFieldBuilderProps) => {
     </FormControl>
   );
 };
-
-export default RadioFieldBuilder;

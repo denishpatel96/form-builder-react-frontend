@@ -1,3 +1,4 @@
+import React from "react";
 import { Add, Clear, Delete } from "@mui/icons-material";
 import {
   TextField,
@@ -18,18 +19,16 @@ import {
   Button,
   ListItemText,
 } from "@mui/material";
-import React from "react";
-import { IFieldPropertiesChangeFunc } from "../Common/Types";
-import { ICheckboxOptionProps, ICheckboxProps } from "./Checkbox";
-import { StyledListItem } from "../Common/Styles";
-import PropTitle from "../Common/PropTitle";
+import { ICheckboxProps, IFieldPropertiesChangeFunc } from "../../Types";
+import { StyledListItem } from "../Styles";
+import PropTitle from "./PropTitle";
 
-interface ICheckboxPropertiesProps {
+export interface ICheckboxPropertiesProps {
   field: ICheckboxProps;
   onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-const CheckboxProperties = ({ field, onPropsChange }: ICheckboxPropertiesProps) => {
+export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxPropertiesProps) => {
   const { colSpan, hidden, label, helperText, required, options, row, size, title, useCalcValues } =
     field;
 
@@ -357,5 +356,3 @@ const CheckboxProperties = ({ field, onPropsChange }: ICheckboxPropertiesProps) 
     </List>
   );
 };
-
-export default CheckboxProperties;

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { FieldProps } from "./Types";
+import { FieldProps } from "../Types";
 
 export const handlePropsChange: Function = (
   selectedFieldId: string,

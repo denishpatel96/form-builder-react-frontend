@@ -6,8 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import {
+  rectIntersection,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
@@ -15,19 +14,18 @@ import {
   UniqueIdentifier,
   Over,
 } from "@dnd-kit/core";
-import BuildArea from "./Layout/BuildArea";
-import FormElementsSidebar from "./Layout/FormElementsSidebar";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, FORM_ELEMENTS } from "../../constants";
-import FormElementPropertiesSidebar from "./Layout/FormElementPropertiesSidebar";
-import { Box, Typography, Divider, Button, Drawer, Container } from "@mui/material";
-import { getTextProps } from "./FormElements/TextField/TextFieldUtility";
-import FormPreviewModal from "./Layout/FormPreviewModal";
-import { handlePropsChange } from "./FormElements/Common/Utility";
-import { getRadioProps } from "./FormElements/Radio/RadioFieldUtility";
-import { FieldProps } from "./FormElements/Common/Types";
-import { useTheme } from "@mui/material/styles";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { getCheckboxProps } from "./FormElements/Checkbox/CheckboxFieldUtility";
+import BuildArea from "./BuildArea";
+import FormFieldsSidebar from "./FormFieldsSideBar";
+import { FORM_ELEMENTS } from "../../constants";
+import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
+import { Box, Button, Container } from "@mui/material";
+import { getCheckboxProps, getTextProps, getRadioProps } from "./Utility";
+import FormPreviewModal from "./BuildArea/BuildAreaHeader/FormPreviewModal";
+import { handlePropsChange } from "./Utility/Common.Utility";
+import { FieldProps } from "./Types";
+import { useTheme } from "@mui/material/styles";
+import BuildAreaHeader from "./BuildArea/BuildAreaHeader";
 
 const FormBuilder = () => {
   const theme = useTheme();
@@ -61,7 +59,6 @@ const FormBuilder = () => {
     }
     if (fieldToAdd !== null) {
       const fieldId = fieldToAdd.id;
-      console.log("id", fieldId);
       setFormFields((prev) => [...prev, fieldToAdd as FieldProps]);
       setElementCount((prev) => prev + 1);
       setSelectedFieldId(fieldId);
@@ -69,18 +66,20 @@ const FormBuilder = () => {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    console.log("hello from 1");
+    console.log("drag started");
     const { active } = event;
     const activeId = active.id.toString();
     setActiveId(activeId);
   };
 
   const handleDragCancel = (event: DragCancelEvent) => {
+    console.log("drag cancelled");
     setActiveId("");
     setOver(null);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    console.log("drag ended", event);
     const { active, over } = event;
     if (over) {
       handleAddFormField(active.id);
@@ -90,6 +89,7 @@ const FormBuilder = () => {
   };
 
   const handleDragOver = (event: DragOverEvent) => {
+    console.log("drag over", event);
     setOver(event?.over);
   };
 
@@ -116,93 +116,31 @@ const FormBuilder = () => {
       onDragOver={handleDragOver}
       onDragCancel={handleDragCancel}
       autoScroll={!!over}
-      collisionDetection={closestCenter}
+      collisionDetection={activeId.includes("ctrl_") ? rectIntersection : closestCenter}
     >
       <Box style={{ minHeight: 500, height: "100vh", display: "flex" }}>
-        <Drawer
-          open
-          onClick={() => setSelectedFieldId("")}
-          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-            if (e?.key === "Escape" || e?.code === "Escape") {
-              setSelectedFieldId("");
-            }
+        <FormFieldsSidebar activeId={activeId} setSelectedFieldId={setSelectedFieldId} />
+        <BuildArea
+          formFields={formFields}
+          setFormFields={setFormFields}
+          onFieldRemove={handleFieldRemove}
+          selectedFieldId={selectedFieldId}
+          setSelectedFieldId={setSelectedFieldId}
+          onFieldSelect={setSelectedFieldId}
+          onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
+        />
+        <FormFieldPropertiesSidebar
+          field={formFields.find((f) => f.id === selectedFieldId)}
+          onPropsChange={onPropsChange}
+          onClosePropertiesDrawer={() => setIsPropertiesOpen(false)}
+          isPinned={isPropertiesPinned}
+          onTogglePin={() => {
+            setIsPropertiesOpen(true);
+            setIsPropertiesPinned((prev) => !prev);
           }}
-          anchor={"left"}
-          variant="persistent"
-          PaperProps={{
-            sx: {
-              width: 200,
-              position: "relative",
-            },
-          }}
-        >
-          <Typography sx={{ height: 50, lineHeight: "50px", pl: 2 }} variant="overline">
-            Form Elements
-          </Typography>
-          <Divider />
-          <FormElementsSidebar activeId={activeId} />
-        </Drawer>
-        <Box style={{ flexGrow: 1, display: "flex" }}>
-          <Container style={{ height: "100%" }}>
-            <Box style={{ padding: 10, height: 60 }}>
-              <Button color="secondary">Save</Button>
-              <FormPreviewModal formFields={formFields} />
-            </Box>
-            <Box
-              sx={{
-                p: 2,
-                height: `calc(100vh - 70px)`,
-                overflow: "auto",
-                bgcolor: theme.palette.background.paper,
-                boxShadow: theme.shadows[1],
-              }}
-              onClick={() => setSelectedFieldId("")}
-              onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-                if (e?.key === "Escape" || e?.code === "Escape") {
-                  setSelectedFieldId("");
-                }
-              }}
-            >
-              <BuildArea
-                formFields={formFields}
-                setFormFields={setFormFields}
-                onFieldRemove={handleFieldRemove}
-                selectedFieldId={selectedFieldId}
-                onFieldSelect={setSelectedFieldId}
-                onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
-              />
-            </Box>
-          </Container>
-        </Box>
-        <Drawer
-          open={isPropertiesOpen}
-          onClose={() => setIsPropertiesOpen(false)}
-          anchor={"right"}
-          variant={isPropertiesPinned ? "permanent" : "temporary"}
-          PaperProps={{
-            sx: {
-              width: { xs: DRAWER_WIDTH_TABLET, md: DRAWER_WIDTH_DESKTOP },
-              overflow: "hidden",
-              ...(isPropertiesPinned && { position: "relative" }),
-            },
-          }}
-          sx={{
-            ".MuiBackdrop-root": {
-              backgroundColor: "transparent",
-            },
-          }}
-        >
-          <FormElementPropertiesSidebar
-            field={formFields.find((f) => f.id === selectedFieldId)}
-            onPropsChange={onPropsChange}
-            onClosePropertiesDrawer={() => setIsPropertiesOpen(false)}
-            isPinned={isPropertiesPinned}
-            onTogglePin={() => {
-              setIsPropertiesOpen(true);
-              setIsPropertiesPinned((prev) => !prev);
-            }}
-          />
-        </Drawer>
+          isOpen={isPropertiesOpen}
+          setIsOpen={setIsPropertiesOpen}
+        />
       </Box>
     </DndContext>
   );

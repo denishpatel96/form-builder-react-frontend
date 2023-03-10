@@ -7,13 +7,13 @@ import {
   FormLabel,
 } from "@mui/material";
 import React from "react";
-import { ICheckboxProps } from "./Checkbox";
+import { ICheckboxProps } from "../../Types/Checkbox";
 
-interface ICheckboxFieldBuilderProps {
+export interface ICheckboxFieldBuilderProps {
   field: ICheckboxProps;
 }
 
-const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
+export const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
   return field.options.length === 1 ? (
     <FormControlLabel
       label={`${field.options[0].label}${field.required ? " *" : ""}`}
@@ -57,5 +57,3 @@ const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
     </FormControl>
   );
 };
-
-export default CheckboxFieldBuilder;

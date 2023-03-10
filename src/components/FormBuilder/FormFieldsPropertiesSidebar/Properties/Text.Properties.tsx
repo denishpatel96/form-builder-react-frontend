@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { IFieldPropertiesChangeFunc } from "../Common/Types";
+import { IFieldPropertiesChangeFunc } from "../../Types/Common";
 import { NumericFormat } from "react-number-format";
-import { ITextProps } from "./Text";
-import { StyledListItem } from "../Common/Styles";
-import PropTitle from "../Common/PropTitle";
+import { ITextProps } from "../../Types/Text";
+import { StyledListItem } from "../Styles";
+import PropTitle from "./PropTitle";
 
 // Additional CSS
 // Length and Pattern Validation
@@ -27,12 +27,12 @@ import PropTitle from "../Common/PropTitle";
 // Editor mode
 // Input Mask
 
-interface ITextPropertiesProps {
+export interface ITextPropertiesProps {
   field: ITextProps;
   onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-const TextProperties = ({ field, onPropsChange }: ITextPropertiesProps) => {
+export const TextProperties = ({ field, onPropsChange }: ITextPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -531,5 +531,3 @@ const TextProperties = ({ field, onPropsChange }: ITextPropertiesProps) => {
     </List>
   );
 };
-
-export default TextProperties;

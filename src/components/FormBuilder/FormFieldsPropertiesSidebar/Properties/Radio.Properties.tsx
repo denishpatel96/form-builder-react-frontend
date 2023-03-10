@@ -18,17 +18,17 @@ import {
   Button,
 } from "@mui/material";
 import React from "react";
-import { IFieldPropertiesChangeFunc } from "../Common/Types";
-import { IRadioOptionProps, IRadioProps } from "./Radio";
-import { StyledListItem } from "../Common/Styles";
-import PropTitle from "../Common/PropTitle";
+import { IFieldPropertiesChangeFunc } from "../../Types/Common";
+import { IRadioOptionProps, IRadioProps } from "../../Types/Radio";
+import { StyledListItem } from "../Styles";
+import PropTitle from "./PropTitle";
 
-interface IRadioPropertiesProps {
+export interface IRadioPropertiesProps {
   field: IRadioProps;
   onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
+export const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -354,5 +354,3 @@ const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
     </List>
   );
 };
-
-export default RadioProperties;
