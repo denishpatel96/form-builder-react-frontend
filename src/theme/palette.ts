@@ -10,7 +10,7 @@ const SECONDARY = {
 const palette = {
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
-  background: { default: "#eee", paper: "#fff", disabled: "#ddd" },
+  background: { default: "#eee", paper: "#fff" },
 };
 
 export default palette;
