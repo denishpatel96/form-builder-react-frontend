@@ -1,12 +1,10 @@
 import React from "react";
 import {
-  closestCenter,
   DndContext,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  rectIntersection,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
@@ -14,8 +12,9 @@ import {
   UniqueIdentifier,
   Over,
   pointerWithin,
+  Active,
 } from "@dnd-kit/core";
-import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
 import { FORM_ELEMENTS } from "../../constants";
@@ -24,12 +23,10 @@ import { Box } from "@mui/material";
 import { getCheckboxProps, getTextProps, getRadioProps } from "./Utility";
 import { handlePropsChange } from "./Utility/Common.Utility";
 import { FieldProps } from "./Types";
-import { useTheme } from "@mui/material/styles";
 
 const FormBuilder = () => {
-  const theme = useTheme();
   const [over, setOver] = React.useState<Over | null>(null);
-  const [activeId, setActiveId] = React.useState<string>("");
+  const [active, setActive] = React.useState<Active | null>(null);
   const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
   const [elementCount, setElementCount] = React.useState<number>(4);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
@@ -67,13 +64,12 @@ const FormBuilder = () => {
   const handleDragStart = (event: DragStartEvent) => {
     //console.log("drag started");
     const { active } = event;
-    const activeId = active.id.toString();
-    setActiveId(activeId);
+    setActive(active);
   };
 
   const handleDragCancel = (event: DragCancelEvent) => {
     //console.log("drag cancelled");
-    setActiveId("");
+    setActive(null);
     setOver(null);
   };
 
@@ -83,7 +79,21 @@ const FormBuilder = () => {
     if (over) {
       handleAddFormField(active.id);
     }
-    setActiveId("");
+    if (over && active.id !== over.id) {
+      const isAddingItem = active.id.toString().includes("ctrl_");
+      // If dragging from left panel to build area
+      // newly added element should appear after over element.
+      // e.g. newIndex + 1
+      // If element is dragged within sortable list
+      // element should just move to index of over element.
+      setFormFields((prev) => {
+        const oldIndex = prev.findIndex((el) => el.id === active.id);
+        const newIndex = prev.findIndex((el) => el.id === over.id);
+        return arrayMove(prev, oldIndex, isAddingItem ? newIndex + 1 : newIndex);
+      });
+      if (!isAddingItem) setSelectedFieldId(active.id.toString());
+    }
+    setActive(null);
     setOver(null);
   };
 
@@ -118,7 +128,10 @@ const FormBuilder = () => {
       collisionDetection={pointerWithin}
     >
       <Box style={{ minHeight: 500, height: "100vh", display: "flex" }}>
-        <FormFieldsSidebar activeId={activeId} setSelectedFieldId={setSelectedFieldId} />
+        <FormFieldsSidebar
+          activeId={active?.id?.toString() || ""}
+          setSelectedFieldId={setSelectedFieldId}
+        />
         <BuildArea
           formFields={formFields}
           setFormFields={setFormFields}

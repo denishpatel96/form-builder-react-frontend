@@ -61,15 +61,6 @@ const BuildArea = ({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      setFormFields((prev) => {
-        const oldIndex = prev.findIndex((el) => el.id === active.id);
-        const newIndex = prev.findIndex((el) => el.id === over.id);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-      // avoid field selection if field is being added by dragging.
-      if (!(active?.id as string)?.includes("ctrl_")) {
-        onFieldSelect(active.id.toString());
-      }
       setActive(null);
     }
   };
@@ -136,8 +127,8 @@ const BuildArea = ({
               sx={{
                 p: 2,
                 minWidth: 200,
-                backgroundColor: "white",
-                border: `1px solid ${theme.palette.primary.light}`,
+                bgcolor: theme.palette.background.paper,
+                boxShadow: theme.shadows[1],
               }}
             >
               {renderElement(activeField)}
