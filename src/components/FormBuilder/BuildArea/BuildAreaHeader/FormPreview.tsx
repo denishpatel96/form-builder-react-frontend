@@ -182,7 +182,7 @@ const FormPreview = ({ formFields, device }: FormPreviewProps) => {
         const formData = new FormData(e.target as HTMLFormElement);
 
         const updatedFormFields = formFields.map((field) => {
-          return { question: field.label, response: formData.get(field.name) };
+          return { question: field.label, response: formData.getAll(field.name) };
         });
         console.log(updatedFormFields);
       }}
