@@ -1,27 +1,30 @@
-import { IRadioProps } from "../Types";
+import { IDropdownProps } from "../Types";
 
-export const getRadioProps: Function = (
+export const getDropdownProps: Function = (
   elementId: string | number,
   elementCount: number
-): IRadioProps => {
+): IDropdownProps => {
   return {
     fieldType: elementId,
     colSpan: 12,
     hidden: false,
-    id: `radio_${elementCount}`,
+    variant: "outlined",
+    id: `select_${elementCount}`,
     title: "",
-    name: `radio_${elementCount}`,
+    name: `select_${elementCount}`,
     error: false,
     helperText: "",
-    row: true,
-    defaultValue: "",
-    label: `Radio Group ${elementCount}`,
+    label: `Dropdown ${elementCount}`,
     required: false,
     useCalcValues: false,
     size: "medium", // 'medium','small'
     options: ["option 1", "option 2", "option 3", "option 4"].map((o) => ({
+      defaultChecked: false,
       value: "",
       label: o,
     })),
+    native: false,
+    multiple: false,
+    autoWidth: false,
   };
 };

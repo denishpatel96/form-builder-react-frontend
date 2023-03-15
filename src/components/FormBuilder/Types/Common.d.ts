@@ -1,4 +1,5 @@
 import { ICheckboxProps } from "./Checkbox";
+import { IDropdownProps } from "./Dropdown";
 import { IRadioProps } from "./Radio";
 import { ITextProps } from "./Text";
 
@@ -7,4 +8,4 @@ export interface IFieldPropertiesChangeFunc {
   (path: string, value: any): void;
 }
 
-export type FieldProps = ITextProps | IRadioProps | ICheckboxProps;
+export type FieldProps = ITextProps | IRadioProps | ICheckboxProps | IDropdownProps;

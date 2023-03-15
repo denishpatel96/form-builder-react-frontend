@@ -18,23 +18,39 @@ import {
   Checkbox,
   Button,
   ListItemText,
-  Chip,
   Tooltip,
+  Chip,
 } from "@mui/material";
-import { ICheckboxProps, IFieldPropertiesChangeFunc } from "../../Types";
+import { IDropdownProps, IFieldPropertiesChangeFunc } from "../../Types";
 import { StyledListItem } from "../Styles";
 import PropTitle from "./PropTitle";
 
-export interface ICheckboxPropertiesProps {
-  field: ICheckboxProps;
+export interface IDropdownPropertiesProps {
+  field: IDropdownProps;
   onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxPropertiesProps) => {
-  const { colSpan, hidden, label, helperText, required, options, row, size, title, useCalcValues } =
-    field;
+export const DropdownProperties = ({ field, onPropsChange }: IDropdownPropertiesProps) => {
+  const {
+    colSpan,
+    hidden,
+    label,
+    helperText,
+    required,
+    options,
+    size,
+    title,
+    useCalcValues,
+    autoWidth,
+    multiple,
+    native,
+    variant,
+  } = field;
 
-  const defaultValue = options.filter((op) => op.defaultChecked).map((op) => op.label);
+  const defaultValue = multiple
+    ? options.filter((op) => op.defaultChecked).map((op) => op.label) || []
+    : options.find((op) => op.defaultChecked)?.label || "";
+
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
       <StyledListItem>
@@ -177,34 +193,45 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <PropTitle text="Default Choices" />
+            <PropTitle text={multiple ? "Default Choices" : "Default Choice"} />
           </Grid>
           <Grid item xs={12}>
             <Select
               fullWidth
-              multiple
+              multiple={multiple}
               variant="standard"
               name="defaultValue"
               id="radio-default-value-select"
               value={defaultValue}
-              renderValue={() => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {defaultValue.map((value) => (
-                    <Tooltip title={value}>
-                      <Chip key={value} label={value} />
-                    </Tooltip>
-                  ))}
-                </Box>
-              )}
+              renderValue={() =>
+                multiple ? (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {(defaultValue as string[]).map((value) => (
+                      <Tooltip title={value}>
+                        <Chip key={value} label={value} />
+                      </Tooltip>
+                    ))}
+                  </Box>
+                ) : (
+                  defaultValue
+                )
+              }
               onChange={(e: SelectChangeEvent<any>, _) => {
                 const value = e.target.value;
+                let valueArray = multiple
+                  ? typeof value === "string"
+                    ? value.split(",")
+                    : value
+                  : [value];
                 const updatedOptions = options.map((op) => {
                   let updatedOp = { ...op };
-                  let valueArray = typeof value === "string" ? value.split(",") : value;
+
                   updatedOp.defaultChecked =
                     valueArray.findIndex((v: string) => v === updatedOp.label) > -1;
+
                   return updatedOp;
                 });
+
                 onPropsChange("options", updatedOptions);
               }}
               IconComponent={() => <></>}
@@ -235,8 +262,14 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
               {options.map((op, index) => {
                 return (
                   <MenuItem key={index} value={op.label}>
-                    <Checkbox checked={defaultValue.indexOf(op.label) > -1} />
-                    <ListItemText primary={op.label} />
+                    {multiple ? (
+                      <>
+                        <Checkbox checked={defaultValue.indexOf(op.label) > -1} />
+                        <ListItemText primary={op.label} />
+                      </>
+                    ) : (
+                      op.label
+                    )}
                   </MenuItem>
                 );
               })}
@@ -287,19 +320,19 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <PropTitle text="Horizontal Layout" />
+            <PropTitle text="Auto Width" />
           </Grid>
           <Grid item xs={12}>
             <Switch
-              name={"row"}
-              checked={row}
+              name={"autoWidth"}
+              checked={autoWidth}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onPropsChange("row", e.target.checked)
+                onPropsChange("autoWidth", e.target.checked)
               }
             />
           </Grid>
           <Grid item xs={12}>
-            <FormHelperText>Lay out the options horizontally.</FormHelperText>
+            <FormHelperText>Adjust dropdown width automatically</FormHelperText>
           </Grid>
         </Grid>
       </StyledListItem>
@@ -325,6 +358,44 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
+            <PropTitle text="Multiple Selections" />
+          </Grid>
+          <Grid item xs={12}>
+            <Switch
+              name={"multiple"}
+              checked={multiple}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onPropsChange("multiple", e.target.checked)
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormHelperText>Allow multiple selection</FormHelperText>
+          </Grid>
+        </Grid>
+      </StyledListItem>
+      <StyledListItem>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <PropTitle text="Native" />
+          </Grid>
+          <Grid item xs={12}>
+            <Switch
+              name={"native"}
+              checked={native}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onPropsChange("native", e.target.checked)
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormHelperText>Use native control of the platform</FormHelperText>
+          </Grid>
+        </Grid>
+      </StyledListItem>
+      <StyledListItem>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
             <PropTitle text="Hidden" />
           </Grid>
           <Grid item xs={12}>
@@ -335,6 +406,31 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
                 onPropsChange("hidden", e.target.checked)
               }
             />
+          </Grid>
+        </Grid>
+      </StyledListItem>
+      <StyledListItem>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <PropTitle text="Variant" />
+          </Grid>
+          <Grid item xs={12}>
+            <ToggleButtonGroup
+              fullWidth
+              size="small"
+              color="primary"
+              value={variant}
+              exclusive
+              onChange={(_, value: any) => onPropsChange("variant", value)}
+              aria-label="Platform"
+            >
+              <ToggleButton value="standard">Standard</ToggleButton>
+              <ToggleButton value="outlined">Outlined</ToggleButton>
+              <ToggleButton value="filled">Filled</ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
+          <Grid item xs={12}>
+            <FormHelperText>Change the style of text input.</FormHelperText>
           </Grid>
         </Grid>
       </StyledListItem>

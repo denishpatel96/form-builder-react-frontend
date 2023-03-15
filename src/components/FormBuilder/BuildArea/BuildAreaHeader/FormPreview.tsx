@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Box,
   Button,
@@ -12,10 +12,13 @@ import {
   RadioGroup,
   TextField,
   Checkbox,
+  MenuItem,
+  Tooltip,
+  Chip,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FORM_ELEMENTS } from "../../../../constants";
-import { ITextProps, FieldProps, IRadioProps, ICheckboxProps } from "../../Types";
+import { ITextProps, FieldProps, IRadioProps, ICheckboxProps, IDropdownProps } from "../../Types";
 import { validateText } from "../../Utility/Text.Utility";
 
 type FormPreviewProps = {
@@ -151,15 +154,72 @@ const CheckboxElement = ({ field }: { field: ICheckboxProps }) => {
   );
 };
 
+const DropdownElement = ({ field }: { field: IDropdownProps }) => {
+  const defaultValue = field.multiple
+    ? field.options.filter((op) => op.defaultChecked).map((op) => op.label) || []
+    : field.options.find((op) => op.defaultChecked)?.label || "";
+  return (
+    <TextField
+      select
+      fullWidth
+      SelectProps={{
+        multiple: field.multiple,
+        native: field.native,
+        autoWidth: field.autoWidth,
+        ...(!field.native && {
+          renderValue: (value: unknown) => {
+            return field.multiple ? (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {(value as string[]).map((v, i) => (
+                  <Tooltip title={v} key={i}>
+                    <Chip key={v} label={v} />
+                  </Tooltip>
+                ))}
+              </Box>
+            ) : (
+              (value as string)
+            );
+          },
+        }),
+      }}
+      id={field.id}
+      name={field.name}
+      label={field.label}
+      variant={field.variant}
+      defaultValue={defaultValue}
+      title={field.title}
+      error={field.error}
+      required={field.required}
+      size={field.size}
+      helperText={field.helperText}
+    >
+      {field.options.map((op, index) => {
+        return field.native ? (
+          <option key={index} value={op.label}>
+            {op.label}
+          </option>
+        ) : (
+          <MenuItem key={index} value={op.label}>
+            {op.label}
+          </MenuItem>
+        );
+      })}
+    </TextField>
+  );
+};
+
 const renderFormFields = (formFields: FieldProps[], device: string) => {
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={2}>
       {formFields.map((field, index) => {
         const { colSpan, fieldType } = field;
         return (
           <Grid item key={index} xs={12} sm={12} md={device === "phone" ? 12 : colSpan}>
             {fieldType === FORM_ELEMENTS.TEXT && <TextElement field={field as ITextProps} />}
             {fieldType === FORM_ELEMENTS.RADIO && <RadioElement field={field as IRadioProps} />}
+            {fieldType === FORM_ELEMENTS.DROPDOWN && (
+              <DropdownElement field={field as IDropdownProps} />
+            )}
             {fieldType === FORM_ELEMENTS.CHECKBOX && (
               <CheckboxElement field={field as ICheckboxProps} />
             )}
@@ -167,7 +227,9 @@ const renderFormFields = (formFields: FieldProps[], device: string) => {
         );
       })}
       <Grid item xs={12}>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" variant="contained">
+          Submit
+        </Button>
       </Grid>
     </Grid>
   );

@@ -20,7 +20,7 @@ import FormFieldsSidebar from "./FormFieldsSideBar";
 import { FORM_ELEMENTS } from "../../constants";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
 import { Box } from "@mui/material";
-import { getCheckboxProps, getTextProps, getRadioProps } from "./Utility";
+import { getCheckboxProps, getTextProps, getRadioProps, getDropdownProps } from "./Utility";
 import { handlePropsChange } from "./Utility/Common.Utility";
 import { FieldProps } from "./Types";
 
@@ -28,13 +28,14 @@ const FormBuilder = () => {
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
   const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
-  const [elementCount, setElementCount] = React.useState<number>(4);
+  const [elementCount, setElementCount] = React.useState<number>(5);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isPropertiesPinned, setIsPropertiesPinned] = React.useState<boolean>(true);
   const [formFields, setFormFields] = React.useState<FieldProps[]>([
     getTextProps(FORM_ELEMENTS.TEXT, 1),
     getRadioProps(FORM_ELEMENTS.RADIO, 2),
     getCheckboxProps(FORM_ELEMENTS.CHECKBOX, 3),
+    getDropdownProps(FORM_ELEMENTS.DROPDOWN, 4),
   ]);
 
   const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
@@ -51,6 +52,9 @@ const FormBuilder = () => {
         break;
       case FORM_ELEMENTS.CHECKBOX:
         fieldToAdd = getCheckboxProps(elementId, elementCount);
+        break;
+      case FORM_ELEMENTS.DROPDOWN:
+        fieldToAdd = getDropdownProps(elementId, elementCount);
         break;
     }
     if (fieldToAdd !== null) {

@@ -13,7 +13,7 @@ export const getCheckboxProps: Function = (
     name: `cb_${elementCount}`,
     error: false,
     helperText: "",
-    row: false,
+    row: true,
     label: `Checkbox Group ${elementCount}`,
     required: false,
     useCalcValues: false,

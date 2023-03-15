@@ -14,7 +14,9 @@ import {
   ITextProps,
   IRadioProps,
   ICheckboxProps,
+  IDropdownProps,
 } from "../Types";
+import { DropdownProperties } from "./Properties/Dropdown.Properties";
 
 type IFormFieldProps = {
   field: FieldProps | undefined;
@@ -113,6 +115,9 @@ const FormFieldPropertiesSidebar = ({
       )}
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX && (
         <CheckboxProperties field={field as ICheckboxProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.DROPDOWN && (
+        <DropdownProperties field={field as IDropdownProps} onPropsChange={onPropsChange} />
       )}
     </Drawer>
   );

@@ -7,8 +7,13 @@ import { OpenWithOutlined } from "@mui/icons-material";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
-import { TextFieldBuilder, RadioFieldBuilder, CheckboxFieldBuilder } from "./FieldBuilders";
-import { ITextProps, IRadioProps, FieldProps, ICheckboxProps } from "../Types";
+import {
+  TextFieldBuilder,
+  RadioFieldBuilder,
+  CheckboxFieldBuilder,
+  DropdownFieldBuilder,
+} from "./FieldBuilders";
+import { ITextProps, IRadioProps, FieldProps, ICheckboxProps, IDropdownProps } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
 
@@ -29,6 +34,9 @@ export const renderElement = (field?: FieldProps) => {
     <>
       {fieldType === FORM_ELEMENTS.TEXT && <TextFieldBuilder field={field as ITextProps} />}
       {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
+      {fieldType === FORM_ELEMENTS.DROPDOWN && (
+        <DropdownFieldBuilder field={field as IDropdownProps} />
+      )}
       {fieldType === FORM_ELEMENTS.CHECKBOX && (
         <CheckboxFieldBuilder field={field as ICheckboxProps} />
       )}
@@ -139,7 +147,7 @@ const BuildArea = ({
     );
 
   return (
-    <Box style={{ flexGrow: 1, display: "flex" }}>
+    <Box style={{ flexGrow: 1, display: "flex", minWidth: 500 }}>
       <Container style={{ height: "100%" }}>
         <BuildAreaHeader formFields={formFields} />
         <Box
