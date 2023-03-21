@@ -1,5 +1,5 @@
 import React from "react";
-import { Add, Clear, Delete } from "@mui/icons-material";
+import { Add, Clear, Delete, Remove } from "@mui/icons-material";
 import {
   TextField,
   Switch,
@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { ICheckboxProps, IFieldPropertiesChangeFunc } from "../../Types";
 import { StyledListItem } from "../Styles";
-import PropTitle from "./PropTitle";
+import PropTitle from "./components/PropTitle";
 
 export interface ICheckboxPropertiesProps {
   field: ICheckboxProps;
@@ -128,7 +128,7 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
                           );
                         }}
                       >
-                        <Delete sx={{ widh: 15, height: 15 }} />
+                        <Remove sx={{ widh: 15, height: 15 }} />
                       </IconButton>
                       <TextField
                         name={`$op-${index}-label`}
@@ -189,8 +189,8 @@ export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxProperties
               value={defaultValue}
               renderValue={() => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {defaultValue.map((value) => (
-                    <Tooltip title={value}>
+                  {defaultValue.map((value, index) => (
+                    <Tooltip title={value} key={index}>
                       <Chip key={value} label={value} />
                     </Tooltip>
                   ))}

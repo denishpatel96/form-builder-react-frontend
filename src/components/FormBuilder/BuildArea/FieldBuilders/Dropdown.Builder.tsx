@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuItem, TextField } from "@mui/material";
+import { Box, Chip, MenuItem, TextField, Tooltip } from "@mui/material";
 import { IDropdownProps } from "../../Types";
 
 export interface IDropdownFieldBuilderProps {
@@ -18,9 +18,24 @@ export const DropdownFieldBuilder = ({ field }: IDropdownFieldBuilderProps) => {
         multiple: field.multiple,
         native: field.native,
         autoWidth: field.autoWidth,
+        ...(!field.native && {
+          renderValue: (value: unknown) => {
+            return field.multiple ? (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {(value as string[]).map((v, i) => (
+                  <Tooltip title={v} key={i}>
+                    <Chip key={v} label={v} />
+                  </Tooltip>
+                ))}
+              </Box>
+            ) : (
+              (value as string)
+            );
+          },
+        }),
       }}
       InputLabelProps={{ shrink: true }}
-      // InputProps={{ readOnly: true }}
+      InputProps={{ readOnly: true }}
       id={field.id}
       label={field.label}
       variant={field.variant}

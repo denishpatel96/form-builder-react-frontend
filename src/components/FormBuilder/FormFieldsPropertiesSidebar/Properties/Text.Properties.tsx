@@ -18,7 +18,7 @@ import { IFieldPropertiesChangeFunc } from "../../Types/Common";
 import { NumericFormat } from "react-number-format";
 import { ITextProps } from "../../Types/Text";
 import { StyledListItem } from "../Styles";
-import PropTitle from "./PropTitle";
+import PropTitle from "./components/PropTitle";
 
 // Additional CSS
 // Length and Pattern Validation

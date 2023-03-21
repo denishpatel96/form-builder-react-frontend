@@ -10,7 +10,6 @@ export interface ITextProps {
   value?: TextFieldProps["value"];
   title: TextFieldProps["title"];
   label: TextFieldProps["label"];
-  required: TextFieldProps["required"];
   helperText: TextFieldProps["helperText"];
   placeholder: TextFieldProps["placeholder"];
   multiline: TextFieldProps["multiline"];
@@ -21,6 +20,7 @@ export interface ITextProps {
   size: TextFieldProps["size"];
   type: TextFieldProps["type"];
   variant: TextFieldProps["variant"];
+  required: TextFieldProps["required"];
   // Length Validation
   validateLength: boolean;
   minLength: number;

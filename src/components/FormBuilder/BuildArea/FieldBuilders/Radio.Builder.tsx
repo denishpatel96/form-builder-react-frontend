@@ -17,7 +17,13 @@ export const RadioFieldBuilder = ({ field }: IRadioFieldBuilderProps) => {
   return (
     <FormControl component={"fieldset"} fullWidth error={field.error} required={field.required}>
       <FormLabel>{field.label}</FormLabel>
-      <RadioGroup row={field.row} title={field.title} value={field.defaultValue} name={field.name}>
+      <RadioGroup
+        row={field.row}
+        title={field.title}
+        value={field.defaultValue}
+        name={field.name}
+        id={field.id}
+      >
         {field.options.map((op, index) => {
           return (
             <FormControlLabel

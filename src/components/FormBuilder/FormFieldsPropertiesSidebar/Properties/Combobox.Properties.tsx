@@ -21,16 +21,16 @@ import {
   Tooltip,
   Chip,
 } from "@mui/material";
-import { IDropdownProps, IFieldPropertiesChangeFunc } from "../../Types";
+import { IComboboxProps, IFieldPropertiesChangeFunc } from "../../Types";
 import { StyledListItem } from "../Styles";
 import PropTitle from "./components/PropTitle";
 
-export interface IDropdownPropertiesProps {
-  field: IDropdownProps;
+export interface IComboboxPropertiesProps {
+  field: IComboboxProps;
   onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const DropdownProperties = ({ field, onPropsChange }: IDropdownPropertiesProps) => {
+export const ComboboxProperties = ({ field, onPropsChange }: IComboboxPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -41,9 +41,7 @@ export const DropdownProperties = ({ field, onPropsChange }: IDropdownProperties
     size,
     title,
     useCalcValues,
-    autoWidth,
     multiple,
-    native,
     variant,
   } = field;
 
@@ -320,25 +318,6 @@ export const DropdownProperties = ({ field, onPropsChange }: IDropdownProperties
       <StyledListItem>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <PropTitle text="Auto Width" />
-          </Grid>
-          <Grid item xs={12}>
-            <Switch
-              name={"autoWidth"}
-              checked={autoWidth}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onPropsChange("autoWidth", e.target.checked)
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormHelperText>Adjust dropdown width automatically</FormHelperText>
-          </Grid>
-        </Grid>
-      </StyledListItem>
-      <StyledListItem>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
             <PropTitle text="Required" />
           </Grid>
           <Grid item xs={12}>
@@ -371,25 +350,6 @@ export const DropdownProperties = ({ field, onPropsChange }: IDropdownProperties
           </Grid>
           <Grid item xs={12}>
             <FormHelperText>Allow multiple selection</FormHelperText>
-          </Grid>
-        </Grid>
-      </StyledListItem>
-      <StyledListItem>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <PropTitle text="Native" />
-          </Grid>
-          <Grid item xs={12}>
-            <Switch
-              name={"native"}
-              checked={native}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onPropsChange("native", e.target.checked)
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormHelperText>Use native control of the platform</FormHelperText>
           </Grid>
         </Grid>
       </StyledListItem>

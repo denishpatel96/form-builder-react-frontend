@@ -16,8 +16,6 @@ import RemoveFieldDialog from "./RemoveFieldDialog";
 interface ISortableItemProps {
   field: FieldProps;
   renderElement: (field?: FieldProps) => JSX.Element;
-  setHoveredFieldId: React.Dispatch<React.SetStateAction<string>>;
-  hoveredFieldId: string;
   onFieldRemove: (id: string) => void;
   onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
   selectedFieldId: string;
@@ -27,29 +25,30 @@ interface ISortableItemProps {
 const SortableItem = ({
   field,
   renderElement,
-  hoveredFieldId,
-  setHoveredFieldId,
   onFieldRemove,
   onFieldSelect,
   selectedFieldId,
   onTogglePropertiesDrawer,
 }: ISortableItemProps) => {
   const theme = useTheme();
+  const [hoveredFieldId, setHoveredFieldId] = React.useState<string>("");
   const { colSpan, fieldType, label, id, name } = field;
+
   const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
   const fieldName = `${label} (${type})`;
 
   const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
     React.useState<boolean>(false);
 
-  const { isOver, isDragging, attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
+  const { active, isOver, isDragging, attributes, listeners, setNodeRef, transition } = useSortable(
+    {
       id,
       transition: {
         duration: 600, // milliseconds
         easing: "cubic-bezier(0.25, 1, 0.5, 1)",
       },
-    });
+    }
+  );
 
   // This is used to move other elements as you drag the element.
   // This is not stable currently for variable size of elements so avoiding it.
@@ -159,8 +158,9 @@ const SortableItem = ({
           borderLeftStyle: "solid",
           boxShadow: theme.shadows[2],
         }),
-        ...(isOver && { border: `4px dotted ${theme.palette.secondary.light}` }),
-        opacity: isDragging ? 0.3 : 1,
+        ...(active?.id.toString().includes("ctrl_") &&
+          isOver && { border: `4px dotted ${theme.palette.secondary.light}` }),
+        opacity: isDragging ? 0 : 1,
       }}
     >
       <Box
@@ -180,7 +180,11 @@ const SortableItem = ({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            onFieldSelect(id);
+            if (selectedFieldId === id) {
+              onTogglePropertiesDrawer();
+            } else {
+              onFieldSelect(id);
+            }
           }}
           onDoubleClick={(e) => {
             e.stopPropagation();

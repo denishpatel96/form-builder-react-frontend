@@ -1,4 +1,4 @@
-import { Add, Clear, Delete } from "@mui/icons-material";
+import { Add, Clear, Delete, Remove } from "@mui/icons-material";
 import {
   TextField,
   Switch,
@@ -21,7 +21,7 @@ import React from "react";
 import { IFieldPropertiesChangeFunc } from "../../Types/Common";
 import { IRadioOptionProps, IRadioProps } from "../../Types/Radio";
 import { StyledListItem } from "../Styles";
-import PropTitle from "./PropTitle";
+import PropTitle from "./components/PropTitle";
 
 export interface IRadioPropertiesProps {
   field: IRadioProps;
@@ -141,7 +141,7 @@ export const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps)
                           );
                         }}
                       >
-                        <Delete sx={{ widh: 15, height: 15 }} />
+                        <Remove sx={{ widh: 15, height: 15 }} />
                       </IconButton>
                       <TextField
                         name={`$op-${index}-label`}

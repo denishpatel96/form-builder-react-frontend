@@ -4,7 +4,7 @@ import React from "react";
 import { FORM_ELEMENTS } from "../../../constants";
 import Droppable from "../../Reusable/Droppable";
 import { OpenWithOutlined } from "@mui/icons-material";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
 import {
@@ -12,8 +12,16 @@ import {
   RadioFieldBuilder,
   CheckboxFieldBuilder,
   DropdownFieldBuilder,
+  ComboboxFieldBuilder,
 } from "./FieldBuilders";
-import { ITextProps, IRadioProps, FieldProps, ICheckboxProps, IDropdownProps } from "../Types";
+import {
+  ITextProps,
+  IRadioProps,
+  FieldProps,
+  ICheckboxProps,
+  IDropdownProps,
+  IComboboxProps,
+} from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
 
@@ -40,6 +48,9 @@ export const renderElement = (field?: FieldProps) => {
       {fieldType === FORM_ELEMENTS.CHECKBOX && (
         <CheckboxFieldBuilder field={field as ICheckboxProps} />
       )}
+      {fieldType === FORM_ELEMENTS.COMBOBOX && (
+        <ComboboxFieldBuilder field={field as IComboboxProps} />
+      )}
     </>
   );
 };
@@ -54,7 +65,6 @@ const BuildArea = ({
   onTogglePropertiesDrawer,
 }: IBuildAreaProps) => {
   const theme = useTheme();
-  const [hoveredFieldId, setHoveredFieldId] = React.useState<string>("");
   const [active, setActive] = React.useState<Active | null>(null);
   const activeField = React.useMemo(
     () => formFields.find((el) => el.id === active?.id),
@@ -76,6 +86,18 @@ const BuildArea = ({
   const handleDragCancel = (event: DragCancelEvent) => {
     setActive(null);
   };
+
+  React.useEffect(() => {
+    console.count("useEffect");
+    console.log("selected id", selectedFieldId);
+    if (selectedFieldId) {
+      document.getElementById(selectedFieldId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }, [selectedFieldId]);
 
   useDndMonitor({
     onDragCancel: handleDragCancel,
@@ -108,8 +130,6 @@ const BuildArea = ({
                   key={index}
                   field={field}
                   renderElement={renderElement}
-                  hoveredFieldId={hoveredFieldId}
-                  setHoveredFieldId={setHoveredFieldId}
                   selectedFieldId={selectedFieldId}
                   onFieldSelect={onFieldSelect}
                   onFieldRemove={onFieldRemove}

@@ -7,7 +7,13 @@ import {
   FORM_ELEMENTS,
   FORM_ELEMENTS_LIST,
 } from "../../../constants";
-import { TextProperties, CheckboxProperties, RadioProperties } from "./Properties";
+import {
+  TextProperties,
+  CheckboxProperties,
+  RadioProperties,
+  DropdownProperties,
+  ComboboxProperties,
+} from "./Properties";
 import {
   FieldProps,
   IFieldPropertiesChangeFunc,
@@ -15,8 +21,8 @@ import {
   IRadioProps,
   ICheckboxProps,
   IDropdownProps,
+  IComboboxProps,
 } from "../Types";
-import { DropdownProperties } from "./Properties/Dropdown.Properties";
 
 type IFormFieldProps = {
   field: FieldProps | undefined;
@@ -118,6 +124,9 @@ const FormFieldPropertiesSidebar = ({
       )}
       {field && field.fieldType === FORM_ELEMENTS.DROPDOWN && (
         <DropdownProperties field={field as IDropdownProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.COMBOBOX && (
+        <ComboboxProperties field={field as IComboboxProps} onPropsChange={onPropsChange} />
       )}
     </Drawer>
   );

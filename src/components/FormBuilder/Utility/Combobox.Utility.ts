@@ -1,20 +1,20 @@
-import { ICheckboxProps } from "../Types";
+import { IComboboxProps } from "../Types";
 
-export const getCheckboxProps: Function = (
+export const getComboboxProps: Function = (
   elementId: string | number,
   elementCount: number
-): ICheckboxProps => {
+): IComboboxProps => {
   return {
     fieldType: elementId,
     colSpan: 12,
     hidden: false,
-    id: `check_${elementCount}`,
+    variant: "outlined",
+    id: `combo_${elementCount}`,
     title: "",
-    name: `check_${elementCount}`,
+    name: `combo_${elementCount}`,
     error: false,
     helperText: "",
-    row: true,
-    label: `Checkbox Group ${elementCount}`,
+    label: `Combobox ${elementCount}`,
     required: false,
     useCalcValues: false,
     size: "medium", // 'medium','small'
@@ -23,5 +23,6 @@ export const getCheckboxProps: Function = (
       value: "",
       label: o,
     })),
+    multiple: false,
   };
 };

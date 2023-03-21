@@ -19,6 +19,7 @@ export const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
       label={`${field.options[0].label}${field.required ? " *" : ""}`}
       control={
         <Checkbox
+          id={field.id}
           checked={field.options[0].defaultChecked}
           value={field.options[0].label}
           size={field.size}
@@ -35,7 +36,7 @@ export const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
       required={field.required}
     >
       <FormLabel>{field.label}</FormLabel>
-      <FormGroup row={field.row} title={field.title}>
+      <FormGroup row={field.row} title={field.title} id={field.id}>
         {field.options.map((op, index) => {
           return (
             <FormControlLabel
