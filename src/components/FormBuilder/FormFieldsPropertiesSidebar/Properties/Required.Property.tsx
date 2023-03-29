@@ -12,10 +12,11 @@ export const RequiredProperty = ({ value, onChange }: RequiredPropertyProps) => 
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Required" />
+          <FormHelperText>Prevent submission if this field is empty</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"required"}
             checked={value}
@@ -23,9 +24,6 @@ export const RequiredProperty = ({ value, onChange }: RequiredPropertyProps) => 
               onChange("required", e.target.checked)
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Prevent submission if this field is empty</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>

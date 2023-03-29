@@ -25,10 +25,11 @@ export const MarksProperty = ({ value, onChange }: MarksPropertyProps) => {
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Marks" />
+          <FormHelperText>Show marks on slider track</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"showMarks"}
             checked={value}
@@ -40,9 +41,6 @@ export const MarksProperty = ({ value, onChange }: MarksPropertyProps) => {
               }
             }}
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Show marks on slider track</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>
@@ -61,10 +59,11 @@ export const CustomMarksProperty = ({
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Custom Marks" />
+          <FormHelperText>Show marks only for custom values with label</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"showCustomMarks"}
             checked={showCustomMarks}
@@ -170,10 +169,6 @@ export const CustomMarksProperty = ({
             />
           </Grid>
         )}
-
-        <Grid item xs={12} display={"flex"} alignItems={"center"}>
-          <FormHelperText>Show marks only for custom values with label</FormHelperText>
-        </Grid>
       </Grid>
     </StyledListItem>
   );

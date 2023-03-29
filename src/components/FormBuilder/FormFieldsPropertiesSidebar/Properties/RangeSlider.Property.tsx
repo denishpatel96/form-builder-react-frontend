@@ -13,10 +13,11 @@ export const RangeSliderProperty = ({ value, onChange }: RangeSliderPropertyProp
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Range Slider" />
+          <FormHelperText>Used to set the start and end of a range</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"rangeSlider"}
             checked={isRangeSlider}
@@ -24,9 +25,6 @@ export const RangeSliderProperty = ({ value, onChange }: RangeSliderPropertyProp
               onChange("defaultValue", isRangeSlider ? value[0] : [value, 0])
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Used to set the start and end of a range</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>

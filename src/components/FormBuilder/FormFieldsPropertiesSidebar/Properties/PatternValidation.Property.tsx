@@ -19,10 +19,11 @@ export const PatternValidationProperty = ({
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Pattern Validation" />
+          <FormHelperText>Validate input for regular expression (regex) pattern.</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"validatePattern"}
             checked={validatePattern}
@@ -30,9 +31,6 @@ export const PatternValidationProperty = ({
               onChange("validatePattern", e.target.checked)
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Validate input for regular expression (regex) pattern.</FormHelperText>
         </Grid>
         <Grid item xs={12}>
           {validatePattern && (

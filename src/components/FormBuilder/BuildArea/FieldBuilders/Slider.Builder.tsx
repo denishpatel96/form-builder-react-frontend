@@ -39,7 +39,6 @@ export const SliderFieldBuilder = ({ field }: ISliderFieldBuilderProps) => {
           step={step}
           min={min}
           max={max}
-          aria-label={label?.toString()}
           valueLabelDisplay={valueLabelDisplay}
           getAriaValueText={(v: number) => `${v}`}
           track={track}

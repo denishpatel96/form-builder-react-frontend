@@ -12,10 +12,11 @@ export const NativeProperty = ({ value, onChange }: NativePropertyProps) => {
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Native" />
+          <FormHelperText>Use native control of the platform</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"native"}
             checked={value}
@@ -23,9 +24,6 @@ export const NativeProperty = ({ value, onChange }: NativePropertyProps) => {
               onChange("native", e.target.checked)
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Use native control of the platform</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>

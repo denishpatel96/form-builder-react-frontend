@@ -23,6 +23,8 @@ export const HoverTextProperty = ({ value, onChange }: HoverTextPropertyProps) =
             size="small"
             value={value}
             fullWidth
+            multiline
+            minRows={3}
             InputProps={{
               endAdornment: value && (
                 <IconButton

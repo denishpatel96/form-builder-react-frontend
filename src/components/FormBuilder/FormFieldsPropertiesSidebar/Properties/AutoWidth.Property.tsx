@@ -12,10 +12,11 @@ export const AutoWidthProperty = ({ value, onChange }: AutoWidthPropertyProps) =
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Auto Width" />
+          <FormHelperText>Adjust dropdown width automatically</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"autoWidth"}
             checked={value}
@@ -23,9 +24,6 @@ export const AutoWidthProperty = ({ value, onChange }: AutoWidthPropertyProps) =
               onChange("autoWidth", e.target.checked)
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Adjust dropdown width automatically</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>

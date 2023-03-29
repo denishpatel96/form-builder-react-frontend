@@ -21,10 +21,11 @@ export const LengthValidationProperty = ({
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Length Validation" />
+          <FormHelperText>Validate input for length before submission</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"validateLength"}
             checked={validateLength}
@@ -32,9 +33,6 @@ export const LengthValidationProperty = ({
               onChange("validateLength", e.target.checked)
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Validate input for length before submission</FormHelperText>
         </Grid>
         <Grid item xs={12}>
           {validateLength && (

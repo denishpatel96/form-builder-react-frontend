@@ -55,7 +55,6 @@ export const SliderElement = ({
                 step={step}
                 min={min}
                 max={max}
-                aria-label={label?.toString()}
                 valueLabelDisplay={valueLabelDisplay}
                 track={track}
               />

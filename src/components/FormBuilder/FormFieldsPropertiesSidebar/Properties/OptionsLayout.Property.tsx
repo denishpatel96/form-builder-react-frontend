@@ -12,18 +12,16 @@ export const OptionsLayoutProperty = ({ value, onChange }: OptionsLayoutProperty
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Horizontal Layout" />
+          <FormHelperText>Lay out the options horizontally.</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"row"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange("row", e.target.checked)}
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Lay out the options horizontally.</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>

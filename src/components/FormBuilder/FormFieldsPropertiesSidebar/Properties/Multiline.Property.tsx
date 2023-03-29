@@ -18,10 +18,11 @@ export const MultilineProperty = ({ value, onChange }: MultilinePropertyProps) =
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Multiline" />
+          <FormHelperText>Create textarea with multiple lines</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"multiline"}
             checked={value.multiline}
@@ -33,9 +34,6 @@ export const MultilineProperty = ({ value, onChange }: MultilinePropertyProps) =
             }}
             inputProps={{ "aria-label": "text-required-property" }}
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Create textarea with multiple lines</FormHelperText>
         </Grid>
         <Grid item>
           {value.multiline && (

@@ -12,10 +12,11 @@ export const MultipleProperty = ({ value, onChange }: MultiplePropertyProps) => 
   return (
     <StyledListItem>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <PropTitle text="Multiple Selections" />
+          <FormHelperText>Allow multiple selection</FormHelperText>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}>
           <Switch
             name={"multiple"}
             checked={value}
@@ -23,9 +24,6 @@ export const MultipleProperty = ({ value, onChange }: MultiplePropertyProps) => 
               onChange("multiple", e.target.checked)
             }
           />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Allow multiple selection</FormHelperText>
         </Grid>
       </Grid>
     </StyledListItem>
