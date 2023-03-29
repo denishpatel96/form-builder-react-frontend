@@ -1,13 +1,3 @@
-import React from "react";
-import {
-  Title,
-  RadioButtonChecked,
-  CheckBox,
-  ArrowDropDownCircleOutlined,
-  FileUploadOutlined,
-  InputOutlined,
-} from "@mui/icons-material";
-
 export enum THEME {
   DARK = "dark",
   LIGHT = "light",
@@ -19,10 +9,13 @@ export enum FORM_ELEMENTS {
   CHECKBOX = "ctrl_checkbox",
   DROPDOWN = "ctrl_dropdown",
   COMBOBOX = "ctrl_combobox",
+  SLIDER = "ctrl_slider",
+  SWITCH = "ctrl_switch",
+  RATING = "ctrl_rating",
   FILE_UPLOAD = "ctrl_fileupload",
 }
 
-export const FORM_ELEMENTS_LIST = [
+export const FORM_ELEMENTS_LIST: { id: string; label: string; description?: string }[] = [
   { id: FORM_ELEMENTS.TEXT, label: "Text", description: "Single / Multiline Text Input" },
   { id: FORM_ELEMENTS.RADIO, label: "Radio", description: "Single Choice" },
   {
@@ -36,5 +29,6 @@ export const FORM_ELEMENTS_LIST = [
     label: "Combobox",
     description: "Searchable Single / Multiple Choice",
   },
+  { id: FORM_ELEMENTS.SLIDER, label: "Slider" },
   { id: FORM_ELEMENTS.FILE_UPLOAD, label: "File Upload" },
 ];

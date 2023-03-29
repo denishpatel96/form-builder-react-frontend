@@ -1,30 +1,20 @@
-import {
-  FormControlProps,
-  FormHelperTextProps,
-  FormLabelProps,
-  TextFieldProps,
-} from "@mui/material";
-
-export interface IComboboxOptionProps {
-  defaultChecked: boolean;
-  value: string | number;
-  label: string;
-}
+import { FormControlProps, TextFieldProps } from "@mui/material";
+import { ISelectableOptionProps } from "./Common";
 
 export interface IComboboxProps {
   fieldType: string | number;
   hidden: boolean;
   colSpan: 3 | 4 | 6 | 8 | 9 | 12;
   id: string;
-  title: FormControlProps["title"];
+  title: string;
   name: string;
   variant: TextFieldProps["variant"];
   error: FormControlProps["error"];
-  helperText: FormHelperTextProps["children"];
-  label: FormLabelProps["children"];
+  helperText: string;
+  label: string;
   required: FormControlProps["required"];
   size: TextFieldProps["size"];
-  options: IComboboxOptionProps[];
+  options: ISelectableOptionProps[];
   useCalcValues: boolean;
   multiple: boolean;
   // readOnly:boolean;

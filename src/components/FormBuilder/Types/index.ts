@@ -4,3 +4,4 @@ export * from "./Radio";
 export * from "./Text";
 export * from "./Dropdown";
 export * from "./Combobox";
+export * from "./Slider";

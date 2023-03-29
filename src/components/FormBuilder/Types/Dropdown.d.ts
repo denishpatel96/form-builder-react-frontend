@@ -1,25 +1,20 @@
-import { FormControlProps, FormHelperTextProps, FormLabelProps, SelectProps } from "@mui/material";
-
-export interface IDropdownOptionProps {
-  defaultChecked: boolean;
-  value: string | number;
-  label: string;
-}
+import { FormControlProps, SelectProps } from "@mui/material";
+import { ISelectableOptionProps } from "./Common";
 
 export interface IDropdownProps {
   fieldType: string | number;
   hidden: boolean;
   colSpan: 3 | 4 | 6 | 8 | 9 | 12;
   id: string;
-  title: FormControlProps["title"];
+  title: string;
   name: string;
   variant: SelectProps["variant"];
   error: FormControlProps["error"];
-  helperText: FormHelperTextProps["children"];
-  label: FormLabelProps["children"];
+  helperText: string;
+  label: string;
   required: FormControlProps["required"];
   size: SelectProps["size"];
-  options: IDropdownOptionProps[];
+  options: ISelectableOptionProps[];
   useCalcValues: boolean;
   autoWidth: boolean;
   native: boolean;

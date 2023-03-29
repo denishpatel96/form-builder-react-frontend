@@ -5,7 +5,7 @@ const PRIMARY = {
   contrastText: "#111",
 };
 const SECONDARY = {
-  main: lighten("#9F73AB", 0.25),
+  main: lighten("#d34f9b", 0.25),
   contrastText: "#000",
 };
 
@@ -13,7 +13,7 @@ const paletteDark = {
   mode: "dark",
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
-  background: { default: lighten("#333", 0.25), paper: "#333" },
+  background: { default: lighten("#333", 0.15), paper: "#333" },
 };
 
 export default paletteDark;

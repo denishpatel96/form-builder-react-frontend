@@ -8,8 +8,6 @@ import {
   Typography,
   Divider,
   IconButton,
-  ListItem,
-  Tooltip,
   ListItemIcon,
 } from "@mui/material";
 import { FORM_ELEMENTS_LIST } from "../../../constants";
@@ -17,15 +15,16 @@ import { StyledFormFieldItem } from "./Styles";
 import { Add, OpenWithOutlined } from "@mui/icons-material";
 
 interface IFormFieldsProps {
+  isOpen: boolean;
   activeId?: UniqueIdentifier | null;
   onDrawerClick: () => void;
   onFieldAdd: (id: string) => void;
 }
 
-const FormFieldsSidebar = ({ activeId, onDrawerClick, onFieldAdd }: IFormFieldsProps) => {
+const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFormFieldsProps) => {
   return (
     <Drawer
-      open
+      open={isOpen}
       onClick={onDrawerClick}
       onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
         if (e?.key === "Escape" || e?.code === "Escape") {
@@ -33,15 +32,15 @@ const FormFieldsSidebar = ({ activeId, onDrawerClick, onFieldAdd }: IFormFieldsP
         }
       }}
       anchor={"left"}
-      variant="persistent"
+      variant={isOpen ? "persistent" : "temporary"}
       PaperProps={{
         sx: {
-          width: 280,
-          position: "relative",
+          width: 220,
+          ...(isOpen && { position: "relative" }),
         },
       }}
     >
-      <Typography sx={{ height: 50, lineHeight: "50px", pl: 2 }} variant="overline">
+      <Typography sx={{ height: 50, lineHeight: "50px" }} variant="overline" textAlign={"center"}>
         Form Fields
       </Typography>
       <Divider />
@@ -51,17 +50,15 @@ const FormFieldsSidebar = ({ activeId, onDrawerClick, onFieldAdd }: IFormFieldsP
             id: element.id,
           });
           return (
-            <StyledFormFieldItem
-              disablePadding
-              key={element.id}
-              ref={setNodeRef}
-              // {...listeners}
-              {...attributes}
-            >
+            <StyledFormFieldItem disablePadding key={element.id} ref={setNodeRef} {...attributes}>
               <ListItemIcon
                 {...listeners}
                 title="Drag to right"
-                sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <OpenWithOutlined sx={{ height: 20, width: 20, opacity: 0.3 }} />
               </ListItemIcon>

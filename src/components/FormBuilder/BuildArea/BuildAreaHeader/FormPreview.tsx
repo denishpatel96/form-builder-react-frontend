@@ -9,6 +9,7 @@ import {
   ICheckboxProps,
   IDropdownProps,
   IComboboxProps,
+  ISliderProps,
 } from "../../Types";
 import {
   ComboboxElement,
@@ -16,6 +17,7 @@ import {
   DropdownElement,
   CheckboxElement,
   RadioElement,
+  SliderElement,
 } from "./Elements";
 import { useForm } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
@@ -37,6 +39,8 @@ const renderField = (field: FieldProps, control: Control<FieldValues, any>) => {
       return <DropdownElement field={field as IDropdownProps} control={control} />;
     case FORM_ELEMENTS.COMBOBOX:
       return <ComboboxElement field={field as IComboboxProps} control={control} />;
+    case FORM_ELEMENTS.SLIDER:
+      return <SliderElement field={field as ISliderProps} control={control} />;
 
     default:
       break;

@@ -1,30 +1,19 @@
-import {
-  CheckboxProps,
-  FormControlProps,
-  FormGroupProps,
-  FormHelperTextProps,
-  FormLabelProps,
-} from "@mui/material";
-
-export interface ICheckboxOptionProps {
-  defaultChecked: boolean;
-  value: string | number;
-  label: string;
-}
+import { CheckboxProps, FormControlProps, FormGroupProps } from "@mui/material";
+import { ISelectableOptionProps } from "./Common";
 
 export interface ICheckboxProps {
   fieldType: string | number;
   hidden: boolean;
   colSpan: 3 | 4 | 6 | 8 | 9 | 12;
   id: string;
-  title: FormControlProps["title"];
+  title: string;
   name: string;
   error: FormControlProps["error"];
-  helperText: FormHelperTextProps["children"];
+  helperText: string;
   row: FormGroupProps["row"];
-  label: FormLabelProps["children"];
+  label: string;
   required: FormControlProps["required"];
   size: CheckboxProps["size"];
-  options: ICheckboxOptionProps[];
+  options: ISelectableOptionProps[];
   useCalcValues: boolean;
 }

@@ -186,10 +186,6 @@ const SortableItem = ({
               onFieldSelect(id);
             }
           }}
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-            onTogglePropertiesDrawer();
-          }}
         >
           {renderElement(field)}
         </Box>

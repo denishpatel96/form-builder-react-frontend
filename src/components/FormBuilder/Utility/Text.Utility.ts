@@ -17,8 +17,8 @@ export const getTextProps: Function = (
     placeholder: "",
     multiline: false,
     minRows: 1,
-    rows: 2,
-    maxRows: 2,
+    rows: 5,
+    maxRows: 8,
     margin: "none", //'dense','none','normal',
     size: "medium", // 'medium','small',string
     type: "text", // 'text','url','email','search','password'

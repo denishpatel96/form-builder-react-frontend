@@ -13,7 +13,8 @@ import {
   RadioProperties,
   DropdownProperties,
   ComboboxProperties,
-} from "./Properties";
+  SliderProperties,
+} from "./FieldProperties";
 import {
   FieldProps,
   IFieldPropertiesChangeFunc,
@@ -22,6 +23,7 @@ import {
   ICheckboxProps,
   IDropdownProps,
   IComboboxProps,
+  ISliderProps,
 } from "../Types";
 
 type IFormFieldProps = {
@@ -77,17 +79,15 @@ const FormFieldPropertiesSidebar = ({
             value={true}
             selected={isPinned}
             onChange={onTogglePin}
+            color="secondary"
           >
             <PushPinOutlined sx={{ height: 20, width: 20 }} />
           </ToggleButton>
         </Tooltip>
         <Divider orientation="vertical" />
-        <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <SettingsOutlined sx={{ height: 20, width: 20, ml: 2 }} />
-          <Typography variant="overline" ml={1}>
-            {field ? `${type} Properties` : "Field Properties"}
-          </Typography>
-        </Box>
+        <Typography width={"100%"} variant="overline" textAlign={"center"}>
+          {field ? `${type} Properties` : "Field Properties"}
+        </Typography>
         {!isPinned && (
           <Tooltip title={"close"} sx={{ ml: "auto" }}>
             <IconButton size="small" onClick={() => onClosePropertiesDrawer()}>
@@ -127,6 +127,9 @@ const FormFieldPropertiesSidebar = ({
       )}
       {field && field.fieldType === FORM_ELEMENTS.COMBOBOX && (
         <ComboboxProperties field={field as IComboboxProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.SLIDER && (
+        <SliderProperties field={field as ISliderProps} onPropsChange={onPropsChange} />
       )}
     </Drawer>
   );

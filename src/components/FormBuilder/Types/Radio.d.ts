@@ -16,14 +16,14 @@ export interface IRadioProps {
   hidden: boolean;
   colSpan: 3 | 4 | 6 | 8 | 9 | 12;
   id: string;
-  title: RadioGroupProps["title"];
+  title: string;
   name: string;
   error: FormControlProps["error"];
-  helperText: FormHelperTextProps["children"];
+  helperText: string;
   row: RadioGroupProps["row"];
   defaultValue?: RadioGroupProps["defaultValue"];
   value?: RadioGroupProps["value"];
-  label: FormLabelProps["children"];
+  label: string;
   required: FormControlProps["required"];
   size: RadioProps["size"];
   options: IRadioOptionProps[];

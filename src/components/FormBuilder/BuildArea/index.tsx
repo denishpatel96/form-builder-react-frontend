@@ -13,6 +13,7 @@ import {
   CheckboxFieldBuilder,
   DropdownFieldBuilder,
   ComboboxFieldBuilder,
+  SliderFieldBuilder,
 } from "./FieldBuilders";
 import {
   ITextProps,
@@ -21,13 +22,13 @@ import {
   ICheckboxProps,
   IDropdownProps,
   IComboboxProps,
+  ISliderProps,
 } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
-  setFormFields: React.Dispatch<React.SetStateAction<FieldProps[]>>;
   onFieldRemove: (id: string) => void;
   onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
   selectedFieldId: string;
@@ -51,13 +52,13 @@ export const renderElement = (field?: FieldProps) => {
       {fieldType === FORM_ELEMENTS.COMBOBOX && (
         <ComboboxFieldBuilder field={field as IComboboxProps} />
       )}
+      {fieldType === FORM_ELEMENTS.SLIDER && <SliderFieldBuilder field={field as ISliderProps} />}
     </>
   );
 };
 
 const BuildArea = ({
   formFields,
-  setFormFields,
   onFieldRemove,
   onFieldSelect,
   selectedFieldId,
@@ -88,8 +89,6 @@ const BuildArea = ({
   };
 
   React.useEffect(() => {
-    console.count("useEffect");
-    console.log("selected id", selectedFieldId);
     if (selectedFieldId) {
       document.getElementById(selectedFieldId)?.scrollIntoView({
         behavior: "smooth",

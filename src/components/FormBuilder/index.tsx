@@ -26,6 +26,7 @@ import {
   getRadioProps,
   getDropdownProps,
   getComboboxProps,
+  getSliderProps,
 } from "./Utility";
 import { handlePropsChange } from "./Utility/Common.Utility";
 import { FieldProps } from "./Types";
@@ -34,7 +35,7 @@ const FormBuilder = () => {
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
   const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
-  const [elementCount, setElementCount] = React.useState<number>(6);
+  const [elementCount, setElementCount] = React.useState<number>(7);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isPropertiesPinned, setIsPropertiesPinned] = React.useState<boolean>(false);
   const [formFields, setFormFields] = React.useState<FieldProps[]>([
@@ -43,6 +44,7 @@ const FormBuilder = () => {
     getCheckboxProps(FORM_ELEMENTS.CHECKBOX, 3),
     getDropdownProps(FORM_ELEMENTS.DROPDOWN, 4),
     getComboboxProps(FORM_ELEMENTS.COMBOBOX, 5),
+    getSliderProps(FORM_ELEMENTS.SLIDER, 6),
   ]);
 
   const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
@@ -68,6 +70,8 @@ const FormBuilder = () => {
         break;
       case FORM_ELEMENTS.COMBOBOX:
         fieldToAdd = getComboboxProps(elementId, elementCount);
+      case FORM_ELEMENTS.SLIDER:
+        fieldToAdd = getSliderProps(elementId, elementCount);
         break;
     }
 
@@ -154,15 +158,24 @@ const FormBuilder = () => {
       autoScroll={!!over}
       collisionDetection={pointerWithin}
     >
-      <Box style={{ minHeight: 500, height: "100vh", display: "flex" }}>
+      <Box
+        tabIndex={0}
+        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+          if ((e?.key === "s" || e?.code === "KeyS") && e.ctrlKey) {
+            e.preventDefault();
+            alert("Save Document");
+          }
+        }}
+        style={{ minHeight: 500, height: "100vh", display: "flex" }}
+      >
         <FormFieldsSidebar
           activeId={active?.id?.toString() || ""}
           onDrawerClick={() => setSelectedFieldId("")}
           onFieldAdd={(elementId) => handleAddFormField(elementId, selectedFieldId)}
+          isOpen={isPropertiesPinned ? true : !isPropertiesOpen}
         />
         <BuildArea
           formFields={formFields}
-          setFormFields={setFormFields}
           onFieldRemove={handleFieldRemove}
           selectedFieldId={selectedFieldId}
           setSelectedFieldId={setSelectedFieldId}
