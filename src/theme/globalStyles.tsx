@@ -74,7 +74,6 @@ const GlobalStyles = () => {
         "&::-webkit-scrollbar": {
           width: "5px",
           height: "5px",
-          marginLeft: "5px",
         },
 
         /* Track */
@@ -84,7 +83,7 @@ const GlobalStyles = () => {
 
         /* Handle */
         "&::-webkit-scrollbar-thumb": {
-          background: theme.palette.secondary.main,
+          background: theme.palette.grey[300],
           borderRadius: "5px",
         },
 
