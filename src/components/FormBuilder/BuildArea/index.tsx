@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { FORM_ELEMENTS } from "../../../constants";
 import Droppable from "../../Reusable/Droppable";
-import { OpenWithOutlined } from "@mui/icons-material";
+import { DragIndicator, OpenWithOutlined } from "@mui/icons-material";
 import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
@@ -164,13 +164,27 @@ const BuildArea = ({
           {active?.id && !active.id.toString().includes("ctrl_") ? (
             <Box
               sx={{
-                p: 2,
+                display: "flex",
+                alignItems: "center",
+                p: 1,
                 minWidth: 200,
                 bgcolor: theme.palette.background.paper,
                 boxShadow: theme.shadows[10],
               }}
             >
-              {renderElement(activeField)}
+              <Box
+                sx={{
+                  cursor: "move",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 25,
+                }}
+              >
+                <DragIndicator color="secondary" sx={{ height: 20, width: 20 }} />
+              </Box>
+              <Box sx={{ flexGrow: 1, p: 1 }}>{renderElement(activeField)}</Box>
             </Box>
           ) : null}
         </DragOverlay>

@@ -7,7 +7,6 @@ export interface IComboboxFieldBuilderProps {
 }
 
 export const ComboboxFieldBuilder = ({ field }: IComboboxFieldBuilderProps) => {
-  console.log("field", field.options);
   const defaultValue = field.multiple
     ? field.options.filter((op) => op.defaultChecked) || []
     : field.options.find((op) => op.defaultChecked) || null;

@@ -159,7 +159,17 @@ const SortableItem = ({
           boxShadow: theme.shadows[2],
         }),
         ...(active?.id.toString().includes("ctrl_") &&
-          isOver && { border: `4px dotted ${theme.palette.secondary.light}` }),
+          isOver && {
+            backgroundColor: theme.palette.action.hover,
+            ":after": {
+              content: '"Drop here to add after this element"',
+              lineHeight: 1.5,
+              color: theme.palette.secondary.main,
+              fontWeight: 600,
+              fontSize: "0.85rem",
+              p: 2,
+            },
+          }),
         opacity: isDragging ? 0 : 1,
       }}
     >

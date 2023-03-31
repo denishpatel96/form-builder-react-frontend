@@ -61,7 +61,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
                   justifyContent: "center",
                 }}
               >
-                <DragIndicator sx={{ height: 20, width: 20, opacity: 0.3 }} />
+                <DragIndicator sx={{ height: 20, width: 20 }} />
               </ListItemIcon>
 
               <ListItemText
@@ -72,12 +72,13 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
                 secondaryTypographyProps={{ variant: "caption" }}
               />
               <IconButton
+                size="small"
                 onClick={(e) => {
                   e.stopPropagation();
                   onFieldAdd(element.id);
                 }}
               >
-                <Add />
+                <Add fontSize="small" />
               </IconButton>
             </StyledFormFieldItem>
           );
@@ -86,7 +87,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
       <DragOverlay dropAnimation={null}>
         {activeId && activeId.toString().includes("ctrl_") ? (
           <StyledFormFieldItemDragOverlay disablePadding>
-            <DragIndicator sx={{ height: 25, width: 25, m: 1 }} />
+            <DragIndicator sx={{ height: 20, width: 20, m: 1 }} />
             <ListItemText primary={FORM_ELEMENTS_LIST.find((e) => e.id === activeId)?.label} />
           </StyledFormFieldItemDragOverlay>
         ) : null}
