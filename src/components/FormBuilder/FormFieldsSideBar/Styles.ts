@@ -12,3 +12,13 @@ export const StyledFormFieldItem = styled(ListItem)(({ theme }) => ({
     },
   },
 }));
+
+export const StyledFormFieldItemDragOverlay = styled(ListItem)(({ theme }) => ({
+  cursor: "move",
+  backgroundColor: theme.palette.background.paper,
+  // border: `1px solid ${theme.palette.secondary.main}`,
+  ".MuiSvgIcon-root": {
+    color: theme.palette.secondary.main,
+  },
+  boxShadow: theme.shadows[10],
+}));

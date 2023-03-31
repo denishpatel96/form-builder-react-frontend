@@ -8,21 +8,25 @@ import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
 import {
-  TextFieldBuilder,
   RadioFieldBuilder,
   CheckboxFieldBuilder,
   DropdownFieldBuilder,
   ComboboxFieldBuilder,
   SliderFieldBuilder,
+  CheckboxGroupFieldBuilder,
+  LongTextFieldBuilder,
+  ShortTextFieldBuilder,
 } from "./FieldBuilders";
 import {
-  ITextProps,
+  IShortTextProps,
   IRadioProps,
   FieldProps,
   ICheckboxProps,
   IDropdownProps,
   IComboboxProps,
   ISliderProps,
+  ICheckboxGroupProps,
+  ILongTextProps,
 } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
@@ -41,13 +45,21 @@ export const renderElement = (field?: FieldProps) => {
   const { fieldType } = field;
   return (
     <>
-      {fieldType === FORM_ELEMENTS.TEXT && <TextFieldBuilder field={field as ITextProps} />}
+      {fieldType === FORM_ELEMENTS.SHORT_TEXT && (
+        <ShortTextFieldBuilder field={field as IShortTextProps} />
+      )}
+      {fieldType === FORM_ELEMENTS.LONG_TEXT && (
+        <LongTextFieldBuilder field={field as ILongTextProps} />
+      )}
       {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
       {fieldType === FORM_ELEMENTS.DROPDOWN && (
         <DropdownFieldBuilder field={field as IDropdownProps} />
       )}
       {fieldType === FORM_ELEMENTS.CHECKBOX && (
         <CheckboxFieldBuilder field={field as ICheckboxProps} />
+      )}
+      {fieldType === FORM_ELEMENTS.CHECKBOX_GROUP && (
+        <CheckboxGroupFieldBuilder field={field as ICheckboxGroupProps} />
       )}
       {fieldType === FORM_ELEMENTS.COMBOBOX && (
         <ComboboxFieldBuilder field={field as IComboboxProps} />
@@ -155,7 +167,7 @@ const BuildArea = ({
                 p: 2,
                 minWidth: 200,
                 bgcolor: theme.palette.background.paper,
-                boxShadow: theme.shadows[1],
+                boxShadow: theme.shadows[10],
               }}
             >
               {renderElement(activeField)}

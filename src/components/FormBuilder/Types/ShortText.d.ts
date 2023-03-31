@@ -1,6 +1,6 @@
 import { TextFieldProps } from "@mui/material";
 
-export interface ITextProps {
+export interface IShortTextProps {
   fieldType: string | number;
   hidden: boolean;
   colSpan: 3 | 4 | 6 | 8 | 9 | 12;
@@ -12,10 +12,6 @@ export interface ITextProps {
   label: string;
   helperText?: string;
   placeholder?: string;
-  multiline: boolean;
-  minRows: TextFieldProps["minRows"];
-  rows: TextFieldProps["rows"];
-  maxRows: TextFieldProps["maxRows"];
   margin: TextFieldProps["margin"];
   size: TextFieldProps["size"];
   type: TextFieldProps["type"];

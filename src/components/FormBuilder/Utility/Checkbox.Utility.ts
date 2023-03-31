@@ -8,20 +8,13 @@ export const getCheckboxProps: Function = (
     fieldType: elementId,
     colSpan: 12,
     hidden: false,
-    id: `check_${elementCount}`,
+    id: `q${elementCount}`,
     title: "",
-    name: `check_${elementCount}`,
-    error: false,
-    helperText: "",
-    row: true,
-    label: `Checkbox Group ${elementCount}`,
+    name: `q${elementCount}`,
+    label: `Checkbox label`,
     required: false,
-    useCalcValues: false,
     size: "medium", // 'medium','small'
-    options: ["option 1", "option 2", "option 3", "option 4"].map((o) => ({
-      defaultChecked: false,
-      value: "",
-      label: o,
-    })),
+    defaultChecked: false,
+    helperText: "",
   };
 };

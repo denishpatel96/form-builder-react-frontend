@@ -8,22 +8,26 @@ import {
   FORM_ELEMENTS_LIST,
 } from "../../../constants";
 import {
-  TextProperties,
   CheckboxProperties,
+  CheckboxGroupProperties,
   RadioProperties,
   DropdownProperties,
   ComboboxProperties,
   SliderProperties,
+  ShortTextProperties,
+  LongTextProperties,
 } from "./FieldProperties";
 import {
   FieldProps,
   IFieldPropertiesChangeFunc,
-  ITextProps,
+  IShortTextProps,
   IRadioProps,
   ICheckboxProps,
   IDropdownProps,
   IComboboxProps,
   ISliderProps,
+  ICheckboxGroupProps,
+  ILongTextProps,
 } from "../Types";
 
 type IFormFieldProps = {
@@ -113,14 +117,23 @@ const FormFieldPropertiesSidebar = ({
           </Typography>
         </Box>
       )}
-      {field && field.fieldType === FORM_ELEMENTS.TEXT && (
-        <TextProperties field={field as ITextProps} onPropsChange={onPropsChange} />
+      {field && field.fieldType === FORM_ELEMENTS.SHORT_TEXT && (
+        <ShortTextProperties field={field as IShortTextProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.LONG_TEXT && (
+        <LongTextProperties field={field as ILongTextProps} onPropsChange={onPropsChange} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.RADIO && (
         <RadioProperties field={field as IRadioProps} onPropsChange={onPropsChange} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX && (
         <CheckboxProperties field={field as ICheckboxProps} onPropsChange={onPropsChange} />
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.CHECKBOX_GROUP && (
+        <CheckboxGroupProperties
+          field={field as ICheckboxGroupProps}
+          onPropsChange={onPropsChange}
+        />
       )}
       {field && field.fieldType === FORM_ELEMENTS.DROPDOWN && (
         <DropdownProperties field={field as IDropdownProps} onPropsChange={onPropsChange} />

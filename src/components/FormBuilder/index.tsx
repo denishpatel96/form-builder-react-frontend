@@ -22,11 +22,13 @@ import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
 import { Box } from "@mui/material";
 import {
   getCheckboxProps,
-  getTextProps,
+  getShortTextProps,
   getRadioProps,
   getDropdownProps,
   getComboboxProps,
   getSliderProps,
+  getCheckboxGroupProps,
+  getLongTextProps,
 } from "./Utility";
 import { handlePropsChange } from "./Utility/Common.Utility";
 import { FieldProps } from "./Types";
@@ -35,16 +37,18 @@ const FormBuilder = () => {
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
   const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
-  const [elementCount, setElementCount] = React.useState<number>(7);
+  const [elementCount, setElementCount] = React.useState<number>(9);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isPropertiesPinned, setIsPropertiesPinned] = React.useState<boolean>(false);
   const [formFields, setFormFields] = React.useState<FieldProps[]>([
-    getTextProps(FORM_ELEMENTS.TEXT, 1),
-    getRadioProps(FORM_ELEMENTS.RADIO, 2),
-    getCheckboxProps(FORM_ELEMENTS.CHECKBOX, 3),
-    getDropdownProps(FORM_ELEMENTS.DROPDOWN, 4),
-    getComboboxProps(FORM_ELEMENTS.COMBOBOX, 5),
-    getSliderProps(FORM_ELEMENTS.SLIDER, 6),
+    getShortTextProps(FORM_ELEMENTS.SHORT_TEXT, 1),
+    getLongTextProps(FORM_ELEMENTS.LONG_TEXT, 2),
+    getRadioProps(FORM_ELEMENTS.RADIO, 3),
+    getCheckboxProps(FORM_ELEMENTS.CHECKBOX, 4),
+    getCheckboxGroupProps(FORM_ELEMENTS.CHECKBOX_GROUP, 5),
+    getDropdownProps(FORM_ELEMENTS.DROPDOWN, 6),
+    getComboboxProps(FORM_ELEMENTS.COMBOBOX, 7),
+    getSliderProps(FORM_ELEMENTS.SLIDER, 8),
   ]);
 
   const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
@@ -56,8 +60,11 @@ const FormBuilder = () => {
     if (!elementId) return;
     let fieldToAdd: FieldProps | null = null;
     switch (elementId) {
-      case FORM_ELEMENTS.TEXT:
-        fieldToAdd = getTextProps(elementId, elementCount);
+      case FORM_ELEMENTS.SHORT_TEXT:
+        fieldToAdd = getShortTextProps(elementId, elementCount);
+        break;
+      case FORM_ELEMENTS.LONG_TEXT:
+        fieldToAdd = getLongTextProps(elementId, elementCount);
         break;
       case FORM_ELEMENTS.RADIO:
         fieldToAdd = getRadioProps(elementId, elementCount);
@@ -65,11 +72,15 @@ const FormBuilder = () => {
       case FORM_ELEMENTS.CHECKBOX:
         fieldToAdd = getCheckboxProps(elementId, elementCount);
         break;
+      case FORM_ELEMENTS.CHECKBOX_GROUP:
+        fieldToAdd = getCheckboxGroupProps(elementId, elementCount);
+        break;
       case FORM_ELEMENTS.DROPDOWN:
         fieldToAdd = getDropdownProps(elementId, elementCount);
         break;
       case FORM_ELEMENTS.COMBOBOX:
         fieldToAdd = getComboboxProps(elementId, elementCount);
+        break;
       case FORM_ELEMENTS.SLIDER:
         fieldToAdd = getSliderProps(elementId, elementCount);
         break;

@@ -1,11 +1,5 @@
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-} from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, FormHelperText } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { ICheckboxProps } from "../../Types/Checkbox";
 
@@ -14,47 +8,24 @@ export interface ICheckboxFieldBuilderProps {
 }
 
 export const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
-  return field.options.length === 1 ? (
-    <FormControlLabel
-      label={`${field.options[0].label}${field.required ? " *" : ""}`}
-      control={
-        <Checkbox
-          id={field.id}
-          checked={field.options[0].defaultChecked}
-          value={field.options[0].label}
-          size={field.size}
-          required={field.required}
-        />
-      }
-    />
-  ) : (
-    <FormControl
-      fullWidth
-      component={"fieldset"}
-      error={field.error}
-      variant="filled"
-      required={field.required}
-    >
-      <FormLabel>{field.label}</FormLabel>
-      <FormGroup row={field.row} title={field.title} id={field.id}>
-        {field.options.map((op, index) => {
-          return (
-            <FormControlLabel
-              key={index}
-              label={op.label}
-              control={
-                <Checkbox
-                  checked={op.defaultChecked}
-                  value={op.label}
-                  size={field.size}
-                  required={field.required}
-                />
-              }
-            />
-          );
-        })}
-      </FormGroup>
-      <FormHelperText>{field.helperText}</FormHelperText>
+  const { helperText, label, defaultChecked, size, required } = field;
+  const theme = useTheme();
+  return (
+    <FormControl component={"fieldset"} fullWidth required={required}>
+      <FormControlLabel
+        label={`${label}${required ? " *" : ""}`}
+        sx={{ color: theme.palette.grey[600], fontWeight: 400 }}
+        control={
+          <Checkbox
+            id={field.id}
+            checked={defaultChecked}
+            value={label}
+            size={size}
+            required={required}
+          />
+        }
+      />
+      <FormHelperText>{helperText}</FormHelperText>
     </FormControl>
   );
 };

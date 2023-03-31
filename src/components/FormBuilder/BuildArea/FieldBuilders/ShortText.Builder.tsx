@@ -1,12 +1,12 @@
 import { TextField } from "@mui/material";
 import React from "react";
-import { ITextProps } from "../../Types/Text";
+import { IShortTextProps } from "../../Types";
 
-export interface ITextFieldBuilderProps {
-  field: ITextProps;
+export interface IShortTextFieldBuilderProps {
+  field: IShortTextProps;
 }
 
-export const TextFieldBuilder = ({ field }: ITextFieldBuilderProps) => {
+export const ShortTextFieldBuilder = ({ field }: IShortTextFieldBuilderProps) => {
   const {
     name,
     id,
@@ -14,10 +14,6 @@ export const TextFieldBuilder = ({ field }: ITextFieldBuilderProps) => {
     defaultValue,
     helperText,
     margin,
-    multiline,
-    rows,
-    maxRows,
-    minRows,
     title,
     required,
     size,
@@ -32,10 +28,6 @@ export const TextFieldBuilder = ({ field }: ITextFieldBuilderProps) => {
       label={label}
       name={name}
       margin={margin}
-      multiline={multiline}
-      rows={rows}
-      minRows={minRows}
-      maxRows={maxRows}
       required={required}
       title={title}
       size={size}

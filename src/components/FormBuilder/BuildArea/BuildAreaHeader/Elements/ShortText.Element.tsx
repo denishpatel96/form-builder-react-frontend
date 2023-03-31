@@ -2,17 +2,21 @@ import React from "react";
 import { TextField } from "@mui/material";
 import { Control, Controller, ControllerProps, FieldError, Path } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types/fields";
-import { ITextProps } from "../../../Types";
+import { IShortTextProps } from "../../../Types";
 import { useFormError } from "./FormErrorProvider";
 import { isRegExp } from "lodash";
 
-export type TextElementProps = {
-  field: ITextProps;
+export type ShortTextElementProps = {
+  field: IShortTextProps;
   control?: Control<FieldValues, any>;
   parseError?: (error: FieldError) => string;
 };
 
-export const TextElement = ({ field, parseError, control }: TextElementProps): JSX.Element => {
+export const ShortTextElement = ({
+  field,
+  parseError,
+  control,
+}: ShortTextElementProps): JSX.Element => {
   const errorMsgFn = useFormError();
   const customErrorFn = parseError || errorMsgFn;
   const {
@@ -30,10 +34,6 @@ export const TextElement = ({ field, parseError, control }: TextElementProps): J
     helperText,
     label,
     margin,
-    maxRows,
-    minRows,
-    multiline,
-    rows,
     placeholder,
     title,
     size,
@@ -62,10 +62,6 @@ export const TextElement = ({ field, parseError, control }: TextElementProps): J
           {...fieldProps}
           label={label}
           margin={margin}
-          maxRows={maxRows}
-          minRows={minRows}
-          multiline={multiline}
-          rows={rows}
           placeholder={placeholder}
           title={title}
           size={size}

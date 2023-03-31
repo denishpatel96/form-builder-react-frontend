@@ -1,9 +1,11 @@
 import { ICheckboxProps } from "./Checkbox";
 import { IDropdownProps } from "./Dropdown";
 import { IRadioProps } from "./Radio";
-import { ITextProps } from "./Text";
+import { IShortTextProps } from "./ShortText";
 import { IComboboxProps } from "./Combobox";
 import { ISliderProps } from "./Slider";
+import { ILongTextProps } from "./LongText";
+import { ICheckboxGroupProps } from "./CheckboxGroup";
 
 //string | number | number[] | boolean | null
 export interface IFieldPropertiesChangeFunc {
@@ -17,9 +19,11 @@ export interface ISelectableOptionProps {
 }
 
 export type FieldProps =
-  | ITextProps
+  | IShortTextProps
+  | ILongTextProps
   | IRadioProps
   | ICheckboxProps
+  | ICheckboxGroupProps
   | IDropdownProps
   | IComboboxProps
   | ISliderProps;

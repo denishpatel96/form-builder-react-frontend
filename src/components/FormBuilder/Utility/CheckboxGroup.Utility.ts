@@ -1,20 +1,20 @@
-import { IDropdownProps } from "../Types";
+import { ICheckboxGroupProps } from "../Types";
 
-export const getDropdownProps: Function = (
+export const getCheckboxGroupProps: Function = (
   elementId: string | number,
   elementCount: number
-): IDropdownProps => {
+): ICheckboxGroupProps => {
   return {
     fieldType: elementId,
     colSpan: 12,
     hidden: false,
-    variant: "outlined",
     id: `q${elementCount}`,
     title: "",
     name: `q${elementCount}`,
     error: false,
     helperText: "",
-    label: `Dropdown label`,
+    row: true,
+    label: `Checkbox group label`,
     required: false,
     useCalcValues: false,
     size: "medium", // 'medium','small'
@@ -23,8 +23,5 @@ export const getDropdownProps: Function = (
       value: "",
       label: o,
     })),
-    native: false,
-    multiple: false,
-    autoWidth: false,
   };
 };

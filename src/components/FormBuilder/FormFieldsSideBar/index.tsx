@@ -9,10 +9,11 @@ import {
   Divider,
   IconButton,
   ListItemIcon,
+  ListItem,
 } from "@mui/material";
 import { FORM_ELEMENTS_LIST } from "../../../constants";
-import { StyledFormFieldItem } from "./Styles";
-import { Add, OpenWithOutlined } from "@mui/icons-material";
+import { StyledFormFieldItem, StyledFormFieldItemDragOverlay } from "./Styles";
+import { Add, DragIndicator, OpenWithOutlined } from "@mui/icons-material";
 
 interface IFormFieldsProps {
   isOpen: boolean;
@@ -35,7 +36,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
       variant={isOpen ? "persistent" : "temporary"}
       PaperProps={{
         sx: {
-          width: 220,
+          width: 280,
           ...(isOpen && { position: "relative" }),
         },
       }}
@@ -60,12 +61,13 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
                   justifyContent: "center",
                 }}
               >
-                <OpenWithOutlined sx={{ height: 20, width: 20, opacity: 0.3 }} />
+                <DragIndicator sx={{ height: 20, width: 20, opacity: 0.3 }} />
               </ListItemIcon>
 
               <ListItemText
                 {...listeners}
                 primary={element.label}
+                primaryTypographyProps={{ variant: "body2" }}
                 secondary={element.description}
                 secondaryTypographyProps={{ variant: "caption" }}
               />
@@ -83,10 +85,10 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
       </List>
       <DragOverlay dropAnimation={null}>
         {activeId && activeId.toString().includes("ctrl_") ? (
-          <StyledFormFieldItem disablePadding>
-            <OpenWithOutlined sx={{ height: 25, width: 25, m: 1 }} />
+          <StyledFormFieldItemDragOverlay disablePadding>
+            <DragIndicator sx={{ height: 25, width: 25, m: 1 }} />
             <ListItemText primary={FORM_ELEMENTS_LIST.find((e) => e.id === activeId)?.label} />
-          </StyledFormFieldItem>
+          </StyledFormFieldItemDragOverlay>
         ) : null}
       </DragOverlay>
     </Drawer>

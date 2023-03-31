@@ -16,17 +16,17 @@ import { ISelectableOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 
-type CheckboxDefaultValuePropertyProps = {
+type CheckboxGroupDefaultValuePropertyProps = {
   value: string[];
   options: ISelectableOptionProps[];
   onChange: (path: string, value: string[] | ISelectableOptionProps[] | undefined) => void;
 };
 
-export const CheckboxDefaultValueProperty = ({
+export const CheckboxGroupDefaultValueProperty = ({
   value,
   options,
   onChange,
-}: CheckboxDefaultValuePropertyProps) => {
+}: CheckboxGroupDefaultValuePropertyProps) => {
   return (
     <StyledListItem>
       <Grid container spacing={1}>
