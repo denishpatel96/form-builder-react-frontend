@@ -48,12 +48,18 @@ export const MarksProperty = ({ value, onChange }: MarksPropertyProps) => {
 };
 
 type CustomMarksPropertyProps = {
-  value: { customMarks: Mark[]; showCustomMarks: boolean; step: number | null | undefined };
+  value: {
+    customMarks: Mark[];
+    showCustomMarks: boolean;
+    step: number | null | undefined;
+    min: number;
+    max: number;
+  };
   onChange: (path: string, value: number | string | boolean | Mark[] | null | undefined) => void;
 };
 
 export const CustomMarksProperty = ({
-  value: { step, customMarks, showCustomMarks },
+  value: { step, customMarks, showCustomMarks, min, max },
   onChange,
 }: CustomMarksPropertyProps) => {
   return (
@@ -71,6 +77,11 @@ export const CustomMarksProperty = ({
               onChange("showCustomMarks", e.target.checked);
               if (!e.target.checked) {
                 onChange("customMarks", []);
+              } else {
+                onChange(
+                  "customMarks",
+                  [min, max].map((v) => ({ value: v, label: `${v}` }))
+                );
               }
             }}
           />

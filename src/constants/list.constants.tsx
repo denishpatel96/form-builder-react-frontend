@@ -29,6 +29,6 @@ export const FORM_ELEMENTS_LIST: { id: string; label: string; description?: stri
     label: "Combobox",
     description: "Searchable Single / Multiple Choice",
   },
-  { id: FORM_ELEMENTS.SLIDER, label: "Slider" },
+  { id: FORM_ELEMENTS.SLIDER, label: "Slider", description: "Single / Range Value" },
   { id: FORM_ELEMENTS.FILE_UPLOAD, label: "File Upload" },
 ];

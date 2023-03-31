@@ -28,7 +28,7 @@ export const SliderFieldBuilder = ({ field }: ISliderFieldBuilderProps) => {
   return (
     <FormControl component={"fieldset"} fullWidth>
       <FormLabel>{label}</FormLabel>
-      <Stack direction={"row"} p={3}>
+      <Stack direction={"row"} px={1}>
         <Slider
           id={id}
           value={defaultValue}
@@ -40,9 +40,8 @@ export const SliderFieldBuilder = ({ field }: ISliderFieldBuilderProps) => {
           min={min}
           max={max}
           valueLabelDisplay={valueLabelDisplay}
-          getAriaValueText={(v: number) => `${v}`}
           track={track}
-          valueLabelFormat={(v: number) => `${prefix} ${v} ${suffix}`.trim()}
+          valueLabelFormat={(v: number) => `${prefix}${v}${suffix}`.trim()}
         />
       </Stack>
       <FormHelperText>{helperText}</FormHelperText>

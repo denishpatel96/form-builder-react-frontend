@@ -31,6 +31,7 @@ export const SliderElement = ({
     max,
     track,
     valueLabelDisplay,
+    valueLabelFormat: { suffix, prefix },
   } = field;
 
   return (
@@ -42,7 +43,7 @@ export const SliderElement = ({
         return (
           <FormControl component={"fieldset"} fullWidth error={!!error}>
             <FormLabel>{label}</FormLabel>
-            <Stack direction={"row"} p={1}>
+            <Stack direction={"row"} px={1}>
               <Slider
                 id={id}
                 onChange={(_ev, value, _activeThumb) => {
@@ -57,6 +58,7 @@ export const SliderElement = ({
                 max={max}
                 valueLabelDisplay={valueLabelDisplay}
                 track={track}
+                valueLabelFormat={(v: number) => `${prefix}${v}${suffix}`.trim()}
               />
             </Stack>
             <FormHelperText error={!!error}>{error?.message || helperText}</FormHelperText>

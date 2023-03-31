@@ -59,7 +59,7 @@ export const SliderProperties = ({ field, onPropsChange }: ISliderPropertiesProp
       <MarksProperty value={showMarks} onChange={onPropsChange} />
       {showMarks && (
         <CustomMarksProperty
-          value={{ step, customMarks, showCustomMarks }}
+          value={{ step, customMarks, showCustomMarks, min, max }}
           onChange={onPropsChange}
         />
       )}
