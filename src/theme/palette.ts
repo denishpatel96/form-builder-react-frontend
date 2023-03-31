@@ -4,7 +4,7 @@ const PRIMARY = {
 };
 const SECONDARY = {
   main: "#d34f9b",
-  contrastText: "#000",
+  contrastText: "#fff",
 };
 
 const palette = {

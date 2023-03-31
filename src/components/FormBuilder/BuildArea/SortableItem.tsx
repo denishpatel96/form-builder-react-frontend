@@ -149,15 +149,6 @@ const SortableItem = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        ...(hoveredFieldId === id && {
-          backgroundColor: theme.palette.action.hover,
-        }),
-        ...(selectedFieldId === id && {
-          borderLeftColor: theme.palette.secondary.light,
-          borderLeftWidth: 4,
-          borderLeftStyle: "solid",
-          boxShadow: theme.shadows[2],
-        }),
         ...(active?.id.toString().includes("ctrl_") &&
           isOver && {
             backgroundColor: theme.palette.action.hover,
@@ -167,18 +158,27 @@ const SortableItem = ({
               color: theme.palette.secondary.main,
               fontWeight: 600,
               fontSize: "0.85rem",
-              p: 2,
+              p: 1,
             },
           }),
         opacity: isDragging ? 0 : 1,
       }}
     >
       <Box
-        style={{
+        sx={{
           width: "100%",
           height: "auto",
           display: "flex",
           alignItems: "center",
+          ...(hoveredFieldId === id && {
+            backgroundColor: theme.palette.action.hover,
+          }),
+          ...(selectedFieldId === id && {
+            borderLeftColor: theme.palette.secondary.light,
+            borderLeftWidth: 4,
+            borderLeftStyle: "solid",
+            boxShadow: theme.shadows[2],
+          }),
         }}
       >
         {(selectedFieldId === id || hoveredFieldId === id) && renderDragHandle()}

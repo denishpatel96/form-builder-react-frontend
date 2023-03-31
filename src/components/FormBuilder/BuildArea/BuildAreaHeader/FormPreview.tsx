@@ -73,10 +73,12 @@ const FormPreview = ({ formFields, device }: FormPreviewProps) => {
             );
           })}
           <Grid item xs={6}>
-            <Button onClick={reset}>Reset</Button>
+            <Button fullWidth onClick={reset} variant="outlined">
+              Reset
+            </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button type="submit" variant="contained">
+            <Button fullWidth type="submit" variant="contained">
               Submit
             </Button>
           </Grid>

@@ -9,7 +9,15 @@ interface IBuildAreaHeaderProps {
 
 const BuildAreaHeader = ({ formFields }: IBuildAreaHeaderProps) => {
   return (
-    <Box style={{ padding: 10, height: 60 }}>
+    <Box
+      sx={{
+        height: 60,
+        backgroundColor: "grey.300",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Button color="secondary">Save</Button>
       <FormPreviewModal formFields={formFields} />
     </Box>

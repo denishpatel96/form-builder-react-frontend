@@ -9,12 +9,11 @@ export interface ICheckboxFieldBuilderProps {
 
 export const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
   const { helperText, label, defaultChecked, size, required } = field;
-  const theme = useTheme();
   return (
     <FormControl component={"fieldset"} fullWidth required={required}>
       <FormControlLabel
         label={`${label}${required ? " *" : ""}`}
-        sx={{ color: theme.palette.grey[600], fontWeight: 400 }}
+        sx={{ color: "grey.600", fontWeight: 400 }}
         control={
           <Checkbox
             id={field.id}

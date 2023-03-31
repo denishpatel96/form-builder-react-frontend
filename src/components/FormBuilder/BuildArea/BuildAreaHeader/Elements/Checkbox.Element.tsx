@@ -35,6 +35,7 @@ export const CheckboxElement = ({
           <FormControl component={"fieldset"} fullWidth error={!!error} required={required}>
             <FormControlLabel
               label={`${label}${required ? "*" : ""}`}
+              sx={{ color: "grey.600", fontWeight: 400 }}
               title={title}
               control={
                 <Checkbox

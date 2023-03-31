@@ -192,13 +192,14 @@ const BuildArea = ({
     );
 
   return (
-    <Box style={{ flexGrow: 1, display: "flex", minWidth: 500 }}>
+    <Box style={{ flexGrow: 1, display: "flex", flexDirection: "column", minWidth: 500 }}>
+      <BuildAreaHeader formFields={formFields} />
       <Container style={{ height: "100%" }}>
-        <BuildAreaHeader formFields={formFields} />
         <Box
           sx={{
-            p: 2,
-            height: `calc(100vh - 70px)`,
+            px: 2,
+            py: 5,
+            height: `calc(100vh - 60px)`,
             overflow: "auto",
             bgcolor: theme.palette.background.paper,
             boxShadow: theme.shadows[1],
