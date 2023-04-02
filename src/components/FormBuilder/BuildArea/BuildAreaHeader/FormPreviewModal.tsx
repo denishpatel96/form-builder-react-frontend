@@ -1,5 +1,5 @@
 import React from "react";
-import { Close, LaptopOutlined, PhoneIphoneOutlined } from "@mui/icons-material";
+import { Close, LaptopOutlined, PhoneIphoneOutlined, PreviewOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -57,7 +57,7 @@ const FormPreviewModal = ({ formFields }: FormPreviewModalProps) => {
 
   return (
     <>
-      <Button size="small" onClick={handleOpen}>
+      <Button size="small" variant="contained" startIcon={<PreviewOutlined />} onClick={handleOpen}>
         Preview
       </Button>
       <Modal

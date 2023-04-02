@@ -1,25 +1,48 @@
-import { ListItem } from "@mui/material";
+import { Box, ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const StyledFormFieldItem = styled(ListItem)(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  ".MuiSvgIcon-root": { color: theme.palette.grey[300] },
+export const StyledFormFieldItemPlaceholder = styled(Box)(({ theme }) => ({
+  height: "100%",
+  width: "100%",
+  borderRadius: theme.shape.borderRadius,
+  padding: "15px 0",
   cursor: "move",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: theme.palette.action.hover,
+  border: `2px dashed ${theme.palette.secondary.main}`,
+}));
+
+export const StyledFormFieldItem = styled(Box)(({ theme }) => ({
+  boxShadow: theme.shadows[2],
+  height: "100%",
+  width: "100%",
+  borderRadius: theme.shape.borderRadius,
+  padding: "10px",
+  cursor: "move",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
   ":hover,:active": {
     backgroundColor: theme.palette.action.hover,
-    ".MuiSvgIcon-root": { color: theme.palette.primary.main },
-    '[data-testid="DragIndicatorIcon"]': {
-      color: theme.palette.secondary.main,
-    },
   },
 }));
 
 export const StyledFormFieldItemDragOverlay = styled(ListItem)(({ theme }) => ({
-  cursor: "move",
-  backgroundColor: theme.palette.background.paper,
-  // border: `1px solid ${theme.palette.secondary.main}`,
-  ".MuiSvgIcon-root": {
-    color: theme.palette.secondary.main,
-  },
   boxShadow: theme.shadows[10],
+  height: "100%",
+  width: "100%",
+  transform: "rotate(10deg)",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  ".MuiSvgIcon-root": { color: theme.palette.secondary.main },
+  padding: "15px 0",
+  cursor: "move",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
 }));

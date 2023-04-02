@@ -1,19 +1,14 @@
 import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Drawer, Typography, Divider, Grid } from "@mui/material";
+import { ELEMENT_CATEGORIES, FORM_ELEMENTS_LIST } from "../../../constants";
 import {
-  ListItemText,
-  List,
-  Drawer,
-  Typography,
-  Divider,
-  IconButton,
-  ListItemIcon,
-  ListItem,
-} from "@mui/material";
-import { FORM_ELEMENTS_LIST } from "../../../constants";
-import { StyledFormFieldItem, StyledFormFieldItemDragOverlay } from "./Styles";
-import { Add, DragIndicator, OpenWithOutlined } from "@mui/icons-material";
+  StyledFormFieldItem,
+  StyledFormFieldItemDragOverlay,
+  StyledFormFieldItemPlaceholder,
+} from "./Styles";
 
 interface IFormFieldsProps {
   isOpen: boolean;
@@ -22,7 +17,20 @@ interface IFormFieldsProps {
   onFieldAdd: (id: string) => void;
 }
 
+export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
+  const theme = useTheme();
+  switch (category) {
+    case ELEMENT_CATEGORIES.TEXT:
+      return theme.palette.info.main;
+    case ELEMENT_CATEGORIES.CHOICE:
+      return theme.palette.success.main;
+    default:
+      return "transparent";
+  }
+};
+
 const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFormFieldsProps) => {
+  const activeElement = FORM_ELEMENTS_LIST.find((e) => e.id === activeId);
   return (
     <Drawer
       open={isOpen}
@@ -37,6 +45,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
       PaperProps={{
         sx: {
           width: 280,
+          maxWidth: "90vw",
           ...(isOpen && { position: "relative" }),
         },
       }}
@@ -45,50 +54,61 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
         Form Fields
       </Typography>
       <Divider />
-      <List disablePadding>
+      <Grid container spacing={2} justifyContent="center" p={1}>
         {FORM_ELEMENTS_LIST.map((element) => {
-          const { attributes, listeners, setNodeRef } = useDraggable({
+          const { isDragging, attributes, listeners, setNodeRef } = useDraggable({
             id: element.id,
           });
           return (
-            <StyledFormFieldItem disablePadding key={element.id} ref={setNodeRef} {...attributes}>
-              <ListItemIcon
-                {...listeners}
-                title="Drag to right"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <DragIndicator sx={{ height: 20, width: 20 }} />
-              </ListItemIcon>
-
-              <ListItemText
-                {...listeners}
-                primary={element.label}
-                primaryTypographyProps={{ variant: "body2" }}
-                secondary={element.description}
-                secondaryTypographyProps={{ variant: "caption" }}
-              />
-              <IconButton
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onFieldAdd(element.id);
-                }}
-              >
-                <Add fontSize="small" />
-              </IconButton>
-            </StyledFormFieldItem>
+            <Grid
+              item
+              key={element.id}
+              sx={{ height: 90, width: 100 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onFieldAdd(element.id);
+              }}
+            >
+              {isDragging ? (
+                <StyledFormFieldItemPlaceholder />
+              ) : (
+                <StyledFormFieldItem
+                  {...listeners}
+                  key={element.id}
+                  ref={setNodeRef}
+                  {...attributes}
+                  sx={{
+                    ".MuiSvgIcon-root": { color: getCategoryColor(element.category) },
+                  }}
+                >
+                  {element.icon}
+                  <Typography
+                    pt={1}
+                    color="grey.800"
+                    variant="caption"
+                    fontWeight={500}
+                    textAlign={"center"}
+                  >
+                    {element.label}
+                  </Typography>
+                </StyledFormFieldItem>
+              )}
+            </Grid>
           );
         })}
-      </List>
+      </Grid>
       <DragOverlay dropAnimation={null}>
-        {activeId && activeId.toString().includes("ctrl_") ? (
-          <StyledFormFieldItemDragOverlay disablePadding>
-            <DragIndicator sx={{ height: 20, width: 20, m: 1 }} />
-            <ListItemText primary={FORM_ELEMENTS_LIST.find((e) => e.id === activeId)?.label} />
+        {activeId && activeElement && activeId.toString().includes("ctrl_") ? (
+          <StyledFormFieldItemDragOverlay
+            disablePadding
+            sx={{
+              ".MuiSvgIcon-root": { color: getCategoryColor(activeElement.category) },
+            }}
+          >
+            {activeElement.icon}
+            <Typography pt={1} variant="caption" fontWeight={500} textAlign={"center"}>
+              {activeElement.label}
+            </Typography>
           </StyledFormFieldItemDragOverlay>
         ) : null}
       </DragOverlay>

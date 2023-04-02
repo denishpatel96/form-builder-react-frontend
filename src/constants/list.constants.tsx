@@ -1,3 +1,16 @@
+import {
+  ArrowDropDownCircleOutlined,
+  ArrowDropDownOutlined,
+  CheckBoxOutlined,
+  CommitOutlined,
+  RadioButtonCheckedOutlined,
+  TextFieldsOutlined,
+  TitleOutlined,
+} from "@mui/icons-material";
+import { SxProps } from "@mui/material";
+import React from "react";
+import { CheckGroupIcon } from "../components/CustomIcons";
+
 export enum THEME {
   DARK = "dark",
   LIGHT = "light",
@@ -17,38 +30,74 @@ export enum FORM_ELEMENTS {
   FILE_UPLOAD = "ctrl_fileupload",
 }
 
-export const FORM_ELEMENTS_LIST: { id: string; label: string; description?: string }[] = [
-  { id: FORM_ELEMENTS.SHORT_TEXT, label: "Short Text", description: "Single line text input" },
-  { id: FORM_ELEMENTS.LONG_TEXT, label: "Long Text", description: "Multiple line text area input" },
+export enum ELEMENT_CATEGORIES {
+  TEXT = "text",
+  CHOICE = "choice",
+  RATING = "rating",
+}
+
+const formElementIconProps = { sx: { height: 35, width: 35 } };
+export const FORM_ELEMENTS_LIST: {
+  id: string;
+  label: string;
+  description?: string;
+  icon?: any;
+  category: ELEMENT_CATEGORIES;
+}[] = [
   {
-    id: FORM_ELEMENTS.RADIO,
-    label: "Radio Group",
-    description: "Select one option from a set",
+    id: FORM_ELEMENTS.SHORT_TEXT,
+    label: "Short Text",
+    description: "Single line text input",
+    icon: <TitleOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.TEXT,
+  },
+  {
+    id: FORM_ELEMENTS.LONG_TEXT,
+    label: "Long Text",
+    description: "Multiple line text area input",
+    icon: <TextFieldsOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.TEXT,
   },
   {
     id: FORM_ELEMENTS.CHECKBOX,
     label: "Checkbox",
     description: "Toggle state of a single item",
+    icon: <CheckBoxOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.CHECKBOX_GROUP,
-    label: "Checkbox Group",
+    label: "CheckGroup",
     description: "Select one or more items from a set",
+    icon: <CheckGroupIcon {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.DROPDOWN,
     label: "Dropdown",
     description: "Select one or more option from a dropdown list",
+    icon: <ArrowDropDownCircleOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.COMBOBOX,
     label: "Combobox",
     description: "Select one or more option from a searchable dropdown list",
+    icon: <ArrowDropDownCircleOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.CHOICE,
+  },
+  {
+    id: FORM_ELEMENTS.RADIO,
+    label: "RadioGroup",
+    description: "Select one option from a set",
+    icon: <RadioButtonCheckedOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.SLIDER,
     label: "Slider",
     description: "Make selections from a range of values on slider",
+    icon: <CommitOutlined {...formElementIconProps} />,
+    category: ELEMENT_CATEGORIES.CHOICE,
   },
-  { id: FORM_ELEMENTS.FILE_UPLOAD, label: "File Upload" },
 ];

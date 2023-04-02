@@ -164,27 +164,16 @@ const BuildArea = ({
           {active?.id && !active.id.toString().includes("ctrl_") ? (
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 1,
+                p: 2,
                 minWidth: 200,
+                cursor: "move",
+                transform: "rotate(1deg)",
                 bgcolor: theme.palette.background.paper,
                 boxShadow: theme.shadows[10],
+                borderRadius: 2,
               }}
             >
-              <Box
-                sx={{
-                  cursor: "move",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 25,
-                }}
-              >
-                <DragIndicator color="secondary" sx={{ height: 20, width: 20 }} />
-              </Box>
-              <Box sx={{ flexGrow: 1, p: 1 }}>{renderElement(activeField)}</Box>
+              {renderElement(activeField)}
             </Box>
           ) : null}
         </DragOverlay>
@@ -194,17 +183,22 @@ const BuildArea = ({
   return (
     <Box style={{ flexGrow: 1, display: "flex", flexDirection: "column", minWidth: 500 }}>
       <BuildAreaHeader formFields={formFields} />
-      <Container style={{ height: "100%" }}>
+      <Container
+        sx={{
+          height: `calc(100vh - 60px)`,
+          overflow: "auto",
+          py: 3,
+        }}
+        onClick={() => setSelectedFieldId("")}
+      >
         <Box
           sx={{
             px: 2,
             py: 5,
-            height: `calc(100vh - 60px)`,
-            overflow: "auto",
             bgcolor: theme.palette.background.paper,
             boxShadow: theme.shadows[1],
+            borderRadius: 2,
           }}
-          onClick={() => setSelectedFieldId("")}
           onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
             if (e?.key === "Escape" || e?.code === "Escape") {
               setSelectedFieldId("");

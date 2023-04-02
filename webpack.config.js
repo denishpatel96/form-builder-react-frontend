@@ -31,6 +31,10 @@ module.exports = {
           cacheDirectory: true,
         },
       },
+      {
+        test: /\.svg$/,
+        use: ["@svgr/webpack"],
+      },
     ],
   },
   devtool: prod ? undefined : "source-map",
