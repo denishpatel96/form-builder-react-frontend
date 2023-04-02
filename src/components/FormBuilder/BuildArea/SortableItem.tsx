@@ -197,7 +197,7 @@ const SortableItem = ({
             width: "100%",
             height: "auto",
             display: "flex",
-            alignItems: "center",
+            flexDirection: "column",
             borderRadius: 2,
             ...(hoveredFieldId === id && {
               pr: 2,
@@ -235,9 +235,9 @@ const SortableItem = ({
           </Box>
 
           {renderRemoveFieldDialog()}
-        </Box>
 
-        {selectedFieldId === id && field.hidden && hiddenWarning}
+          {selectedFieldId === id && field.hidden && hiddenWarning}
+        </Box>
       </Grid>
       {active?.id.toString().includes("ctrl_") && isOver && (
         <Grid item xs={12} height={80}>

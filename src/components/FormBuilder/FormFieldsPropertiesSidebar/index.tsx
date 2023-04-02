@@ -29,6 +29,7 @@ import {
   ICheckboxGroupProps,
   ILongTextProps,
 } from "../Types";
+import { getCategoryColor } from "../FormFieldsSideBar";
 
 type IFormFieldProps = {
   field: FieldProps | undefined;
@@ -49,7 +50,7 @@ const FormFieldPropertiesSidebar = ({
   isOpen,
   setIsOpen,
 }: IFormFieldProps) => {
-  const type = FORM_ELEMENTS_LIST.find((el) => el.id === field?.fieldType)?.label;
+  const element = FORM_ELEMENTS_LIST.find((el) => el.id === field?.fieldType);
   return (
     <Drawer
       open={isOpen}
@@ -89,9 +90,22 @@ const FormFieldPropertiesSidebar = ({
           </ToggleButton>
         </Tooltip>
         <Divider orientation="vertical" />
-        <Typography width={"100%"} variant="overline" textAlign={"center"}>
-          {field ? `${type} Properties` : "Field Properties"}
-        </Typography>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            ...(element && {
+              ".MuiSvgIcon-root": { color: getCategoryColor(element.category) },
+            }),
+          }}
+        >
+          {element?.icon}
+          <Typography pl={1} variant="subtitle1" textAlign={"center"}>
+            {element ? `${element.label} Properties` : "Field Properties"}
+          </Typography>
+        </Box>
         {!isPinned && (
           <Tooltip title={"close"} sx={{ ml: "auto" }}>
             <IconButton size="small" onClick={() => onClosePropertiesDrawer()}>

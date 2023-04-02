@@ -1,7 +1,6 @@
 import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 import React from "react";
-import { useTheme } from "@mui/material/styles";
 import { Drawer, Typography, Divider, Grid } from "@mui/material";
 import { ELEMENT_CATEGORIES, FORM_ELEMENTS_LIST } from "../../../constants";
 import {
@@ -18,12 +17,11 @@ interface IFormFieldsProps {
 }
 
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
-  const theme = useTheme();
   switch (category) {
     case ELEMENT_CATEGORIES.TEXT:
-      return theme.palette.info.main;
+      return "info.main";
     case ELEMENT_CATEGORIES.CHOICE:
-      return theme.palette.success.main;
+      return "success.main";
     default:
       return "transparent";
   }
@@ -50,7 +48,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
         },
       }}
     >
-      <Typography sx={{ height: 50, lineHeight: "50px" }} variant="overline" textAlign={"center"}>
+      <Typography sx={{ height: 50, lineHeight: "50px" }} variant="subtitle1" textAlign={"center"}>
         Form Fields
       </Typography>
       <Divider />
@@ -62,8 +60,11 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
           return (
             <Grid
               item
+              ref={setNodeRef}
+              {...attributes}
+              {...listeners}
               key={element.id}
-              sx={{ height: 90, width: 100 }}
+              sx={{ height: 100, width: 100 }}
               onClick={(e) => {
                 e.stopPropagation();
                 onFieldAdd(element.id);
@@ -73,10 +74,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
                 <StyledFormFieldItemPlaceholder />
               ) : (
                 <StyledFormFieldItem
-                  {...listeners}
                   key={element.id}
-                  ref={setNodeRef}
-                  {...attributes}
                   sx={{
                     ".MuiSvgIcon-root": { color: getCategoryColor(element.category) },
                   }}
@@ -103,6 +101,8 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
             disablePadding
             sx={{
               ".MuiSvgIcon-root": { color: getCategoryColor(activeElement.category) },
+              height: 84,
+              width: 84,
             }}
           >
             {activeElement.icon}
