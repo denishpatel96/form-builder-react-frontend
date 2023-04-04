@@ -1,28 +1,45 @@
 import React, { ReactNode, useMemo } from "react";
 import { CssBaseline } from "@mui/material";
-import { ThemeProvider, createTheme, StyledEngineProvider } from "@mui/material/styles";
+import {
+  ThemeProvider,
+  createTheme,
+  StyledEngineProvider,
+  Theme,
+  ThemeOptions,
+} from "@mui/material/styles";
 import shape from "./shape";
 import palette from "./palette";
-import paletteDark from "./paletteDark";
 import typography from "./typography";
 import componentsOverride from "./overrides";
-import { shadows, shadowsDark, customShadows, customShadowsDark } from "./shadows";
+import { shadows, customShadows, ICustomShadows } from "./shadows";
 import mixins from "./mixins";
-import { THEME } from "../constants";
+import { Shape } from "@mui/system";
+
+interface IShape extends Shape {
+  borderRadiusMd: number;
+  borderRadiusSm: number;
+}
+export interface ITheme extends Theme {
+  customShadows: ICustomShadows;
+  shape: IShape;
+}
+
+export interface IThemeOptions extends ThemeOptions {
+  customShadows: ICustomShadows;
+  shape: IShape;
+}
 
 export default function ThemeConfig({ children }: { children: ReactNode }) {
-  let mode = THEME.LIGHT;
-
-  const themeOptions = useMemo(
+  const themeOptions: IThemeOptions = useMemo(
     () => ({
-      palette: mode && mode === THEME.DARK ? paletteDark : palette,
+      palette,
       shape,
       typography,
-      shadows: mode && mode === THEME.DARK ? shadowsDark : shadows,
-      customShadows: mode && mode === THEME.DARK ? customShadowsDark : customShadows,
+      shadows,
+      customShadows,
       mixins,
     }),
-    [mode]
+    []
   );
 
   const theme = createTheme(themeOptions);

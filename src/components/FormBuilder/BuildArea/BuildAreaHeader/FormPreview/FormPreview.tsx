@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { FORM_ELEMENTS } from "../../../../constants";
+import { FORM_ELEMENTS } from "../../../../../constants";
 import {
   IShortTextProps,
   FieldProps,
@@ -12,7 +12,7 @@ import {
   ISliderProps,
   ICheckboxGroupProps,
   ILongTextProps,
-} from "../../Types";
+} from "../../../Types";
 import {
   ComboboxElement,
   DropdownElement,
@@ -21,10 +21,10 @@ import {
   SliderElement,
   ShortTextElement,
   LongTextElement,
-} from "./Elements";
+} from "../Elements";
 import { useForm } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
-import { CheckboxGroupElement } from "./Elements/CheckboxGroup.Element";
+import { CheckboxGroupElement } from "../Elements/CheckboxGroup.Element";
 
 type FormPreviewProps = {
   formFields: FieldProps[];

@@ -1,4 +1,4 @@
-import { Close, InfoOutlined, PushPinOutlined, SettingsOutlined } from "@mui/icons-material";
+import { ChevronRightOutlined, InfoOutlined, PushPinOutlined } from "@mui/icons-material";
 import { Typography, Divider, Box, IconButton, Tooltip, ToggleButton, Drawer } from "@mui/material";
 import React from "react";
 import {
@@ -34,9 +34,7 @@ import { getCategoryColor } from "../FormFieldsSideBar";
 type IFormFieldProps = {
   field: FieldProps | undefined;
   onPropsChange: IFieldPropertiesChangeFunc;
-  onClosePropertiesDrawer: () => void;
   onTogglePin: () => void;
-  isPinned: boolean;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -44,9 +42,6 @@ type IFormFieldProps = {
 const FormFieldPropertiesSidebar = ({
   field,
   onPropsChange,
-  onClosePropertiesDrawer,
-  onTogglePin,
-  isPinned,
   isOpen,
   setIsOpen,
 }: IFormFieldProps) => {
@@ -56,12 +51,10 @@ const FormFieldPropertiesSidebar = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       anchor={"right"}
-      variant={isPinned ? "permanent" : "temporary"}
       PaperProps={{
         sx: {
           width: { xs: DRAWER_WIDTH_TABLET, md: DRAWER_WIDTH_DESKTOP },
           overflow: "hidden",
-          ...(isPinned && { position: "relative" }),
         },
       }}
       sx={{
@@ -78,18 +71,9 @@ const FormFieldPropertiesSidebar = ({
           alignItems: "center",
         }}
       >
-        <Tooltip title={isPinned ? "Unpin" : "Pin"}>
-          <ToggleButton
-            sx={{ height: 25, width: 25, m: 1 }}
-            value={true}
-            selected={isPinned}
-            onChange={onTogglePin}
-            color="secondary"
-          >
-            <PushPinOutlined sx={{ height: 20, width: 20 }} />
-          </ToggleButton>
-        </Tooltip>
-        <Divider orientation="vertical" />
+        <IconButton onClick={() => setIsOpen(false)} sx={{ ml: "auto" }}>
+          <ChevronRightOutlined sx={{ height: 20, width: 20 }} />
+        </IconButton>
         <Box
           sx={{
             width: "100%",
@@ -106,13 +90,6 @@ const FormFieldPropertiesSidebar = ({
             {element ? `${element.label} Properties` : "Field Properties"}
           </Typography>
         </Box>
-        {!isPinned && (
-          <Tooltip title={"close"} sx={{ ml: "auto" }}>
-            <IconButton size="small" onClick={() => onClosePropertiesDrawer()}>
-              <Close sx={{ height: 20, width: 20 }} />
-            </IconButton>
-          </Tooltip>
-        )}
       </Box>
       <Divider />
       {!field && (

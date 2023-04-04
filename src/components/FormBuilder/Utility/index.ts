@@ -7,3 +7,4 @@ export * from "./Common.Utility";
 export * from "./Dropdown.Utility";
 export * from "./Combobox.Utility";
 export * from "./Slider.Utility";
+export * from "./FormDesign.Utility";

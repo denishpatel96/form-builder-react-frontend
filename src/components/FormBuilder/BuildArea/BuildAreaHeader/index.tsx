@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Box } from "@mui/material";
 import { FieldProps } from "../../Types";
-import FormPreviewModal from "./FormPreviewModal";
+import FormPreviewModal from "./FormPreview/FormPreviewModal";
 import { SaveOutlined } from "@mui/icons-material";
 
 interface IBuildAreaHeaderProps {
@@ -13,14 +13,23 @@ const BuildAreaHeader = ({ formFields }: IBuildAreaHeaderProps) => {
     <Box
       sx={{
         px: 3,
-        height: 50,
-        backgroundColor: "grey.50",
+        minHeight: 50,
+        backgroundColor: "grey.200",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        position: "sticky",
+        top: 0,
+        borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
       }}
     >
-      <Button color="secondary" startIcon={<SaveOutlined />} variant="outlined">
+      <Button
+        size="small"
+        sx={{ mr: 1 }}
+        color="secondary"
+        startIcon={<SaveOutlined />}
+        variant="contained"
+      >
         Save
       </Button>
       <FormPreviewModal formFields={formFields} />

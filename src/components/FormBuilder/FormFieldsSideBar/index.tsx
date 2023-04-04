@@ -1,19 +1,21 @@
 import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 import React from "react";
-import { Drawer, Typography, Divider, Grid } from "@mui/material";
+import { Drawer, Typography, Divider, Grid, Tooltip, Box, IconButton } from "@mui/material";
 import { ELEMENT_CATEGORIES, FORM_ELEMENTS_LIST } from "../../../constants";
 import {
   StyledFormFieldItem,
   StyledFormFieldItemDragOverlay,
   StyledFormFieldItemPlaceholder,
 } from "./Styles";
+import { ChevronLeftOutlined } from "@mui/icons-material";
 
 interface IFormFieldsProps {
   isOpen: boolean;
   activeId?: UniqueIdentifier | null;
   onDrawerClick: () => void;
   onFieldAdd: (id: string) => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
@@ -27,7 +29,13 @@ export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   }
 };
 
-const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFormFieldsProps) => {
+const FormFieldsSidebar = ({
+  isOpen,
+  activeId,
+  onDrawerClick,
+  onFieldAdd,
+  setIsOpen,
+}: IFormFieldsProps) => {
   const activeElement = FORM_ELEMENTS_LIST.find((e) => e.id === activeId);
   return (
     <Drawer
@@ -43,14 +51,38 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, onFieldAdd }: IFor
       PaperProps={{
         sx: {
           width: 280,
-          maxWidth: "90vw",
           ...(isOpen && { position: "relative" }),
         },
       }}
     >
-      <Typography sx={{ height: 50, lineHeight: "50px" }} variant="subtitle1" textAlign={"center"}>
-        Form Fields
-      </Typography>
+      <Box
+        sx={{
+          height: 50,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            sx={{ height: 50, lineHeight: "50px" }}
+            variant="subtitle1"
+            textAlign={"center"}
+          >
+            Form Fields
+          </Typography>
+        </Box>
+        <IconButton onClick={() => setIsOpen(false)} sx={{ ml: "auto" }}>
+          <ChevronLeftOutlined />
+        </IconButton>
+      </Box>
       <Divider />
       <Grid container spacing={2} justifyContent="center" p={1}>
         {FORM_ELEMENTS_LIST.map((element) => {

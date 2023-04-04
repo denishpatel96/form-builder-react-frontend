@@ -7,3 +7,4 @@ export * from "./LongText";
 export * from "./Dropdown";
 export * from "./Combobox";
 export * from "./Slider";
+export * from "./FormDesign";

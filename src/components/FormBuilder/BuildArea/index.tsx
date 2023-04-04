@@ -1,35 +1,15 @@
-import { Stack, Typography, Box, Grid, Container } from "@mui/material";
+import { Stack, Typography, Box, Grid, Container, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
-import { FORM_ELEMENTS } from "../../../constants";
 import Droppable from "../../Reusable/Droppable";
-import { DragIndicator, OpenWithOutlined } from "@mui/icons-material";
+import { AddOutlined, OpenWithOutlined, Palette, PaletteOutlined } from "@mui/icons-material";
 import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
-import {
-  RadioFieldBuilder,
-  CheckboxFieldBuilder,
-  DropdownFieldBuilder,
-  ComboboxFieldBuilder,
-  SliderFieldBuilder,
-  CheckboxGroupFieldBuilder,
-  LongTextFieldBuilder,
-  ShortTextFieldBuilder,
-} from "./FieldBuilders";
-import {
-  IShortTextProps,
-  IRadioProps,
-  FieldProps,
-  ICheckboxProps,
-  IDropdownProps,
-  IComboboxProps,
-  ISliderProps,
-  ICheckboxGroupProps,
-  ILongTextProps,
-} from "../Types";
+import { FieldProps } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
+import { getFieldBuilder } from "./FieldBuilders";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
@@ -39,35 +19,6 @@ interface IBuildAreaProps {
   setSelectedFieldId: React.Dispatch<React.SetStateAction<string>>;
   onTogglePropertiesDrawer: () => void;
 }
-
-export const renderElement = (field?: FieldProps) => {
-  if (!field) return <></>;
-  const { fieldType } = field;
-  return (
-    <>
-      {fieldType === FORM_ELEMENTS.SHORT_TEXT && (
-        <ShortTextFieldBuilder field={field as IShortTextProps} />
-      )}
-      {fieldType === FORM_ELEMENTS.LONG_TEXT && (
-        <LongTextFieldBuilder field={field as ILongTextProps} />
-      )}
-      {fieldType === FORM_ELEMENTS.RADIO && <RadioFieldBuilder field={field as IRadioProps} />}
-      {fieldType === FORM_ELEMENTS.DROPDOWN && (
-        <DropdownFieldBuilder field={field as IDropdownProps} />
-      )}
-      {fieldType === FORM_ELEMENTS.CHECKBOX && (
-        <CheckboxFieldBuilder field={field as ICheckboxProps} />
-      )}
-      {fieldType === FORM_ELEMENTS.CHECKBOX_GROUP && (
-        <CheckboxGroupFieldBuilder field={field as ICheckboxGroupProps} />
-      )}
-      {fieldType === FORM_ELEMENTS.COMBOBOX && (
-        <ComboboxFieldBuilder field={field as IComboboxProps} />
-      )}
-      {fieldType === FORM_ELEMENTS.SLIDER && <SliderFieldBuilder field={field as ISliderProps} />}
-    </>
-  );
-};
 
 const BuildArea = ({
   formFields,
@@ -118,7 +69,7 @@ const BuildArea = ({
 
   const renderFormArea = (): JSX.Element =>
     formFields.length === 0 ? (
-      <Droppable id="form-builder" style={{ width: "100%", height: "calc(100% - 60px)" }}>
+      <Droppable id="form-builder" style={{ width: "100%", height: "100%" }}>
         <Stack
           style={{
             width: "100%",
@@ -140,7 +91,7 @@ const BuildArea = ({
                 <SortableItem
                   key={index}
                   field={field}
-                  renderElement={renderElement}
+                  renderElement={getFieldBuilder}
                   selectedFieldId={selectedFieldId}
                   onFieldSelect={onFieldSelect}
                   onFieldRemove={onFieldRemove}
@@ -173,7 +124,7 @@ const BuildArea = ({
                 borderRadius: 2,
               }}
             >
-              {renderElement(activeField)}
+              {getFieldBuilder(activeField)}
             </Box>
           ) : null}
         </DragOverlay>
@@ -181,33 +132,38 @@ const BuildArea = ({
     );
 
   return (
-    <Box style={{ flexGrow: 1, display: "flex", flexDirection: "column", minWidth: 500 }}>
+    <Box
+      style={{
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        minWidth: 500,
+        maxWidth: "100%",
+        position: "relative",
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}
+    >
       <BuildAreaHeader formFields={formFields} />
-      <Container
+
+      <Box
         sx={{
-          height: `calc(100vh - 60px)`,
-          overflow: "auto",
-          py: 3,
+          p: 5,
+          m: 4,
+          height: "auto",
+          bgcolor: theme.palette.background.paper,
+          boxShadow: theme.shadows[1],
+          borderRadius: 2,
         }}
         onClick={() => setSelectedFieldId("")}
+        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+          if (e?.key === "Escape" || e?.code === "Escape") {
+            setSelectedFieldId("");
+          }
+        }}
       >
-        <Box
-          sx={{
-            px: 2,
-            py: 5,
-            bgcolor: theme.palette.background.paper,
-            boxShadow: theme.shadows[1],
-            borderRadius: 2,
-          }}
-          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-            if (e?.key === "Escape" || e?.code === "Escape") {
-              setSelectedFieldId("");
-            }
-          }}
-        >
-          {renderFormArea()}
-        </Box>
-      </Container>
+        {renderFormArea()}
+      </Box>
     </Box>
   );
 };

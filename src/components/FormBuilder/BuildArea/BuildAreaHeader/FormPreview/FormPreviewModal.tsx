@@ -16,7 +16,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { FieldProps } from "../../Types";
+import { FieldProps } from "../../../Types";
 import FormPreview from "./FormPreview";
 
 const modalStyle: SxProps = {

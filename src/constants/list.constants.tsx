@@ -1,20 +1,13 @@
 import {
   ArrowDropDownCircleOutlined,
-  ArrowDropDownOutlined,
   CheckBoxOutlined,
   CommitOutlined,
   RadioButtonCheckedOutlined,
   TextFieldsOutlined,
   TitleOutlined,
 } from "@mui/icons-material";
-import { SxProps } from "@mui/material";
 import React from "react";
 import { CheckGroupIcon } from "../components/CustomIcons";
-
-export enum THEME {
-  DARK = "dark",
-  LIGHT = "light",
-}
 
 export enum FORM_ELEMENTS {
   SHORT_TEXT = "ctrl_short_text",
