@@ -29,9 +29,10 @@ import {
   getSliderProps,
   getCheckboxGroupProps,
   getLongTextProps,
+  getFormDesignProps,
 } from "./Utility";
-import { handlePropsChange } from "./Utility/Common.Utility";
-import { FieldProps } from "./Types";
+import _ from "lodash";
+import { FieldProps, IFormDesignProps } from "./Types";
 import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
 
@@ -54,7 +55,27 @@ const FormBuilder = () => {
     getSliderProps(FORM_ELEMENTS.SLIDER, 8),
   ]);
 
-  const onPropsChange = handlePropsChange(selectedFieldId, setFormFields);
+  const [formProperties, setFormProperties] = React.useState<IFormDesignProps>(
+    getFormDesignProps()
+  );
+
+  const handlePropsChange = (path: string, value: any) => {
+    setFormFields((prev) => {
+      if (selectedFieldId === null) return prev;
+      const updated = [...prev];
+      const index = updated.findIndex((f) => f.id === selectedFieldId);
+      _.set(updated[index], path, value);
+      return updated;
+    });
+  };
+
+  const handleFormDesignPropsChange = (path: string, value: any) => {
+    setFormProperties((prev) => {
+      const updated = { ...prev };
+      _.set(updated, path, value);
+      return updated;
+    });
+  };
 
   const handleAddFormField = (
     elementId: UniqueIdentifier,
@@ -279,6 +300,7 @@ const FormBuilder = () => {
         />
         <BuildArea
           formFields={formFields}
+          formProperties={formProperties}
           onFieldRemove={handleFieldRemove}
           selectedFieldId={selectedFieldId}
           setSelectedFieldId={setSelectedFieldId}
@@ -287,7 +309,7 @@ const FormBuilder = () => {
         />
         <FormFieldPropertiesSidebar
           field={formFields.find((f) => f.id === selectedFieldId)}
-          onPropsChange={onPropsChange}
+          onPropsChange={handlePropsChange}
           onTogglePin={() => setIsPropertiesOpen(true)}
           isOpen={isPropertiesOpen}
           setIsOpen={setIsPropertiesOpen}
@@ -296,7 +318,8 @@ const FormBuilder = () => {
         {renderFormDesignButton()}
         <FormDesignSidebar
           setIsOpen={setIsFormDesignOpen}
-          onPropsChange={onPropsChange}
+          formProperties={formProperties}
+          onPropsChange={handleFormDesignPropsChange}
           isOpen={isFormDesignOpen}
         />
       </Box>

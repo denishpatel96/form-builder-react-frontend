@@ -20,6 +20,7 @@ const BuildAreaHeader = ({ formFields }: IBuildAreaHeaderProps) => {
         justifyContent: "space-between",
         position: "sticky",
         top: 0,
+        width: "100%",
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
       }}
     >

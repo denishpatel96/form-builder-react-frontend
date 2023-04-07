@@ -3,7 +3,7 @@ const Card = (theme: any) => {
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: theme.customShadows.z12,
+          boxShadow: theme.shadows[10],
           borderRadius: theme.shape.borderRadiusMd,
           position: "relative",
           zIndex: 0, // Fix Safari overflow: hidden with border radius

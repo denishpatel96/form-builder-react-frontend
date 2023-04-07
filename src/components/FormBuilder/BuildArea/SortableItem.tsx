@@ -3,7 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Box, Grid, IconButton, Stack, Typography } from "@mui/material";
 import { FORM_ELEMENTS_LIST } from "../../../constants";
-import { useTheme } from "@mui/material/styles";
+import { lighten, useTheme } from "@mui/material/styles";
 import { FieldProps } from "../Types";
 import {
   DeleteOutlined,
@@ -185,7 +185,7 @@ const SortableItem = ({
               height: "95%",
               width: "100%",
               borderRadius: 2,
-              backgroundColor: theme.palette.grey[200],
+              backgroundColor: lighten(theme.palette.background.paper, 0.25),
               border: `2px dashed ${theme.palette.secondary.main}`,
             },
           }),

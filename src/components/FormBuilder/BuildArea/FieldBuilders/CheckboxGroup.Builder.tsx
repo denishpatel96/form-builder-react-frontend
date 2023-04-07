@@ -14,20 +14,7 @@ export interface ICheckboxGroupFieldBuilderProps {
 }
 
 export const CheckboxGroupFieldBuilder = ({ field }: ICheckboxGroupFieldBuilderProps) => {
-  return field.options.length === 1 ? (
-    <FormControlLabel
-      label={`${field.options[0].label}${field.required ? " *" : ""}`}
-      control={
-        <Checkbox
-          id={field.id}
-          checked={field.options[0].defaultChecked}
-          value={field.options[0].label}
-          size={field.size}
-          required={field.required}
-        />
-      }
-    />
-  ) : (
+  return (
     <FormControl
       fullWidth
       component={"fieldset"}

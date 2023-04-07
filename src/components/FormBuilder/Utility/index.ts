@@ -3,7 +3,6 @@ export * from "./CheckboxGroup.Utility";
 export * from "./Radio.Utility";
 export * from "./ShortText.Utility";
 export * from "./LongText.Utility";
-export * from "./Common.Utility";
 export * from "./Dropdown.Utility";
 export * from "./Combobox.Utility";
 export * from "./Slider.Utility";

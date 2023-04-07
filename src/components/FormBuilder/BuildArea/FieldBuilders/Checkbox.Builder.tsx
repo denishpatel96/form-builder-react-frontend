@@ -1,5 +1,4 @@
-import { Checkbox, FormControl, FormControlLabel, FormHelperText } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, FormLabel } from "@mui/material";
 import React from "react";
 import { ICheckboxProps } from "../../Types/Checkbox";
 
@@ -12,8 +11,7 @@ export const CheckboxFieldBuilder = ({ field }: ICheckboxFieldBuilderProps) => {
   return (
     <FormControl component={"fieldset"} fullWidth required={required}>
       <FormControlLabel
-        label={`${label}${required ? " *" : ""}`}
-        sx={{ color: "grey.600", fontWeight: 400 }}
+        label={<FormLabel>{`${label}${required ? " *" : ""}`}</FormLabel>}
         control={
           <Checkbox
             id={field.id}

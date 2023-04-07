@@ -1,3 +1,4 @@
+import { PaletteOptions } from "@mui/material";
 import { CSSProperties } from "react";
 
 export interface IFormDesignProps {
@@ -11,10 +12,7 @@ export interface IFormDesignProps {
   labelFontWeight: "normal" | "bold" | "bolder";
   labelColor: CSSProperties["color"];
   // Color Scheme
-  pageColor: CSSProperties["backgroundColor"];
-  formColor: CSSProperties["backgroundColor"];
-  fontColor: CSSProperties["color"];
-  inputBackgroundColor: CSSProperties["backgroundColor"];
+  palette?: PaletteOptions;
   // Background Images
   pageImage: string | undefined | null;
   formImage: string | undefined | null;

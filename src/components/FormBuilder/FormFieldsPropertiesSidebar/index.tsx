@@ -1,5 +1,5 @@
-import { ChevronRightOutlined, InfoOutlined, PushPinOutlined } from "@mui/icons-material";
-import { Typography, Divider, Box, IconButton, Tooltip, ToggleButton, Drawer } from "@mui/material";
+import { ChevronRightOutlined, InfoOutlined } from "@mui/icons-material";
+import { Typography, Divider, Box, IconButton, Drawer } from "@mui/material";
 import React from "react";
 import {
   DRAWER_WIDTH_DESKTOP,
@@ -72,7 +72,7 @@ const FormFieldPropertiesSidebar = ({
         }}
       >
         <IconButton onClick={() => setIsOpen(false)} sx={{ ml: "auto" }}>
-          <ChevronRightOutlined sx={{ height: 20, width: 20 }} />
+          <ChevronRightOutlined />
         </IconButton>
         <Box
           sx={{

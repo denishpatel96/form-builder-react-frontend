@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormControlLabel, FormHelperText } from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, FormLabel } from "@mui/material";
 import React from "react";
 import { Controller } from "react-hook-form";
 import { Control, ControllerProps, FieldError, FieldValues } from "react-hook-form/dist/types";
@@ -34,8 +34,7 @@ export const CheckboxElement = ({
         return (
           <FormControl component={"fieldset"} fullWidth error={!!error} required={required}>
             <FormControlLabel
-              label={`${label}${required ? "*" : ""}`}
-              sx={{ color: "grey.600", fontWeight: 400 }}
+              label={<FormLabel>{`${label}${required ? "*" : ""}`}</FormLabel>}
               title={title}
               control={
                 <Checkbox

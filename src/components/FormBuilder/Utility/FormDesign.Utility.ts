@@ -1,21 +1,17 @@
+import { createTheme, PaletteOptions } from "@mui/material";
 import { IFormDesignProps } from "../Types";
 
 export const getFormDesignProps: Function = (): IFormDesignProps => {
   return {
     // Form Styles
-    formWidth: 700,
-    verticalPadding: 2,
-    horizontalPadding: 2,
-    horizontalSpacing: 2,
-    verticalSpacing: 2,
+    formWidth: 900,
+    verticalPadding: 24,
+    horizontalPadding: 24,
+    horizontalSpacing: 24,
+    verticalSpacing: 24,
     // Label Style
     labelFontWeight: "normal",
     labelColor: "blue",
-    // Color Scheme
-    pageColor: "black",
-    formColor: "grey",
-    fontColor: "black",
-    inputBackgroundColor: "white",
     // Background Images
     pageImage: null,
     formImage: null,
@@ -23,4 +19,8 @@ export const getFormDesignProps: Function = (): IFormDesignProps => {
     fontFamily: "inherit",
     fontSize: 16,
   };
+};
+
+export const getCustomTheme: Function = (palette: PaletteOptions) => {
+  const theme = createTheme({ palette: { mode: palette.mode } });
 };

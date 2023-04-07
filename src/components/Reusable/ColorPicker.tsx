@@ -1,3 +1,5 @@
+import { TagOutlined } from "@mui/icons-material";
+import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { CSSProperties, useRef, useState } from "react";
 import { SketchPicker, ColorResult } from "react-color";
@@ -7,9 +9,10 @@ export interface IColorPickerProps {
   name: string;
   color: CSSProperties["backgroundColor"];
   onChange: (name: string, value: string) => void;
+  textFieldProps: TextFieldProps;
 }
 
-const ColorPicker = ({ name, color, onChange }: IColorPickerProps) => {
+const ColorPicker = ({ textFieldProps, name, color, onChange }: IColorPickerProps) => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -28,23 +31,37 @@ const ColorPicker = ({ name, color, onChange }: IColorPickerProps) => {
         sx={{ width: "auto", p: 1 }}
       >
         <SketchPicker
+          disableAlpha
+          width="250px"
           color={color}
           onChangeComplete={(color: ColorResult) => {
             onChange(name, color.hex);
-            handleClose();
           }}
         />
       </MenuPopover>
-      <Box
+      <TextField
+        fullWidth
         ref={anchorRef}
         onClick={handleOpen}
-        sx={{
-          width: "30px",
-          height: "30px",
-          backgroundColor: color?.toString(),
-          borderRadius: "50%",
+        value={color?.toUpperCase()}
+        variant="outlined"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <Box
+                sx={{
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: color,
+                  borderRadius: "50%",
+                  border: "1px solid grey",
+                }}
+              ></Box>
+            </InputAdornment>
+          ),
         }}
-      ></Box>
+        {...textFieldProps}
+      />
     </>
   );
 };

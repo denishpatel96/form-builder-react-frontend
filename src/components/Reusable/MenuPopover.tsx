@@ -1,7 +1,6 @@
 import React from "react";
 import { Popover, PopoverProps } from "@mui/material";
 import { alpha, styled, useTheme } from "@mui/material/styles";
-import { ITheme } from "../../theme";
 
 const ArrowStyle = styled("span")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -32,8 +31,8 @@ export default function MenuPopover({ children, sx, ...other }: PopoverProps) {
           mt: 1.5,
           ml: 0.5,
           overflow: "inherit",
-          boxShadow: (theme as ITheme).customShadows.z20,
-          border: `solid 1px ${theme.palette.grey[500]}`,
+          boxShadow: theme.shadows[10],
+          border: `solid 1px ${theme.palette.grey[300]}`,
           width: "auto",
           ...sx,
         },

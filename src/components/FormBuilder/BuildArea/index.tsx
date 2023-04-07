@@ -1,18 +1,21 @@
-import { Stack, Typography, Box, Grid, Container, IconButton } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Stack, Typography, Box, Grid } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import React from "react";
 import Droppable from "../../Reusable/Droppable";
-import { AddOutlined, OpenWithOutlined, Palette, PaletteOutlined } from "@mui/icons-material";
+import { OpenWithOutlined } from "@mui/icons-material";
 import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
-import { FieldProps } from "../Types";
+import { FieldProps, IFormDesignProps } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
 import { getFieldBuilder } from "./FieldBuilders";
+import { getTheme } from "../../../theme";
+import { cloneDeep } from "lodash";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
+  formProperties: IFormDesignProps;
   onFieldRemove: (id: string) => void;
   onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
   selectedFieldId: string;
@@ -22,13 +25,14 @@ interface IBuildAreaProps {
 
 const BuildArea = ({
   formFields,
+  formProperties,
   onFieldRemove,
   onFieldSelect,
   selectedFieldId,
   setSelectedFieldId,
   onTogglePropertiesDrawer,
 }: IBuildAreaProps) => {
-  const theme = useTheme();
+  const customTheme = getTheme({ palette: cloneDeep(formProperties.palette) });
   const [active, setActive] = React.useState<Active | null>(null);
   const activeField = React.useMemo(
     () => formFields.find((el) => el.id === active?.id),
@@ -84,7 +88,11 @@ const BuildArea = ({
       </Droppable>
     ) : (
       <form>
-        <Grid container spacing={1}>
+        <Grid
+          container
+          rowSpacing={`${formProperties.verticalSpacing}px`}
+          columnSpacing={`${formProperties.horizontalSpacing}px`}
+        >
           <SortableContext items={formFields.map((f) => f.id)}>
             {formFields.map((field, index) => {
               return (
@@ -119,8 +127,8 @@ const BuildArea = ({
                 minWidth: 200,
                 cursor: "move",
                 transform: "rotate(1deg)",
-                bgcolor: theme.palette.background.paper,
-                boxShadow: theme.shadows[10],
+                bgcolor: (theme) => theme.palette.background.paper,
+                boxShadow: (theme) => theme.shadows[10],
                 borderRadius: 2,
               }}
             >
@@ -133,37 +141,47 @@ const BuildArea = ({
 
   return (
     <Box
-      style={{
+      sx={{
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         minWidth: 500,
         maxWidth: "100%",
         position: "relative",
         overflowY: "auto",
         overflowX: "hidden",
+        bgcolor: customTheme.palette?.background?.default,
       }}
+      onClick={() => setSelectedFieldId("")}
     >
       <BuildAreaHeader formFields={formFields} />
 
-      <Box
-        sx={{
-          p: 5,
-          m: 4,
-          height: "auto",
-          bgcolor: theme.palette.background.paper,
-          boxShadow: theme.shadows[1],
-          borderRadius: 2,
-        }}
-        onClick={() => setSelectedFieldId("")}
-        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-          if (e?.key === "Escape" || e?.code === "Escape") {
-            setSelectedFieldId("");
-          }
-        }}
-      >
-        {renderFormArea()}
-      </Box>
+      <ThemeProvider theme={customTheme}>
+        <Box
+          sx={{
+            margin: "24px 0",
+            padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
+            height: "auto",
+            width: "calc(100% - 48px)",
+            maxWidth: formProperties.formWidth,
+            bgcolor: (theme) => theme.palette.background.paper,
+            boxShadow: (theme) => theme.shadows[1],
+            borderRadius: 2,
+            ".MuiTypography-root": {
+              color: (theme) => theme.palette.text.secondary,
+            },
+            ".MuiInputBase-root": {},
+          }}
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+            if (e?.key === "Escape" || e?.code === "Escape") {
+              setSelectedFieldId("");
+            }
+          }}
+        >
+          {renderFormArea()}
+        </Box>
+      </ThemeProvider>
     </Box>
   );
 };
