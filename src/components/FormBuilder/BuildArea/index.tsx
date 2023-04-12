@@ -149,13 +149,6 @@ const BuildArea = ({
         minWidth: 500,
         maxWidth: "100%",
         position: "relative",
-        overflowY: "auto",
-        overflowX: "hidden",
-        bgcolor: customTheme.palette?.background?.default,
-        backgroundImage: `url(${formProperties.pageImage})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "50% 50%",
       }}
       onClick={() => setSelectedFieldId("")}
     >
@@ -164,29 +157,45 @@ const BuildArea = ({
       <ThemeProvider theme={customTheme}>
         <Box
           sx={{
-            margin: "24px 0",
-            padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
-            height: "auto",
-            width: "calc(100% - 48px)",
-            maxWidth: formProperties.formWidth,
-            bgcolor: (theme) => theme.palette.background.paper,
-            boxShadow: (theme) => theme.shadows[1],
-
-            borderRadius: 2,
-            ".MuiTypography-root": {
-              color: (theme) => theme.palette.text.secondary,
-            },
-            backgroundImage: `url(${formProperties.formImage})`,
+            flexGrow: 1,
+            minWidth: 500,
+            width: "100%",
+            position: "relative",
+            overflowY: "auto",
+            overflowX: "hidden",
+            bgcolor: customTheme.palette?.background?.default,
+            backgroundImage: `url(${formProperties.pageImage})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
+            backgroundPosition: "50% 50%",
           }}
-          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-            if (e?.key === "Escape" || e?.code === "Escape") {
-              setSelectedFieldId("");
-            }
-          }}
+          onClick={() => setSelectedFieldId("")}
         >
-          {renderFormArea()}
+          <Box
+            sx={{
+              margin: "24px auto",
+              padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
+              height: "auto",
+              width: "calc(100% - 48px)",
+              maxWidth: formProperties.formWidth,
+              bgcolor: (theme) => theme.palette.background.paper,
+              boxShadow: (theme) => theme.shadows[1],
+              borderRadius: 2,
+              ".MuiTypography-root": {
+                color: (theme) => theme.palette.text.secondary,
+              },
+              backgroundImage: `url(${formProperties.formImage})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+            onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+              if (e?.key === "Escape" || e?.code === "Escape") {
+                setSelectedFieldId("");
+              }
+            }}
+          >
+            {renderFormArea()}
+          </Box>
         </Box>
       </ThemeProvider>
     </Box>
