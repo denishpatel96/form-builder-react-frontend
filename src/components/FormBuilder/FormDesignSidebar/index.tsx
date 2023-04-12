@@ -20,6 +20,7 @@ import { ColorValueProperty } from "./Properties/ColorValue.Property";
 import { ModeProperty } from "./Properties/Mode.Property";
 import { getTheme } from "../../../theme";
 import { cloneDeep } from "lodash";
+import { ImageURLProperty } from "./Properties/ImageURL.Property";
 
 type FormDesignSidebarProps = {
   formProperties: IFormDesignProps;
@@ -57,8 +58,7 @@ const FormDesignSidebar = ({
 
   const defaultTheme = getTheme({ palette: { mode: formProperties.palette?.mode || "light" } });
 
-  console.log("new theme", defaultTheme);
-  const [tabValue, setTabValue] = React.useState(0);
+  const [tabValue, setTabValue] = React.useState(1);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -187,6 +187,13 @@ const FormDesignSidebar = ({
             onChange={onPropsChange}
             path={"palette.background.default"}
           />
+          <ImageURLProperty
+            name="pageImage"
+            label="Page Image URL"
+            value={pageImage}
+            path={"pageImage"}
+            onChange={onPropsChange}
+          />
           <ColorValueProperty
             name="formColor"
             label="Form Color"
@@ -195,7 +202,13 @@ const FormDesignSidebar = ({
             onChange={onPropsChange}
             path={"palette.background.paper"}
           />
-
+          <ImageURLProperty
+            name="formImage"
+            label="Form Image URL"
+            value={formImage}
+            path={"formImage"}
+            onChange={onPropsChange}
+          />
           <ListSubheader>
             <Typography variant="overline">Text</Typography>
           </ListSubheader>

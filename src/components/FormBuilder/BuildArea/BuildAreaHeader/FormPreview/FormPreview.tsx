@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Button, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { FORM_ELEMENTS } from "../../../../../constants";
 import {
   IShortTextProps,
@@ -12,6 +11,7 @@ import {
   ISliderProps,
   ICheckboxGroupProps,
   ILongTextProps,
+  IFormDesignProps,
 } from "../../../Types";
 import {
   ComboboxElement,
@@ -25,10 +25,12 @@ import {
 import { useForm } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
 import { CheckboxGroupElement } from "../Elements/CheckboxGroup.Element";
+import { ArrowCircleRight, ArrowRight, ArrowRightAlt, Refresh } from "@mui/icons-material";
 
 type FormPreviewProps = {
   formFields: FieldProps[];
   device: string;
+  formProperties: IFormDesignProps;
 };
 
 const renderField = (field: FieldProps, control: Control<FieldValues, any>) => {
@@ -55,35 +57,34 @@ const renderField = (field: FieldProps, control: Control<FieldValues, any>) => {
   }
 };
 
-const FormPreview = ({ formFields, device }: FormPreviewProps) => {
-  const theme = useTheme();
+const FormPreview = ({ formFields, device, formProperties }: FormPreviewProps) => {
   const { handleSubmit, control, reset } = useForm();
   return (
     <form onSubmit={handleSubmit((data) => console.log("formData : ", data))}>
-      <Box
-        sx={{ py: 4, px: 2, bgcolor: theme.palette.background.paper, boxShadow: theme.shadows[1] }}
+      <Grid
+        container
+        rowSpacing={`${formProperties.verticalSpacing}px`}
+        columnSpacing={`${formProperties.horizontalSpacing}px`}
       >
-        <Grid container spacing={3}>
-          {formFields.map((field, index) => {
-            const { colSpan } = field;
-            return (
-              <Grid item key={index} xs={12} sm={12} md={device === "phone" ? 12 : colSpan}>
-                {renderField(field, control)}
-              </Grid>
-            );
-          })}
-          <Grid item xs={6}>
-            <Button fullWidth onClick={reset} variant="outlined">
+        {formFields.map((field, index) => {
+          const { colSpan } = field;
+          return (
+            <Grid item key={index} xs={12} sm={12} md={device === "phone" ? 12 : colSpan}>
+              {renderField(field, control)}
+            </Grid>
+          );
+        })}
+        <Grid item xs={12}>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Button onClick={reset} startIcon={<Refresh />}>
               Reset
             </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button fullWidth type="submit" variant="contained">
+            <Button type="submit" variant="contained" endIcon={<ArrowCircleRight />}>
               Submit
             </Button>
-          </Grid>
+          </Box>
         </Grid>
-      </Box>
+      </Grid>
     </form>
   );
 };

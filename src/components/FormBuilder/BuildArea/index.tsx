@@ -152,10 +152,14 @@ const BuildArea = ({
         overflowY: "auto",
         overflowX: "hidden",
         bgcolor: customTheme.palette?.background?.default,
+        backgroundImage: `url(${formProperties.pageImage})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "50% 50%",
       }}
       onClick={() => setSelectedFieldId("")}
     >
-      <BuildAreaHeader formFields={formFields} />
+      <BuildAreaHeader formFields={formFields} formProperties={formProperties} />
 
       <ThemeProvider theme={customTheme}>
         <Box
@@ -167,11 +171,14 @@ const BuildArea = ({
             maxWidth: formProperties.formWidth,
             bgcolor: (theme) => theme.palette.background.paper,
             boxShadow: (theme) => theme.shadows[1],
+
             borderRadius: 2,
             ".MuiTypography-root": {
               color: (theme) => theme.palette.text.secondary,
             },
-            ".MuiInputBase-root": {},
+            backgroundImage: `url(${formProperties.formImage})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
           }}
           onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
             if (e?.key === "Escape" || e?.code === "Escape") {

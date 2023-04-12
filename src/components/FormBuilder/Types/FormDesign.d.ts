@@ -14,8 +14,8 @@ export interface IFormDesignProps {
   // Color Scheme
   palette?: PaletteOptions;
   // Background Images
-  pageImage: string | undefined | null;
-  formImage: string | undefined | null;
+  pageImage: string;
+  formImage: string;
   // Font Options
   fontFamily: CSSProperties["fontFamily"];
   fontSize: CSSProperties["fontSize"];

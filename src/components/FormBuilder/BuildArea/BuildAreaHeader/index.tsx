@@ -1,14 +1,15 @@
 import React from "react";
 import { Button, Box } from "@mui/material";
-import { FieldProps } from "../../Types";
+import { FieldProps, IFormDesignProps } from "../../Types";
 import FormPreviewModal from "./FormPreview/FormPreviewModal";
 import { SaveOutlined } from "@mui/icons-material";
 
 interface IBuildAreaHeaderProps {
   formFields: FieldProps[];
+  formProperties: IFormDesignProps;
 }
 
-const BuildAreaHeader = ({ formFields }: IBuildAreaHeaderProps) => {
+const BuildAreaHeader = ({ formFields, formProperties }: IBuildAreaHeaderProps) => {
   return (
     <Box
       sx={{
@@ -33,7 +34,7 @@ const BuildAreaHeader = ({ formFields }: IBuildAreaHeaderProps) => {
       >
         Save
       </Button>
-      <FormPreviewModal formFields={formFields} />
+      <FormPreviewModal formFields={formFields} formProperties={formProperties} />
     </Box>
   );
 };

@@ -1,6 +1,6 @@
 import { TagOutlined } from "@mui/icons-material";
 import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, rgbToHex } from "@mui/system";
 import React, { CSSProperties, useRef, useState } from "react";
 import { SketchPicker, ColorResult } from "react-color";
 import MenuPopover from "./MenuPopover";
@@ -31,11 +31,10 @@ const ColorPicker = ({ textFieldProps, name, color, onChange }: IColorPickerProp
         sx={{ width: "auto", p: 1 }}
       >
         <SketchPicker
-          disableAlpha
           width="250px"
           color={color}
           onChangeComplete={(color: ColorResult) => {
-            onChange(name, color.hex);
+            onChange(name, `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`);
           }}
         />
       </MenuPopover>

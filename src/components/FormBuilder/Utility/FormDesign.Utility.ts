@@ -1,4 +1,3 @@
-import { createTheme, PaletteOptions } from "@mui/material";
 import { IFormDesignProps } from "../Types";
 
 export const getFormDesignProps: Function = (): IFormDesignProps => {
@@ -13,14 +12,10 @@ export const getFormDesignProps: Function = (): IFormDesignProps => {
     labelFontWeight: "normal",
     labelColor: "blue",
     // Background Images
-    pageImage: null,
-    formImage: null,
+    pageImage: "",
+    formImage: "",
     // Font Options
     fontFamily: "inherit",
     fontSize: 16,
   };
-};
-
-export const getCustomTheme: Function = (palette: PaletteOptions) => {
-  const theme = createTheme({ palette: { mode: palette.mode } });
 };

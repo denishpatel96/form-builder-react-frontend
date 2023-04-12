@@ -78,7 +78,7 @@ const GlobalStyles = () => {
 
         /* Track */
         "&::-webkit-scrollbar-track": {
-          background: "#f1f1f1",
+          background: "transparent",
         },
 
         /* Handle */
