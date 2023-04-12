@@ -42,7 +42,7 @@ type FormPreviewModalProps = {
 };
 
 const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [device, setDevice] = React.useState("phone");
   const handleOpen = () => {
     setOpen(true);
@@ -91,13 +91,9 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
             <Box
               sx={{
                 flexGrow: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                maxWidth: "100%",
+                width: "100%",
                 position: "relative",
-                overflowY: "auto",
-                overflowX: "hidden",
+                overflow: "scroll",
                 bgcolor: (theme) => theme.palette?.background?.default,
                 backgroundImage: `url(${formProperties.pageImage})`,
                 backgroundRepeat: "no-repeat",
@@ -106,8 +102,9 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
             >
               <Box
                 sx={{
+                  margin: "8px auto",
                   padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
-                  height: "fit-content",
+                  height: "auto",
                   width: "calc(100% - 48px)",
                   maxWidth: formProperties.formWidth,
                   bgcolor: (theme) => theme.palette.background.paper,
