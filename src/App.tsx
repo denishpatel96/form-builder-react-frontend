@@ -3,15 +3,19 @@ import { BrowserRouter } from "react-router-dom";
 import Routes from "./Routes";
 import ThemeConfig from "./theme";
 import GlobalStyles from "./theme/globalStyles";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const App = () => {
   return (
-    <ThemeConfig>
-      <GlobalStyles />
-      <BrowserRouter>
-        <Routes />
-      </BrowserRouter>
-    </ThemeConfig>
+    <Provider store={store}>
+      <ThemeConfig>
+        <GlobalStyles />
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </ThemeConfig>
+    </Provider>
   );
 };
 
