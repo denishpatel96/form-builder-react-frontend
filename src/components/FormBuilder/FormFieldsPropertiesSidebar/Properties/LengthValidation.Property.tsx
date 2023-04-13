@@ -3,6 +3,8 @@ import React from "react";
 import { NumericFormat } from "react-number-format";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type LengthValidationPropertyProps = {
   value: {
@@ -11,13 +13,12 @@ type LengthValidationPropertyProps = {
     maxLength?: string | number;
     msgLength?: string;
   };
-  onChange: (path: string, value: boolean | number | string | undefined) => void;
 };
 
 export const LengthValidationProperty = ({
   value: { validateLength, minLength, maxLength, msgLength },
-  onChange,
 }: LengthValidationPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -30,7 +31,7 @@ export const LengthValidationProperty = ({
             name={"validateLength"}
             checked={validateLength}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("validateLength", e.target.checked)
+              dispatch(changeFieldProp({ path: "validateLength", value: e.target.checked }))
             }
           />
         </Grid>
@@ -46,7 +47,7 @@ export const LengthValidationProperty = ({
                   value={msgLength}
                   fullWidth
                   onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                    onChange("msgLength", e.target.value)
+                    dispatch(changeFieldProp({ path: "msgLength", value: e.target.value }))
                   }
                   helperText={"Message to display when validation fails."}
                 />
@@ -62,7 +63,7 @@ export const LengthValidationProperty = ({
                   value={minLength}
                   customInput={TextField}
                   onValueChange={({ value }) => {
-                    onChange("minLength", +value);
+                    dispatch(changeFieldProp({ path: "minLength", value: +value }));
                   }}
                 />
               </Grid>
@@ -77,7 +78,7 @@ export const LengthValidationProperty = ({
                   value={maxLength}
                   customInput={TextField}
                   onValueChange={({ value }) => {
-                    onChange("maxLength", +value);
+                    dispatch(changeFieldProp({ path: "maxLength", value: +value }));
                   }}
                 />
               </Grid>

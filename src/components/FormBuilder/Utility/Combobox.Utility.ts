@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { IComboboxProps } from "../Types";
 
-export const getComboboxProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): IComboboxProps => {
+export const getComboboxProps: Function = (elementCount: number): IComboboxProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.COMBOBOX,
     colSpan: 12,
     hidden: false,
     variant: "outlined",

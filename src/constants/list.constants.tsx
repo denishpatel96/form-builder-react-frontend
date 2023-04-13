@@ -9,6 +9,13 @@ import {
 import React from "react";
 import { CheckGroupIcon } from "../components/CustomIcons";
 
+export enum REQUEST_STATUS {
+  IDLE = "idle",
+  LOADING = "loading",
+  SUCCEEDED = "succeeded",
+  FAILED = "failed",
+}
+
 export enum FORM_ELEMENTS {
   SHORT_TEXT = "ctrl_short_text",
   LONG_TEXT = "ctrl_long_text",

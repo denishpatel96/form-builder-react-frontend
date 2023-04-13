@@ -2,13 +2,15 @@ import { Grid, SliderProps, ToggleButton, ToggleButtonGroup } from "@mui/materia
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type ValueLabelDisplayPropertyProps = {
   value: SliderProps["valueLabelDisplay"];
-  onChange: (path: string, value: SliderProps["valueLabelDisplay"]) => void;
 };
 
-export const ValueLabelDisplayProperty = ({ value, onChange }: ValueLabelDisplayPropertyProps) => {
+export const ValueLabelDisplayProperty = ({ value }: ValueLabelDisplayPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -22,7 +24,9 @@ export const ValueLabelDisplayProperty = ({ value, onChange }: ValueLabelDisplay
             color="primary"
             value={value}
             exclusive
-            onChange={(_, value: any) => value !== null && onChange("valueLabelDisplay", value)}
+            onChange={(_, value: any) =>
+              value !== null && dispatch(changeFieldProp({ path: "valueLabelDisplay", value }))
+            }
           >
             <ToggleButton value="off">Off</ToggleButton>
             <ToggleButton value="auto">Auto</ToggleButton>

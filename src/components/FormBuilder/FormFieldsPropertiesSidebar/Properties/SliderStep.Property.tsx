@@ -3,6 +3,8 @@ import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { NumericFormat } from "react-number-format";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type SliderStepPropertyProps = {
   value: {
@@ -10,13 +12,10 @@ type SliderStepPropertyProps = {
     min: number;
     max: number;
   };
-  onChange: (path: string, value: number | null | undefined) => void;
 };
 
-export const SliderStepProperty = ({
-  value: { step, min, max },
-  onChange,
-}: SliderStepPropertyProps) => {
+export const SliderStepProperty = ({ value: { step, min, max } }: SliderStepPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -36,7 +35,7 @@ export const SliderStepProperty = ({
             allowNegative={false}
             isAllowed={({ floatValue: v }) => (v ? v <= max - min : true)}
             onValueChange={({ value }) => {
-              onChange(`step`, +value);
+              dispatch(changeFieldProp({ path: `step`, value: +value }));
             }}
           />
         </Grid>

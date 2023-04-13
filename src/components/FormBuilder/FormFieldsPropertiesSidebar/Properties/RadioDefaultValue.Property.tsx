@@ -4,18 +4,16 @@ import React from "react";
 import { IRadioOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type RadioDefaultValuePropertyProps = {
   value: string | undefined;
   options: IRadioOptionProps[];
-  onChange: (path: string, value: string | undefined) => void;
 };
 
-export const RadioDefaultValueProperty = ({
-  value,
-  options,
-  onChange,
-}: RadioDefaultValuePropertyProps) => {
+export const RadioDefaultValueProperty = ({ value, options }: RadioDefaultValuePropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -30,7 +28,7 @@ export const RadioDefaultValueProperty = ({
             id="radio-default-value-select"
             value={value}
             onChange={(e: SelectChangeEvent<any>, _) => {
-              onChange("defaultValue", e.target.value);
+              dispatch(changeFieldProp({ path: "defaultValue", value: e.target.value }));
             }}
             IconComponent={() => <></>}
             endAdornment={
@@ -42,7 +40,7 @@ export const RadioDefaultValueProperty = ({
                     event.stopPropagation();
                   }}
                   onClick={() => {
-                    onChange("defaultValue", "");
+                    dispatch(changeFieldProp({ path: "defaultValue", value: "" }));
                   }}
                 >
                   <Clear sx={{ width: 15, height: 15 }} />

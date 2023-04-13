@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type AutoWidthPropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: boolean | undefined) => void;
 };
 
-export const AutoWidthProperty = ({ value, onChange }: AutoWidthPropertyProps) => {
+export const AutoWidthProperty = ({ value }: AutoWidthPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -21,7 +23,7 @@ export const AutoWidthProperty = ({ value, onChange }: AutoWidthPropertyProps) =
             name={"autoWidth"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("autoWidth", e.target.checked)
+              dispatch(changeFieldProp({ path: "autoWidth", value: e.target.checked }))
             }
           />
         </Grid>

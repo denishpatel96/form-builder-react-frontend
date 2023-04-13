@@ -3,13 +3,15 @@ import { Grid, IconButton, TextField } from "@mui/material";
 import React, { ReactNode } from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type PlaceholderPropertyProps = {
   value: string | undefined;
-  onChange: (path: string, value: string | undefined) => void;
 };
 
-export const PlaceholderProperty = ({ value, onChange }: PlaceholderPropertyProps) => {
+export const PlaceholderProperty = ({ value }: PlaceholderPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -29,7 +31,7 @@ export const PlaceholderProperty = ({ value, onChange }: PlaceholderPropertyProp
                   color="primary"
                   size="small"
                   onClick={() => {
-                    onChange("placeholder", "");
+                    dispatch(changeFieldProp({ path: "placeholder", value: "" }));
                   }}
                 >
                   <Clear sx={{ height: 15, width: 15 }} />
@@ -37,7 +39,7 @@ export const PlaceholderProperty = ({ value, onChange }: PlaceholderPropertyProp
               ),
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              onChange("placeholder", e.target.value)
+              dispatch(changeFieldProp({ path: "placeholder", value: e.target.value }))
             }
           />
         </Grid>

@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type NativePropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: boolean | undefined) => void;
 };
 
-export const NativeProperty = ({ value, onChange }: NativePropertyProps) => {
+export const NativeProperty = ({ value }: NativePropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -21,7 +23,7 @@ export const NativeProperty = ({ value, onChange }: NativePropertyProps) => {
             name={"native"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("native", e.target.checked)
+              dispatch(changeFieldProp({ path: "native", value: e.target.checked }))
             }
           />
         </Grid>

@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type HiddenPropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: boolean | undefined) => void;
 };
 
-export const HiddenProperty = ({ value, onChange }: HiddenPropertyProps) => {
+export const HiddenProperty = ({ value }: HiddenPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -21,7 +23,7 @@ export const HiddenProperty = ({ value, onChange }: HiddenPropertyProps) => {
             name={"hidden"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("hidden", e.target.checked)
+              dispatch(changeFieldProp({ path: "hidden", value: e.target.checked }))
             }
           />
         </Grid>

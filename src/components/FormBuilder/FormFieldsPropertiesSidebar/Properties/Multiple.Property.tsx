@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type MultiplePropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: boolean | undefined) => void;
 };
 
-export const MultipleProperty = ({ value, onChange }: MultiplePropertyProps) => {
+export const MultipleProperty = ({ value }: MultiplePropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -21,7 +23,7 @@ export const MultipleProperty = ({ value, onChange }: MultiplePropertyProps) => 
             name={"multiple"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("multiple", e.target.checked)
+              dispatch(changeFieldProp({ path: "multiple", value: e.target.checked }))
             }
           />
         </Grid>

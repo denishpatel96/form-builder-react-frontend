@@ -1,6 +1,6 @@
 import React from "react";
 import { List } from "@mui/material";
-import { IDropdownProps, IFieldPropertiesChangeFunc } from "../../Types";
+import { IDropdownProps } from "../../Types";
 import {
   AutoWidthProperty,
   CompactnessProperty,
@@ -19,10 +19,9 @@ import {
 
 export interface IDropdownPropertiesProps {
   field: IDropdownProps;
-  onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const DropdownProperties = ({ field, onPropsChange }: IDropdownPropertiesProps) => {
+export const DropdownProperties = ({ field }: IDropdownPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -45,22 +44,19 @@ export const DropdownProperties = ({ field, onPropsChange }: IDropdownProperties
 
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
-      <LabelProperty value={label} onChange={onPropsChange} />
-      <HelperTextProperty value={helperText} onChange={onPropsChange} />
-      <OptionsProperty value={{ options, useCalcValues }} onChange={onPropsChange} />
-      <DropdownDefaultValueProperty
-        value={{ multiple, options, defaultValue }}
-        onChange={onPropsChange}
-      />
-      <HoverTextProperty value={title} onChange={onPropsChange} />
-      <WidthProperty value={colSpan} onChange={onPropsChange} />
-      <AutoWidthProperty value={autoWidth} onChange={onPropsChange} />
-      <RequiredProperty value={required} onChange={onPropsChange} />
-      <MultipleProperty value={multiple} onChange={onPropsChange} />
-      <NativeProperty value={native} onChange={onPropsChange} />
-      <HiddenProperty value={hidden} onChange={onPropsChange} />
-      <VariantProperty value={variant} onChange={onPropsChange} />
-      <CompactnessProperty value={size} onChange={onPropsChange} />
+      <LabelProperty value={label} />
+      <HelperTextProperty value={helperText} />
+      <OptionsProperty value={{ options, useCalcValues }} />
+      <DropdownDefaultValueProperty value={{ multiple, options, defaultValue }} />
+      <HoverTextProperty value={title} />
+      <WidthProperty value={colSpan} />
+      <AutoWidthProperty value={autoWidth} />
+      <RequiredProperty value={required} />
+      <MultipleProperty value={multiple} />
+      <NativeProperty value={native} />
+      <HiddenProperty value={hidden} />
+      <VariantProperty value={variant} />
+      <CompactnessProperty value={size} />
     </List>
   );
 };

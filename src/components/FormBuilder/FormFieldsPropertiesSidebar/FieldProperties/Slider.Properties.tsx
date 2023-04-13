@@ -1,7 +1,6 @@
 import { List } from "@mui/material";
 import React from "react";
 import { ISliderProps } from "../../Types";
-import { IFieldPropertiesChangeFunc } from "../../Types/Common";
 import {
   CompactnessProperty,
   CustomMarksProperty,
@@ -22,10 +21,9 @@ import { WidthProperty } from "../Properties/Width.Property";
 
 export interface ISliderPropertiesProps {
   field: ISliderProps;
-  onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const SliderProperties = ({ field, onPropsChange }: ISliderPropertiesProps) => {
+export const SliderProperties = ({ field }: ISliderPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -47,29 +45,23 @@ export const SliderProperties = ({ field, onPropsChange }: ISliderPropertiesProp
 
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
-      <LabelProperty value={label} onChange={onPropsChange} />
-      <HelperTextProperty value={helperText} onChange={onPropsChange} />
-      <RangeSliderProperty value={defaultValue} onChange={onPropsChange} />
-      <DefaultNumberValueProperty
-        value={{ defaultValue: defaultValue as number[], min, max }}
-        onChange={onPropsChange}
-      />
-      <NumberValueRangeProperty value={{ min, max }} onChange={onPropsChange} />
-      {step !== null && <SliderStepProperty value={{ min, max, step }} onChange={onPropsChange} />}
-      <MarksProperty value={showMarks} onChange={onPropsChange} />
+      <LabelProperty value={label} />
+      <HelperTextProperty value={helperText} />
+      <RangeSliderProperty value={defaultValue} />
+      <DefaultNumberValueProperty value={{ defaultValue: defaultValue as number[], min, max }} />
+      <NumberValueRangeProperty value={{ min, max }} />
+      {step !== null && <SliderStepProperty value={{ min, max, step }} />}
+      <MarksProperty value={showMarks} />
       {showMarks && (
-        <CustomMarksProperty
-          value={{ step, customMarks, showCustomMarks, min, max }}
-          onChange={onPropsChange}
-        />
+        <CustomMarksProperty value={{ step, customMarks, showCustomMarks, min, max }} />
       )}
-      <SliderTrackProperty value={track} onChange={onPropsChange} />
-      <ValueLabelDisplayProperty value={valueLabelDisplay} onChange={onPropsChange} />
-      <ValueLabelFormatProperty value={valueLabelFormat} onChange={onPropsChange} />
-      <HoverTextProperty value={title} onChange={onPropsChange} />
-      <WidthProperty value={colSpan} onChange={onPropsChange} />
-      <HiddenProperty value={hidden} onChange={onPropsChange} />
-      <CompactnessProperty value={size} onChange={onPropsChange} />
+      <SliderTrackProperty value={track} />
+      <ValueLabelDisplayProperty value={valueLabelDisplay} />
+      <ValueLabelFormatProperty value={valueLabelFormat} />
+      <HoverTextProperty value={title} />
+      <WidthProperty value={colSpan} />
+      <HiddenProperty value={hidden} />
+      <CompactnessProperty value={size} />
     </List>
   );
 };

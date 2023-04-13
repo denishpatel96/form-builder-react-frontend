@@ -3,13 +3,15 @@ import { Grid, IconButton, TextField } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type HoverTextPropertyProps = {
   value: string | undefined;
-  onChange: (path: string, value: string | undefined) => void;
 };
 
-export const HoverTextProperty = ({ value, onChange }: HoverTextPropertyProps) => {
+export const HoverTextProperty = ({ value }: HoverTextPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -31,7 +33,7 @@ export const HoverTextProperty = ({ value, onChange }: HoverTextPropertyProps) =
                   color="primary"
                   size="small"
                   onClick={() => {
-                    onChange("title", "");
+                    dispatch(changeFieldProp({ path: "title", value: "" }));
                   }}
                 >
                   <Clear sx={{ height: 15, width: 15 }} />
@@ -39,7 +41,7 @@ export const HoverTextProperty = ({ value, onChange }: HoverTextPropertyProps) =
               ),
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-              onChange("title", e.target.value);
+              dispatch(changeFieldProp({ path: "title", value: e.target.value }));
             }}
           />
         </Grid>

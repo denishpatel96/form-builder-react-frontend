@@ -1,7 +1,6 @@
 import { List } from "@mui/material";
 import React from "react";
 import { IRadioProps } from "../../Types";
-import { IFieldPropertiesChangeFunc } from "../../Types/Common";
 import {
   CompactnessProperty,
   HelperTextProperty,
@@ -17,10 +16,9 @@ import {
 
 export interface IRadioPropertiesProps {
   field: IRadioProps;
-  onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps) => {
+export const RadioProperties = ({ field }: IRadioPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -37,16 +35,16 @@ export const RadioProperties = ({ field, onPropsChange }: IRadioPropertiesProps)
 
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
-      <LabelProperty value={label} onChange={onPropsChange} />
-      <HelperTextProperty value={helperText} onChange={onPropsChange} />
-      <OptionsProperty value={{ useCalcValues, options }} onChange={onPropsChange} />
-      <RadioDefaultValueProperty value={defaultValue} onChange={onPropsChange} options={options} />
-      <OptionsLayoutProperty value={row} onChange={onPropsChange} />
-      <HoverTextProperty value={title} onChange={onPropsChange} />
-      <WidthProperty value={colSpan} onChange={onPropsChange} />
-      <RequiredProperty value={required} onChange={onPropsChange} />
-      <HiddenProperty value={hidden} onChange={onPropsChange} />
-      <CompactnessProperty value={size} onChange={onPropsChange} />
+      <LabelProperty value={label} />
+      <HelperTextProperty value={helperText} />
+      <OptionsProperty value={{ useCalcValues, options }} />
+      <RadioDefaultValueProperty value={defaultValue} options={options} />
+      <OptionsLayoutProperty value={row} />
+      <HoverTextProperty value={title} />
+      <WidthProperty value={colSpan} />
+      <RequiredProperty value={required} />
+      <HiddenProperty value={hidden} />
+      <CompactnessProperty value={size} />
     </List>
   );
 };

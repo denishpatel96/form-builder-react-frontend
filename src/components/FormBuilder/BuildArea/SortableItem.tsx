@@ -1,42 +1,36 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Box, Grid, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Typography } from "@mui/material";
 import { FORM_ELEMENTS_LIST } from "../../../constants";
 import { lighten, useTheme } from "@mui/material/styles";
 import { FieldProps } from "../Types";
 import {
   DeleteOutlined,
   DragIndicator,
-  EditOutlined,
-  SettingsOutlined,
   TuneOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
 import RemoveFieldDialog from "./RemoveFieldDialog";
 import { StyledFormFieldItemPlaceholder } from "../FormFieldsSideBar/Styles";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { removeField, selectField } from "../../../store/features/form/formSlice";
 
 interface ISortableItemProps {
   field: FieldProps;
   renderElement: (field?: FieldProps) => JSX.Element;
-  onFieldRemove: (id: string) => void;
-  onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
-  selectedFieldId: string;
   onTogglePropertiesDrawer: () => void;
 }
 
-const SortableItem = ({
-  field,
-  renderElement,
-  onFieldRemove,
-  onFieldSelect,
-  selectedFieldId,
-  onTogglePropertiesDrawer,
-}: ISortableItemProps) => {
+const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISortableItemProps) => {
   const theme = useTheme();
   const [hoveredFieldId, setHoveredFieldId] = React.useState<string>("");
   const { colSpan, fieldType, label, id, name } = field;
 
+  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
+  const dispatch = useAppDispatch();
+  const handleSelectField = (fieldId: string) => {
+    dispatch(selectField({ fieldId }));
+  };
   const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
   const fieldName = `${label} (${type})`;
 
@@ -98,7 +92,7 @@ const SortableItem = ({
         onClose={() => setConfirmDeleteFieldDialogOpen(false)}
         onConfirm={() => {
           setConfirmDeleteFieldDialogOpen(false);
-          onFieldRemove(id);
+          dispatch(removeField({ fieldId: id }));
         }}
       />
     );
@@ -119,7 +113,7 @@ const SortableItem = ({
         sx={{ width: 30, height: 30 }}
         onClick={(e) => {
           e.stopPropagation();
-          onFieldSelect(id);
+          handleSelectField(id);
           onTogglePropertiesDrawer();
         }}
       >
@@ -226,7 +220,7 @@ const SortableItem = ({
               if (selectedFieldId === id) {
                 onTogglePropertiesDrawer();
               } else {
-                onFieldSelect(id);
+                handleSelectField(id);
               }
             }}
           >

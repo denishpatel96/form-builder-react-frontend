@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { IRadioProps } from "../Types";
 
-export const getRadioProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): IRadioProps => {
+export const getRadioProps: Function = (elementCount: number): IRadioProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.RADIO,
     colSpan: 12,
     hidden: false,
     id: `q${elementCount}`,

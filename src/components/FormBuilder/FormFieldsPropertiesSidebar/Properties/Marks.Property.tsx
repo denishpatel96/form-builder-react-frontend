@@ -15,13 +15,15 @@ import { StyledListItem } from "../Styles";
 import { Mark } from "../../Types";
 import { Add, Remove } from "@mui/icons-material";
 import { NumericFormat } from "react-number-format";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type MarksPropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: number | string | boolean | Mark[] | undefined) => void;
 };
 
-export const MarksProperty = ({ value, onChange }: MarksPropertyProps) => {
+export const MarksProperty = ({ value }: MarksPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -34,10 +36,10 @@ export const MarksProperty = ({ value, onChange }: MarksPropertyProps) => {
             name={"showMarks"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              onChange("showMarks", e.target.checked);
+              dispatch(changeFieldProp({ path: "showMarks", value: e.target.checked }));
               if (!e.target.checked) {
-                onChange("showCustomMarks", false);
-                onChange("customMarks", []);
+                dispatch(changeFieldProp({ path: "showCustomMarks", value: false }));
+                dispatch(changeFieldProp({ path: "customMarks", value: [] }));
               }
             }}
           />
@@ -55,13 +57,12 @@ type CustomMarksPropertyProps = {
     min: number;
     max: number;
   };
-  onChange: (path: string, value: number | string | boolean | Mark[] | null | undefined) => void;
 };
 
 export const CustomMarksProperty = ({
   value: { step, customMarks, showCustomMarks, min, max },
-  onChange,
 }: CustomMarksPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -74,13 +75,15 @@ export const CustomMarksProperty = ({
             name={"showCustomMarks"}
             checked={showCustomMarks}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              onChange("showCustomMarks", e.target.checked);
+              dispatch(changeFieldProp({ path: "showCustomMarks", value: e.target.checked }));
               if (!e.target.checked) {
-                onChange("customMarks", []);
+                dispatch(changeFieldProp({ path: "customMarks", value: [] }));
               } else {
-                onChange(
-                  "customMarks",
-                  [min, max].map((v) => ({ value: v, label: `${v}` }))
+                dispatch(
+                  changeFieldProp({
+                    path: "customMarks",
+                    value: [min, max].map((v) => ({ value: v, label: `${v}` })),
+                  })
                 );
               }
             }}
@@ -108,9 +111,11 @@ export const CustomMarksProperty = ({
                       <IconButton
                         sx={{ width: 20, height: 20, mr: 1 }}
                         onClick={() => {
-                          onChange(
-                            "customMarks",
-                            customMarks.filter((_, ind) => ind !== index)
+                          dispatch(
+                            changeFieldProp({
+                              path: "customMarks",
+                              value: customMarks.filter((_, ind) => ind !== index),
+                            })
                           );
                         }}
                       >
@@ -129,7 +134,9 @@ export const CustomMarksProperty = ({
                         }
                         onValueChange={({ floatValue: v }) => {
                           if (v === undefined) v = 0;
-                          onChange(`customMarks[${index}].value`, v);
+                          dispatch(
+                            changeFieldProp({ path: `customMarks[${index}].value`, value: v })
+                          );
                         }}
                       />
                     </Grid>
@@ -141,7 +148,12 @@ export const CustomMarksProperty = ({
                         value={mark.label}
                         fullWidth
                         onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                          onChange(`customMarks[${index}].label`, e.target.value)
+                          dispatch(
+                            changeFieldProp({
+                              path: `customMarks[${index}].label`,
+                              value: e.target.value,
+                            })
+                          )
                         }
                       />
                     </Grid>
@@ -154,7 +166,12 @@ export const CustomMarksProperty = ({
                   size="small"
                   startIcon={<Add />}
                   onClick={() => {
-                    onChange(`customMarks`, [...customMarks, { label: "", value: 0 }]);
+                    dispatch(
+                      changeFieldProp({
+                        path: `customMarks`,
+                        value: [...customMarks, { label: "", value: 0 }],
+                      })
+                    );
                   }}
                 >
                   <Typography variant="body2">Add custom mark</Typography>
@@ -171,7 +188,9 @@ export const CustomMarksProperty = ({
                   name={"restrictSelectionToCustomMarks"}
                   checked={step === null}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onChange("step", e.target.checked ? null : undefined)
+                    dispatch(
+                      changeFieldProp({ path: "step", value: e.target.checked ? null : undefined })
+                    )
                   }
                   size="small"
                 />

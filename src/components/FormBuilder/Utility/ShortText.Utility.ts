@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { IShortTextProps } from "../Types";
 
-export const getShortTextProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): IShortTextProps => {
+export const getShortTextProps: Function = (elementCount: number): IShortTextProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.SHORT_TEXT,
     colSpan: 12,
     hidden: false,
     title: "",

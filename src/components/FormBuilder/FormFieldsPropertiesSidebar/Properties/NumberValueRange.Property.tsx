@@ -3,19 +3,20 @@ import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { NumericFormat } from "react-number-format";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type NumberValueRangePropertyProps = {
   value: {
     min: number;
     max: number;
   };
-  onChange: (path: string, value: number | undefined) => void;
 };
 
 export const NumberValueRangeProperty = ({
   value: { min, max },
-  onChange,
 }: NumberValueRangePropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -37,11 +38,11 @@ export const NumberValueRangeProperty = ({
             }
             onValueChange={({ floatValue: v }) => {
               if (v === undefined) v = 0;
-              onChange("min", v);
+              dispatch(changeFieldProp({ path: "min", value: v }));
             }}
             onBlur={() => {
               if (min > max) {
-                onChange("max", min);
+                dispatch(changeFieldProp({ path: "max", value: min }));
               }
             }}
           />
@@ -61,11 +62,11 @@ export const NumberValueRangeProperty = ({
             }
             onValueChange={({ floatValue: v }) => {
               if (v === undefined) v = 0;
-              onChange("max", v);
+              dispatch(changeFieldProp({ path: "max", value: v }));
             }}
             onBlur={() => {
               if (min > max) {
-                onChange("min", max);
+                dispatch(changeFieldProp({ path: "min", value: max }));
               }
             }}
           />

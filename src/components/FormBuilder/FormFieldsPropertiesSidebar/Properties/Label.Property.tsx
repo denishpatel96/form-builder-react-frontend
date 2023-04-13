@@ -1,15 +1,17 @@
 import { Clear } from "@mui/icons-material";
 import { Grid, IconButton, TextField } from "@mui/material";
-import React, { ReactNode } from "react";
+import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type LabelPropertyProps = {
   value: string | undefined;
-  onChange: (path: string, value: string | undefined) => void;
 };
 
-export const LabelProperty = ({ value, onChange }: LabelPropertyProps) => {
+export const LabelProperty = ({ value }: LabelPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -29,7 +31,7 @@ export const LabelProperty = ({ value, onChange }: LabelPropertyProps) => {
                   color="primary"
                   size="small"
                   onClick={() => {
-                    onChange("label", "");
+                    dispatch(changeFieldProp({ path: "label", value: "" }));
                   }}
                 >
                   <Clear sx={{ height: 15, width: 15 }} />
@@ -37,7 +39,7 @@ export const LabelProperty = ({ value, onChange }: LabelPropertyProps) => {
               ),
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              onChange("label", e.target.value)
+              dispatch(changeFieldProp({ path: "label", value: e.target.value }))
             }
           />
         </Grid>

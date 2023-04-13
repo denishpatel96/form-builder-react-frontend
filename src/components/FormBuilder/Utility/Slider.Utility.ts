@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { ISliderProps } from "../Types";
 
-export const getSliderProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): ISliderProps => {
+export const getSliderProps: Function = (elementCount: number): ISliderProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.SLIDER,
     colSpan: 12,
     hidden: false,
     id: `q${elementCount}`,

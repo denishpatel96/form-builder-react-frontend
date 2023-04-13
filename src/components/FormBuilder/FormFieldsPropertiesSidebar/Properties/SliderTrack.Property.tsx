@@ -2,13 +2,15 @@ import { Grid, SliderProps, ToggleButton, ToggleButtonGroup } from "@mui/materia
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type SliderTrackPropertyProps = {
   value: SliderProps["track"];
-  onChange: (path: string, value: SliderProps["track"]) => void;
 };
 
-export const SliderTrackProperty = ({ value, onChange }: SliderTrackPropertyProps) => {
+export const SliderTrackProperty = ({ value }: SliderTrackPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -22,7 +24,9 @@ export const SliderTrackProperty = ({ value, onChange }: SliderTrackPropertyProp
             color="primary"
             value={value}
             exclusive
-            onChange={(_, value: any) => value !== null && onChange("track", value)}
+            onChange={(_, value: any) =>
+              value !== null && dispatch(changeFieldProp({ path: "track", value }))
+            }
           >
             <ToggleButton value={false}>Hidden</ToggleButton>
             <ToggleButton value="normal">Visible</ToggleButton>

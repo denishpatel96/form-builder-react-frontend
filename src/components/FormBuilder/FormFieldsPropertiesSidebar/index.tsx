@@ -19,7 +19,6 @@ import {
 } from "./FieldProperties";
 import {
   FieldProps,
-  IFieldPropertiesChangeFunc,
   IShortTextProps,
   IRadioProps,
   ICheckboxProps,
@@ -33,18 +32,12 @@ import { getCategoryColor } from "../FormFieldsSideBar";
 
 type IFormFieldProps = {
   field: FieldProps | undefined;
-  onPropsChange: IFieldPropertiesChangeFunc;
   onTogglePin: () => void;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const FormFieldPropertiesSidebar = ({
-  field,
-  onPropsChange,
-  isOpen,
-  setIsOpen,
-}: IFormFieldProps) => {
+const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProps) => {
   const element = FORM_ELEMENTS_LIST.find((el) => el.id === field?.fieldType);
   return (
     <Drawer
@@ -109,31 +102,28 @@ const FormFieldPropertiesSidebar = ({
         </Box>
       )}
       {field && field.fieldType === FORM_ELEMENTS.SHORT_TEXT && (
-        <ShortTextProperties field={field as IShortTextProps} onPropsChange={onPropsChange} />
+        <ShortTextProperties field={field as IShortTextProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.LONG_TEXT && (
-        <LongTextProperties field={field as ILongTextProps} onPropsChange={onPropsChange} />
+        <LongTextProperties field={field as ILongTextProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.RADIO && (
-        <RadioProperties field={field as IRadioProps} onPropsChange={onPropsChange} />
+        <RadioProperties field={field as IRadioProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX && (
-        <CheckboxProperties field={field as ICheckboxProps} onPropsChange={onPropsChange} />
+        <CheckboxProperties field={field as ICheckboxProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX_GROUP && (
-        <CheckboxGroupProperties
-          field={field as ICheckboxGroupProps}
-          onPropsChange={onPropsChange}
-        />
+        <CheckboxGroupProperties field={field as ICheckboxGroupProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.DROPDOWN && (
-        <DropdownProperties field={field as IDropdownProps} onPropsChange={onPropsChange} />
+        <DropdownProperties field={field as IDropdownProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.COMBOBOX && (
-        <ComboboxProperties field={field as IComboboxProps} onPropsChange={onPropsChange} />
+        <ComboboxProperties field={field as IComboboxProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.SLIDER && (
-        <SliderProperties field={field as ISliderProps} onPropsChange={onPropsChange} />
+        <SliderProperties field={field as ISliderProps} />
       )}
     </Drawer>
   );

@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { ILongTextProps } from "../Types";
 
-export const getLongTextProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): ILongTextProps => {
+export const getLongTextProps: Function = (elementCount: number): ILongTextProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.LONG_TEXT,
     colSpan: 12,
     hidden: false,
     title: "",

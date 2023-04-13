@@ -8,13 +8,15 @@ import {
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type MarginPropertyProps = {
   value: TextFieldProps["margin"];
-  onChange: (path: string, value: TextFieldProps["margin"]) => void;
 };
 
-export const MarginProperty = ({ value, onChange }: MarginPropertyProps) => {
+export const MarginProperty = ({ value }: MarginPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -28,7 +30,9 @@ export const MarginProperty = ({ value, onChange }: MarginPropertyProps) => {
             color="primary"
             value={value}
             exclusive
-            onChange={(_, value: any) => value !== null && onChange("margin", value)}
+            onChange={(_, value: any) =>
+              value !== null && dispatch(changeFieldProp({ path: "margin", value }))
+            }
             aria-label="Platform"
           >
             <ToggleButton value="none">None</ToggleButton>

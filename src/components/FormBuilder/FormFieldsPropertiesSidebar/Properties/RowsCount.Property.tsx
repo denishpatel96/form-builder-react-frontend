@@ -3,16 +3,18 @@ import React from "react";
 import { NumericFormat } from "react-number-format";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type RowsCountPropertyProps = {
   value: {
     maxRows: TextFieldProps["maxRows"];
     minRows: TextFieldProps["minRows"];
   };
-  onChange: (path: string, value: boolean | number | undefined) => void;
 };
 
-export const RowsCountProperty = ({ value, onChange }: RowsCountPropertyProps) => {
+export const RowsCountProperty = ({ value }: RowsCountPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -32,8 +34,8 @@ export const RowsCountProperty = ({ value, onChange }: RowsCountPropertyProps) =
                 value={value.minRows}
                 customInput={TextField}
                 onValueChange={({ floatValue }) => {
-                  onChange("rows", 0);
-                  onChange("minRows", floatValue);
+                  dispatch(changeFieldProp({ path: "rows", value: 0 }));
+                  dispatch(changeFieldProp({ path: "minRows", value: floatValue }));
                 }}
               />
             </Grid>
@@ -48,8 +50,8 @@ export const RowsCountProperty = ({ value, onChange }: RowsCountPropertyProps) =
                 value={value.maxRows}
                 customInput={TextField}
                 onValueChange={({ floatValue }) => {
-                  onChange("rows", 0);
-                  onChange("maxRows", floatValue);
+                  dispatch(changeFieldProp({ path: "rows", value: 0 }));
+                  dispatch(changeFieldProp({ path: "maxRows", value: floatValue }));
                 }}
               />
             </Grid>

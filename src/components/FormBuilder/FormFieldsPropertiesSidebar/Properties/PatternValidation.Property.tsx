@@ -2,6 +2,8 @@ import { FormHelperText, Grid, Switch, TextField } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type PatternValidationPropertyProps = {
   value: {
@@ -9,13 +11,12 @@ type PatternValidationPropertyProps = {
     pattern?: string;
     msgPattern?: string;
   };
-  onChange: (path: string, value: boolean | number | string | undefined) => void;
 };
 
 export const PatternValidationProperty = ({
   value: { validatePattern, pattern, msgPattern },
-  onChange,
 }: PatternValidationPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -28,7 +29,7 @@ export const PatternValidationProperty = ({
             name={"validatePattern"}
             checked={validatePattern}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("validatePattern", e.target.checked)
+              dispatch(changeFieldProp({ path: "validatePattern", value: e.target.checked }))
             }
           />
         </Grid>
@@ -44,7 +45,7 @@ export const PatternValidationProperty = ({
                   value={msgPattern}
                   fullWidth
                   onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                    onChange("msgPattern", e.target.value)
+                    dispatch(changeFieldProp({ path: "msgPattern", value: e.target.value }))
                   }
                   helperText={"Message to display when validation fails."}
                 />
@@ -58,7 +59,7 @@ export const PatternValidationProperty = ({
                   value={pattern}
                   fullWidth
                   onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                    onChange("pattern", e.target.value)
+                    dispatch(changeFieldProp({ path: "pattern", value: e.target.value }))
                   }
                 />
               </Grid>

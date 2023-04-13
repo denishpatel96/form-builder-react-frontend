@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type RequiredPropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: boolean | undefined) => void;
 };
 
-export const RequiredProperty = ({ value, onChange }: RequiredPropertyProps) => {
+export const RequiredProperty = ({ value }: RequiredPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -21,7 +23,7 @@ export const RequiredProperty = ({ value, onChange }: RequiredPropertyProps) => 
             name={"required"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("required", e.target.checked)
+              dispatch(changeFieldProp({ path: "required", value: e.target.checked }))
             }
           />
         </Grid>

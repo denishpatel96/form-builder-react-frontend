@@ -9,12 +9,13 @@ import {
   StyledFormFieldItemPlaceholder,
 } from "./Styles";
 import { ChevronLeftOutlined } from "@mui/icons-material";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { addField } from "../../../store/features/form/formSlice";
 
 interface IFormFieldsProps {
   isOpen: boolean;
   activeId?: UniqueIdentifier | null;
   onDrawerClick: () => void;
-  onFieldAdd: (id: string) => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -29,13 +30,9 @@ export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   }
 };
 
-const FormFieldsSidebar = ({
-  isOpen,
-  activeId,
-  onDrawerClick,
-  onFieldAdd,
-  setIsOpen,
-}: IFormFieldsProps) => {
+const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IFormFieldsProps) => {
+  const dispatch = useAppDispatch();
+  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
   const activeElement = FORM_ELEMENTS_LIST.find((e) => e.id === activeId);
   return (
     <Drawer
@@ -99,7 +96,7 @@ const FormFieldsSidebar = ({
               sx={{ height: 100, width: 100 }}
               onClick={(e) => {
                 e.stopPropagation();
-                onFieldAdd(element.id);
+                dispatch(addField({ elementType: element.id, addAfter: selectedFieldId }));
               }}
             >
               {isDragging ? (

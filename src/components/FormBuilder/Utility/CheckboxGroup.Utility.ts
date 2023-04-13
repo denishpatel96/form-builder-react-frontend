@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { ICheckboxGroupProps } from "../Types";
 
-export const getCheckboxGroupProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): ICheckboxGroupProps => {
+export const getCheckboxGroupProps: Function = (elementCount: number): ICheckboxGroupProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.CHECKBOX_GROUP,
     colSpan: 12,
     hidden: false,
     id: `q${elementCount}`,

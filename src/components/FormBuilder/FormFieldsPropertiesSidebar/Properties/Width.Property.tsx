@@ -1,14 +1,16 @@
-import { Grid, Slider, SliderProps } from "@mui/material";
+import { Grid, Slider } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type WidthPropertyProps = {
   value: 3 | 4 | 6 | 8 | 9 | 12;
-  onChange: (path: string, value: number) => void;
 };
 
-export const WidthProperty = ({ value, onChange }: WidthPropertyProps) => {
+export const WidthProperty = ({ value }: WidthPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -21,7 +23,7 @@ export const WidthProperty = ({ value, onChange }: WidthPropertyProps) => {
             value={value}
             valueLabelDisplay="auto"
             onChange={(_, value) => {
-              onChange("colSpan", value as number);
+              dispatch(changeFieldProp({ path: "colSpan", value: value as number }));
             }}
             step={null}
             marks={[3, 4, 6, 8, 9, 12].map((el) => ({ value: el, label: el }))}

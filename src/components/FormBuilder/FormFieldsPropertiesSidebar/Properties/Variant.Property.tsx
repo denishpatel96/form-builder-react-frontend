@@ -8,13 +8,15 @@ import {
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type VariantPropertyProps = {
   value: TextFieldProps["variant"];
-  onChange: (path: string, value: TextFieldProps["variant"]) => void;
 };
 
-export const VariantProperty = ({ value, onChange }: VariantPropertyProps) => {
+export const VariantProperty = ({ value }: VariantPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -28,7 +30,9 @@ export const VariantProperty = ({ value, onChange }: VariantPropertyProps) => {
             color="primary"
             value={value}
             exclusive
-            onChange={(_, value: any) => value !== null && onChange("variant", value)}
+            onChange={(_, value: any) =>
+              value !== null && dispatch(changeFieldProp({ path: "variant", value }))
+            }
             aria-label="Platform"
           >
             <ToggleButton value="standard">Standard</ToggleButton>

@@ -3,13 +3,15 @@ import React from "react";
 import { StyledListItem } from "../Styles";
 import PropTitle from "./PropTitle";
 import { Clear } from "@mui/icons-material";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type HelperTextPropertyProps = {
   value: string | undefined;
-  onChange: (path: string, value: string | undefined) => void;
 };
 
-export const HelperTextProperty = ({ value, onChange }: HelperTextPropertyProps) => {
+export const HelperTextProperty = ({ value }: HelperTextPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -29,7 +31,7 @@ export const HelperTextProperty = ({ value, onChange }: HelperTextPropertyProps)
                   color="primary"
                   size="small"
                   onClick={() => {
-                    onChange("helperText", "");
+                    dispatch(changeFieldProp({ path: "helperText", value: "" }));
                   }}
                 >
                   <Clear sx={{ height: 15, width: 15 }} />
@@ -37,7 +39,7 @@ export const HelperTextProperty = ({ value, onChange }: HelperTextPropertyProps)
               ),
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              onChange("helperText", e.target.value)
+              dispatch(changeFieldProp({ path: "helperText", value: e.target.value }))
             }
           />
         </Grid>

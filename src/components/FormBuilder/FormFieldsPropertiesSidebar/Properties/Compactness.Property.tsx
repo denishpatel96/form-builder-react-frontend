@@ -1,14 +1,16 @@
 import { FormHelperText, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { useAppDispatch } from "../../../../store/hooks";
 import { StyledListItem } from "../Styles";
 import PropTitle from "./PropTitle";
 
 type CompactnessPropertyProps = {
   value: "small" | "medium" | undefined;
-  onChange: (path: string, value: string) => void;
 };
 
-export const CompactnessProperty = ({ value, onChange }: CompactnessPropertyProps) => {
+export const CompactnessProperty = ({ value }: CompactnessPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -22,7 +24,9 @@ export const CompactnessProperty = ({ value, onChange }: CompactnessPropertyProp
             color="primary"
             value={value}
             exclusive
-            onChange={(_, value: any) => value !== null && onChange("size", value)}
+            onChange={(_, value: any) =>
+              value !== null && dispatch(changeFieldProp({ path: "size", value }))
+            }
           >
             <ToggleButton value="small">Compact</ToggleButton>
             <ToggleButton value="medium">Normal</ToggleButton>

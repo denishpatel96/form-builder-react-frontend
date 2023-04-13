@@ -1,11 +1,9 @@
+import { FORM_ELEMENTS } from "../../../constants";
 import { IDropdownProps } from "../Types";
 
-export const getDropdownProps: Function = (
-  elementId: string | number,
-  elementCount: number
-): IDropdownProps => {
+export const getDropdownProps: Function = (elementCount: number): IDropdownProps => {
   return {
-    fieldType: elementId,
+    fieldType: FORM_ELEMENTS.DROPDOWN,
     colSpan: 12,
     hidden: false,
     variant: "outlined",

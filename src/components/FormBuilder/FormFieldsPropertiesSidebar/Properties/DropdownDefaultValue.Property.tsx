@@ -15,6 +15,8 @@ import React from "react";
 import { ISelectableOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type DropdownDefaultValuePropertyProps = {
   value: {
@@ -22,13 +24,12 @@ type DropdownDefaultValuePropertyProps = {
     multiple: boolean;
     options: ISelectableOptionProps[];
   };
-  onChange: (path: string, value: string[] | ISelectableOptionProps[] | undefined) => void;
 };
 
 export const DropdownDefaultValueProperty = ({
   value: { defaultValue, multiple, options },
-  onChange,
 }: DropdownDefaultValuePropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -72,7 +73,7 @@ export const DropdownDefaultValueProperty = ({
                 return updatedOp;
               });
 
-              onChange("options", updatedOptions);
+              dispatch(changeFieldProp({ path: "options", value: updatedOptions }));
             }}
             IconComponent={() => <></>}
             endAdornment={
@@ -84,12 +85,14 @@ export const DropdownDefaultValueProperty = ({
                     event.stopPropagation();
                   }}
                   onClick={() => {
-                    onChange(
-                      "options",
-                      options.map((op) => {
-                        let updatedOp = { ...op };
-                        updatedOp.defaultChecked = false;
-                        return updatedOp;
+                    dispatch(
+                      changeFieldProp({
+                        path: "options",
+                        value: options.map((op) => {
+                          let updatedOp = { ...op };
+                          updatedOp.defaultChecked = false;
+                          return updatedOp;
+                        }),
                       })
                     );
                   }}

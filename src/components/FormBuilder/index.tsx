@@ -9,65 +9,37 @@ import {
   DragOverEvent,
   DragStartEvent,
   DragCancelEvent,
-  UniqueIdentifier,
   Over,
   pointerWithin,
   Active,
 } from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
-import { FORM_ELEMENTS } from "../../constants";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import {
-  getCheckboxProps,
-  getShortTextProps,
-  getRadioProps,
-  getDropdownProps,
-  getComboboxProps,
-  getSliderProps,
-  getCheckboxGroupProps,
-  getLongTextProps,
-  getFormDesignProps,
-} from "./Utility";
+import { getFormDesignProps } from "./Utility";
 import _ from "lodash";
-import { FieldProps, IFormDesignProps } from "./Types";
+import { IFormDesignProps } from "./Types";
 import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { addField, moveField, selectField } from "../../store/features/form/formSlice";
 
 const FormBuilder = () => {
+  const dispatch = useAppDispatch();
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
-  const [selectedFieldId, setSelectedFieldId] = React.useState<string>("");
-  const [elementCount, setElementCount] = React.useState<number>(9);
+
+  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
+  const formFields = useAppSelector((state) => state.form.fields);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isFormFieldsOpen, setIsFormFieldsOpen] = React.useState<boolean>(true);
   const [isFormDesignOpen, setIsFormDesignOpen] = React.useState<boolean>(false);
-  const [formFields, setFormFields] = React.useState<FieldProps[]>([
-    getShortTextProps(FORM_ELEMENTS.SHORT_TEXT, 1),
-    getLongTextProps(FORM_ELEMENTS.LONG_TEXT, 2),
-    getRadioProps(FORM_ELEMENTS.RADIO, 3),
-    getCheckboxProps(FORM_ELEMENTS.CHECKBOX, 4),
-    getCheckboxGroupProps(FORM_ELEMENTS.CHECKBOX_GROUP, 5),
-    getDropdownProps(FORM_ELEMENTS.DROPDOWN, 6),
-    getComboboxProps(FORM_ELEMENTS.COMBOBOX, 7),
-    getSliderProps(FORM_ELEMENTS.SLIDER, 8),
-  ]);
 
   const [formProperties, setFormProperties] = React.useState<IFormDesignProps>(
     getFormDesignProps()
   );
-
-  const handlePropsChange = (path: string, value: any) => {
-    setFormFields((prev) => {
-      if (selectedFieldId === null) return prev;
-      const updated = [...prev];
-      const index = updated.findIndex((f) => f.id === selectedFieldId);
-      _.set(updated[index], path, value);
-      return updated;
-    });
-  };
 
   const handleFormDesignPropsChange = (path: string, value: any) => {
     setFormProperties((prev) => {
@@ -75,59 +47,6 @@ const FormBuilder = () => {
       _.set(updated, path, value);
       return updated;
     });
-  };
-
-  const handleAddFormField = (
-    elementId: UniqueIdentifier,
-    addAfterElementId: UniqueIdentifier = ""
-  ) => {
-    if (!elementId) return;
-    let fieldToAdd: FieldProps | null = null;
-    switch (elementId) {
-      case FORM_ELEMENTS.SHORT_TEXT:
-        fieldToAdd = getShortTextProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.LONG_TEXT:
-        fieldToAdd = getLongTextProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.RADIO:
-        fieldToAdd = getRadioProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.CHECKBOX:
-        fieldToAdd = getCheckboxProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.CHECKBOX_GROUP:
-        fieldToAdd = getCheckboxGroupProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.DROPDOWN:
-        fieldToAdd = getDropdownProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.COMBOBOX:
-        fieldToAdd = getComboboxProps(elementId, elementCount);
-        break;
-      case FORM_ELEMENTS.SLIDER:
-        fieldToAdd = getSliderProps(elementId, elementCount);
-        break;
-    }
-
-    if (fieldToAdd !== null) {
-      const fieldId = fieldToAdd.id;
-      setFormFields((prev) => {
-        const updated = [...prev];
-        if (addAfterElementId) {
-          updated.splice(
-            updated.findIndex((i) => i.id === addAfterElementId) + 1,
-            0,
-            fieldToAdd as FieldProps
-          );
-        } else {
-          updated.push(fieldToAdd as FieldProps);
-        }
-        return updated;
-      });
-      setElementCount((prev) => prev + 1);
-      setSelectedFieldId(fieldId);
-    }
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -143,37 +62,26 @@ const FormBuilder = () => {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    //console.log("drag ended", event);
+    //console.log("drag ended", event)
     const { active, over } = event;
-    if (over) {
-      handleAddFormField(active.id, over.id);
+    if (over && active.id !== over.id && active.id.toString().includes("ctrl_")) {
+      console.log("event", active, over);
+      dispatch(addField({ elementType: active.id.toString(), addAfter: over.id.toString() }));
     }
     setActive(null);
     setOver(null);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
-    //console.log("drag over", event);
+    // console.log("drag over", event);
     const { active, over } = event;
     if (over && active.id !== over.id && !active.id.toString().includes("ctrl_")) {
+      console.log("moving");
       // If element is dragged within sortable list
       // element should just move to index of over element.
-      setFormFields((prev) => {
-        const oldIndex = prev.findIndex((el) => el.id === active.id);
-        const newIndex = prev.findIndex((el) => el.id === over.id);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-      setSelectedFieldId(active.id.toString());
+      dispatch(moveField({ activeId: active.id.toString(), overId: over.id.toString() }));
     }
     setOver(event?.over);
-  };
-
-  const handleFieldRemove = (fieldId: string) => {
-    setFormFields((prev) => {
-      let updated = [...prev];
-      updated = updated.filter((f) => f.id !== fieldId);
-      return updated;
-    });
   };
 
   const sensors = useSensors(
@@ -293,23 +201,17 @@ const FormBuilder = () => {
         {renderFormFieldsButton()}
         <FormFieldsSidebar
           activeId={active?.id?.toString() || ""}
-          onDrawerClick={() => setSelectedFieldId("")}
-          onFieldAdd={(elementId) => handleAddFormField(elementId, selectedFieldId)}
+          onDrawerClick={() => dispatch(selectField({ fieldId: "" }))}
           isOpen={isFormFieldsOpen}
           setIsOpen={setIsFormFieldsOpen}
         />
         <BuildArea
           formFields={formFields}
           formProperties={formProperties}
-          onFieldRemove={handleFieldRemove}
-          selectedFieldId={selectedFieldId}
-          setSelectedFieldId={setSelectedFieldId}
-          onFieldSelect={setSelectedFieldId}
           onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
         />
         <FormFieldPropertiesSidebar
           field={formFields.find((f) => f.id === selectedFieldId)}
-          onPropsChange={handlePropsChange}
           onTogglePin={() => setIsPropertiesOpen(true)}
           isOpen={isPropertiesOpen}
           setIsOpen={setIsPropertiesOpen}

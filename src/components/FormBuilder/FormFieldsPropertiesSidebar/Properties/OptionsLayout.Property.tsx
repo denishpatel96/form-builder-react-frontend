@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type OptionsLayoutPropertyProps = {
   value: boolean | undefined;
-  onChange: (path: string, value: boolean | undefined) => void;
 };
 
-export const OptionsLayoutProperty = ({ value, onChange }: OptionsLayoutPropertyProps) => {
+export const OptionsLayoutProperty = ({ value }: OptionsLayoutPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -20,7 +22,9 @@ export const OptionsLayoutProperty = ({ value, onChange }: OptionsLayoutProperty
           <Switch
             name={"row"}
             checked={value}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange("row", e.target.checked)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              dispatch(changeFieldProp({ path: "row", value: e.target.checked }))
+            }
           />
         </Grid>
       </Grid>

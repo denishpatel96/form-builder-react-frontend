@@ -3,16 +3,17 @@ import { FormHelperText, Grid, IconButton, TextField } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type ValueLabelFormatPropertyProps = {
   value: { prefix: string | undefined; suffix: string | undefined };
-  onChange: (path: string, value: string | undefined) => void;
 };
 
 export const ValueLabelFormatProperty = ({
   value: { prefix, suffix },
-  onChange,
 }: ValueLabelFormatPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -28,7 +29,7 @@ export const ValueLabelFormatProperty = ({
             label="Prefix"
             fullWidth
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-              onChange("valueLabelFormat.prefix", e.target.value);
+              dispatch(changeFieldProp({ path: "valueLabelFormat.prefix", value: e.target.value }));
             }}
           />
         </Grid>
@@ -41,7 +42,7 @@ export const ValueLabelFormatProperty = ({
             label="Suffix"
             fullWidth
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-              onChange("valueLabelFormat.suffix", e.target.value);
+              dispatch(changeFieldProp({ path: "valueLabelFormat.suffix", value: e.target.value }));
             }}
           />
         </Grid>

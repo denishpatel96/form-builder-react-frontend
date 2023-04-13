@@ -1,29 +1,6 @@
 import React from "react";
-import { Add, Clear, Delete, Remove } from "@mui/icons-material";
-import {
-  TextField,
-  Switch,
-  FormHelperText,
-  List,
-  Grid,
-  ToggleButtonGroup,
-  ToggleButton,
-  IconButton,
-  Slider,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  Box,
-  Typography,
-  Checkbox,
-  Button,
-  ListItemText,
-  Tooltip,
-  Chip,
-} from "@mui/material";
-import { IComboboxProps, IFieldPropertiesChangeFunc } from "../../Types";
-import { StyledListItem } from "../Styles";
-import PropTitle from "../Properties/PropTitle";
+import { List } from "@mui/material";
+import { IComboboxProps } from "../../Types";
 import {
   CompactnessProperty,
   DropdownDefaultValueProperty,
@@ -40,10 +17,9 @@ import {
 
 export interface IComboboxPropertiesProps {
   field: IComboboxProps;
-  onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const ComboboxProperties = ({ field, onPropsChange }: IComboboxPropertiesProps) => {
+export const ComboboxProperties = ({ field }: IComboboxPropertiesProps) => {
   const {
     colSpan,
     hidden,
@@ -64,20 +40,17 @@ export const ComboboxProperties = ({ field, onPropsChange }: IComboboxProperties
 
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
-      <LabelProperty value={label} onChange={onPropsChange} />
-      <HelperTextProperty value={helperText} onChange={onPropsChange} />
-      <OptionsProperty value={{ useCalcValues, options }} onChange={onPropsChange} />
-      <DropdownDefaultValueProperty
-        value={{ multiple, options, defaultValue }}
-        onChange={onPropsChange}
-      />
-      <HoverTextProperty value={title} onChange={onPropsChange} />
-      <WidthProperty value={colSpan} onChange={onPropsChange} />
-      <RequiredProperty value={required} onChange={onPropsChange} />
-      <MultipleProperty value={multiple} onChange={onPropsChange} />
-      <HiddenProperty value={hidden} onChange={onPropsChange} />
-      <VariantProperty value={variant} onChange={onPropsChange} />
-      <CompactnessProperty value={size} onChange={onPropsChange} />
+      <LabelProperty value={label} />
+      <HelperTextProperty value={helperText} />
+      <OptionsProperty value={{ useCalcValues, options }} />
+      <DropdownDefaultValueProperty value={{ multiple, options, defaultValue }} />
+      <HoverTextProperty value={title} />
+      <WidthProperty value={colSpan} />
+      <RequiredProperty value={required} />
+      <MultipleProperty value={multiple} />
+      <HiddenProperty value={hidden} />
+      <VariantProperty value={variant} />
+      <CompactnessProperty value={size} />
     </List>
   );
 };

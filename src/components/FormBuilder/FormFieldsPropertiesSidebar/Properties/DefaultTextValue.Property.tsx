@@ -3,13 +3,15 @@ import { Grid, IconButton, TextField } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type DefaultTextValuePropertyProps = {
   value: string | undefined;
-  onChange: (path: string, value: string | undefined) => void;
 };
 
-export const DefaultTextValueProperty = ({ value, onChange }: DefaultTextValuePropertyProps) => {
+export const DefaultTextValueProperty = ({ value }: DefaultTextValuePropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -29,7 +31,7 @@ export const DefaultTextValueProperty = ({ value, onChange }: DefaultTextValuePr
                   color="primary"
                   size="small"
                   onClick={() => {
-                    onChange("defaultValue", "");
+                    dispatch(changeFieldProp({ path: "defaultValue", value: "" }));
                   }}
                 >
                   <Clear sx={{ height: 15, width: 15 }} />
@@ -37,7 +39,7 @@ export const DefaultTextValueProperty = ({ value, onChange }: DefaultTextValuePr
               ),
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-              onChange("defaultValue", e.target.value);
+              dispatch(changeFieldProp({ path: "defaultValue", value: e.target.value }));
             }}
           />
         </Grid>

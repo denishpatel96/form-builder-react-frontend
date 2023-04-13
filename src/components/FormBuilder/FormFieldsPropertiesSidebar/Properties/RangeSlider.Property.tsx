@@ -2,13 +2,15 @@ import { FormHelperText, Grid, Switch } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type RangeSliderPropertyProps = {
   value: number | number[];
-  onChange: (path: string, value: number | number[] | undefined) => void;
 };
 
-export const RangeSliderProperty = ({ value, onChange }: RangeSliderPropertyProps) => {
+export const RangeSliderProperty = ({ value }: RangeSliderPropertyProps) => {
+  const dispatch = useAppDispatch();
   const isRangeSlider = Array.isArray(value);
   return (
     <StyledListItem>
@@ -22,7 +24,12 @@ export const RangeSliderProperty = ({ value, onChange }: RangeSliderPropertyProp
             name={"rangeSlider"}
             checked={isRangeSlider}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange("defaultValue", isRangeSlider ? value[0] : [value, 0])
+              dispatch(
+                changeFieldProp({
+                  path: "defaultValue",
+                  value: isRangeSlider ? value[0] : [value, 0],
+                })
+              )
             }
           />
         </Grid>

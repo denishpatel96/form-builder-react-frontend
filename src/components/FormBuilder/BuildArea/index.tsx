@@ -12,32 +12,26 @@ import BuildAreaHeader from "./BuildAreaHeader";
 import { getFieldBuilder } from "./FieldBuilders";
 import { getTheme } from "../../../theme";
 import { cloneDeep } from "lodash";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { selectField } from "../../../store/features/form/formSlice";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
   formProperties: IFormDesignProps;
-  onFieldRemove: (id: string) => void;
-  onFieldSelect: React.Dispatch<React.SetStateAction<string>>;
-  selectedFieldId: string;
-  setSelectedFieldId: React.Dispatch<React.SetStateAction<string>>;
   onTogglePropertiesDrawer: () => void;
 }
 
-const BuildArea = ({
-  formFields,
-  formProperties,
-  onFieldRemove,
-  onFieldSelect,
-  selectedFieldId,
-  setSelectedFieldId,
-  onTogglePropertiesDrawer,
-}: IBuildAreaProps) => {
+const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBuildAreaProps) => {
+  const dispatch = useAppDispatch();
   const customTheme = getTheme({ palette: cloneDeep(formProperties.palette) });
   const [active, setActive] = React.useState<Active | null>(null);
   const activeField = React.useMemo(
     () => formFields.find((el) => el.id === active?.id),
     [formFields, active]
   );
+
+  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     setActive(active);
@@ -100,9 +94,6 @@ const BuildArea = ({
                   key={index}
                   field={field}
                   renderElement={getFieldBuilder}
-                  selectedFieldId={selectedFieldId}
-                  onFieldSelect={onFieldSelect}
-                  onFieldRemove={onFieldRemove}
                   onTogglePropertiesDrawer={onTogglePropertiesDrawer}
                 />
               );
@@ -150,7 +141,7 @@ const BuildArea = ({
         maxWidth: "100%",
         position: "relative",
       }}
-      onClick={() => setSelectedFieldId("")}
+      onClick={() => dispatch(selectField({ fieldId: "" }))}
     >
       <BuildAreaHeader formFields={formFields} formProperties={formProperties} />
 
@@ -169,7 +160,7 @@ const BuildArea = ({
             backgroundSize: "cover",
             backgroundPosition: "50% 50%",
           }}
-          onClick={() => setSelectedFieldId("")}
+          onClick={() => dispatch(selectField({ fieldId: "" }))}
         >
           <Box
             sx={{
@@ -190,7 +181,7 @@ const BuildArea = ({
             }}
             onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
               if (e?.key === "Escape" || e?.code === "Escape") {
-                setSelectedFieldId("");
+                dispatch(selectField({ fieldId: "" }));
               }
             }}
           >

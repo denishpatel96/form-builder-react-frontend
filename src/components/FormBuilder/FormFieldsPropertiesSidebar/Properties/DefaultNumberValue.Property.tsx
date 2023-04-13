@@ -4,6 +4,8 @@ import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { NumericFormat } from "react-number-format";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type DefaultNumberValuePropertyProps = {
   value: {
@@ -11,14 +13,13 @@ type DefaultNumberValuePropertyProps = {
     min: number;
     max: number;
   };
-  onChange: (path: string, value: number | number[] | undefined) => void;
 };
 
 export const DefaultNumberValueProperty = ({
   value: { defaultValue, min, max },
-  onChange,
 }: DefaultNumberValuePropertyProps) => {
   const isRangeSlider = Array.isArray(defaultValue);
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -46,7 +47,7 @@ export const DefaultNumberValueProperty = ({
                         color="primary"
                         size="small"
                         onClick={() => {
-                          onChange(`defaultValue[${index}]`, min);
+                          dispatch(changeFieldProp({ path: `defaultValue[${index}]`, value: min }));
                         }}
                       >
                         <Clear sx={{ height: 15, width: 15 }} />
@@ -54,7 +55,7 @@ export const DefaultNumberValueProperty = ({
                     ),
                   }}
                   onValueChange={({ value }) => {
-                    onChange(`defaultValue[${index}]`, +value);
+                    dispatch(changeFieldProp({ path: `defaultValue[${index}]`, value: +value }));
                   }}
                 />
               </Grid>
@@ -78,7 +79,7 @@ export const DefaultNumberValueProperty = ({
                     color="primary"
                     size="small"
                     onClick={() => {
-                      onChange(`defaultValue`, min);
+                      dispatch(changeFieldProp({ path: `defaultValue`, value: min }));
                     }}
                   >
                     <Clear sx={{ height: 15, width: 15 }} />
@@ -86,7 +87,7 @@ export const DefaultNumberValueProperty = ({
                 ),
               }}
               onValueChange={({ value }) => {
-                onChange(`defaultValue`, +value);
+                dispatch(changeFieldProp({ path: `defaultValue`, value: +value }));
               }}
             />
           </Grid>

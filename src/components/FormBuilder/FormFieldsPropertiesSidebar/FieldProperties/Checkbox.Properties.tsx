@@ -1,6 +1,6 @@
 import React from "react";
 import { List } from "@mui/material";
-import { ICheckboxProps, IFieldPropertiesChangeFunc } from "../../Types";
+import { ICheckboxProps } from "../../Types";
 import {
   CompactnessProperty,
   DefaultCheckedProperty,
@@ -14,22 +14,21 @@ import {
 
 export interface ICheckboxPropertiesProps {
   field: ICheckboxProps;
-  onPropsChange: IFieldPropertiesChangeFunc;
 }
 
-export const CheckboxProperties = ({ field, onPropsChange }: ICheckboxPropertiesProps) => {
+export const CheckboxProperties = ({ field }: ICheckboxPropertiesProps) => {
   const { colSpan, hidden, label, helperText, required, size, title, defaultChecked } = field;
 
   return (
     <List sx={{ overflowY: "auto", overflowX: "hidden" }}>
-      <LabelProperty value={label} onChange={onPropsChange} />
-      <HelperTextProperty value={helperText} onChange={onPropsChange} />
-      <DefaultCheckedProperty value={defaultChecked} onChange={onPropsChange} />
-      <HoverTextProperty value={title} onChange={onPropsChange} />
-      <WidthProperty value={colSpan} onChange={onPropsChange} />
-      <RequiredProperty value={required} onChange={onPropsChange} />
-      <HiddenProperty value={hidden} onChange={onPropsChange} />
-      <CompactnessProperty value={size} onChange={onPropsChange} />
+      <LabelProperty value={label} />
+      <HelperTextProperty value={helperText} />
+      <DefaultCheckedProperty value={defaultChecked} />
+      <HoverTextProperty value={title} />
+      <WidthProperty value={colSpan} />
+      <RequiredProperty value={required} />
+      <HiddenProperty value={hidden} />
+      <CompactnessProperty value={size} />
     </List>
   );
 };

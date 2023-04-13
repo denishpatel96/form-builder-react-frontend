@@ -13,22 +13,18 @@ import React from "react";
 import { ISelectableOptionProps, IRadioOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
+import { useAppDispatch } from "../../../../store/hooks";
+import { changeFieldProp } from "../../../../store/features/form/formSlice";
 
 type OptionsPropertyProps = {
   value: {
     useCalcValues: boolean;
     options: IRadioOptionProps[] | ISelectableOptionProps[];
   };
-  onChange: (
-    path: string,
-    value: boolean | string | IRadioOptionProps[] | ISelectableOptionProps[]
-  ) => void;
 };
 
-export const OptionsProperty = ({
-  value: { useCalcValues, options },
-  onChange,
-}: OptionsPropertyProps) => {
+export const OptionsProperty = ({ value: { useCalcValues, options } }: OptionsPropertyProps) => {
+  const dispatch = useAppDispatch();
   return (
     <StyledListItem>
       <Grid container spacing={1}>
@@ -42,7 +38,7 @@ export const OptionsProperty = ({
                 name={"useCalcValues"}
                 checked={useCalcValues}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  onChange("useCalcValues", e.target.checked)
+                  dispatch(changeFieldProp({ path: "useCalcValues", value: e.target.checked }))
                 }
                 size="small"
               />
@@ -75,9 +71,11 @@ export const OptionsProperty = ({
                     <IconButton
                       sx={{ width: 20, height: 20, mr: 1 }}
                       onClick={() => {
-                        onChange(
-                          "options",
-                          options.filter((_, ind) => ind !== index)
+                        dispatch(
+                          changeFieldProp({
+                            path: "options",
+                            value: options.filter((_, ind) => ind !== index),
+                          })
                         );
                       }}
                     >
@@ -90,7 +88,12 @@ export const OptionsProperty = ({
                       value={op.label}
                       fullWidth
                       onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                        onChange(`options[${index}].label`, e.target.value)
+                        dispatch(
+                          changeFieldProp({
+                            path: `options[${index}].label`,
+                            value: e.target.value,
+                          })
+                        )
                       }
                     />
                   </Grid>
@@ -103,7 +106,12 @@ export const OptionsProperty = ({
                         value={op.value}
                         fullWidth
                         onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                          onChange(`options[${index}].value`, e.target.value)
+                          dispatch(
+                            changeFieldProp({
+                              path: `options[${index}].value`,
+                              value: e.target.value,
+                            })
+                          )
                         }
                       />
                     </Grid>
@@ -117,7 +125,12 @@ export const OptionsProperty = ({
                 size="small"
                 startIcon={<Add />}
                 onClick={() => {
-                  onChange(`options`, [...options, { label: "", value: "" }]);
+                  dispatch(
+                    changeFieldProp({
+                      path: `options`,
+                      value: [...options, { label: "", value: "" }],
+                    })
+                  );
                 }}
               >
                 <Typography variant="body2">Add option</Typography>
