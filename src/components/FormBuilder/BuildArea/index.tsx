@@ -13,7 +13,7 @@ import { getFieldBuilder } from "./FieldBuilders";
 import { getTheme } from "../../../theme";
 import { cloneDeep } from "lodash";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { selectField } from "../../../store/features/form/formSlice";
+import { deselectFields } from "../../../store/features/form/formSlice";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];
@@ -141,7 +141,7 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
         maxWidth: "100%",
         position: "relative",
       }}
-      onClick={() => dispatch(selectField({ fieldId: "" }))}
+      onClick={() => dispatch(deselectFields())}
     >
       <BuildAreaHeader formFields={formFields} formProperties={formProperties} />
 
@@ -160,7 +160,11 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
             backgroundSize: "cover",
             backgroundPosition: "50% 50%",
           }}
-          onClick={() => dispatch(selectField({ fieldId: "" }))}
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+            if (e?.key === "Escape" || e?.code === "Escape") {
+              dispatch(deselectFields());
+            }
+          }}
         >
           <Box
             sx={{
@@ -178,11 +182,6 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
               backgroundImage: `url(${formProperties.formImage})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
-            }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-              if (e?.key === "Escape" || e?.code === "Escape") {
-                dispatch(selectField({ fieldId: "" }));
-              }
             }}
           >
             {renderFormArea()}

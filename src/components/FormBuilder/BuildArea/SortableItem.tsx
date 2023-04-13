@@ -28,9 +28,6 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
 
   const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
   const dispatch = useAppDispatch();
-  const handleSelectField = (fieldId: string) => {
-    dispatch(selectField({ fieldId }));
-  };
   const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
   const fieldName = `${label} (${type})`;
 
@@ -113,7 +110,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
         sx={{ width: 30, height: 30 }}
         onClick={(e) => {
           e.stopPropagation();
-          handleSelectField(id);
+          dispatch(selectField({ fieldId: id }));
           onTogglePropertiesDrawer();
         }}
       >
@@ -220,7 +217,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
               if (selectedFieldId === id) {
                 onTogglePropertiesDrawer();
               } else {
-                handleSelectField(id);
+                dispatch(selectField({ fieldId: id }));
               }
             }}
           >

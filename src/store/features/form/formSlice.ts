@@ -1,5 +1,4 @@
-import { arrayMove } from "@dnd-kit/sortable";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 import { FieldProps } from "../../../components/FormBuilder/Types";
 import {
@@ -13,18 +12,26 @@ import {
   getShortTextProps,
   getSliderProps,
 } from "../../../components/FormBuilder/Utility";
-import { FORM_ELEMENTS } from "../../../constants";
+import { REQUEST_STATUS } from "../../../constants";
 
 interface FormState {
   count: number;
   selectedFieldId: string;
   fields: FieldProps[];
+  reqStatus: REQUEST_STATUS;
+  reqError?: string;
 }
 
 const initialState: FormState = {
   count: 9,
   selectedFieldId: "",
-  fields: [
+  fields: [],
+  reqStatus: REQUEST_STATUS.IDLE,
+};
+
+export const fetchFields = createAsyncThunk("form/fetchFields", async () => {
+  // const response = await client.get('/fakeApi/posts')
+  return [
     getShortTextProps(1),
     getLongTextProps(2),
     getRadioProps(3),
@@ -33,8 +40,8 @@ const initialState: FormState = {
     getDropdownProps(6),
     getComboboxProps(7),
     getSliderProps(8),
-  ],
-};
+  ];
+});
 
 const formSlice = createSlice({
   name: "form",
@@ -48,6 +55,11 @@ const formSlice = createSlice({
     // select field
     selectField: (state, action: PayloadAction<{ fieldId: string }>) => {
       state.selectedFieldId = action.payload.fieldId;
+    },
+
+    // deselect all fields
+    deselectFields: (state) => {
+      state.selectedFieldId = "";
     },
 
     // add field
@@ -96,8 +108,30 @@ const formSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchFields.pending, (state, action) => {
+        state.reqStatus = REQUEST_STATUS.LOADING;
+      })
+      .addCase(fetchFields.fulfilled, (state, action) => {
+        state.reqStatus = REQUEST_STATUS.SUCCEEDED;
+        // Add any fetched posts to the array
+        state.fields = action.payload;
+      })
+      .addCase(fetchFields.rejected, (state, action) => {
+        state.reqStatus = REQUEST_STATUS.FAILED;
+        state.reqError = action.error.message;
+      });
+  },
 });
 
-export const { incrementCount, selectField, addField, removeField, moveField, changeFieldProp } =
-  formSlice.actions;
+export const {
+  incrementCount,
+  selectField,
+  deselectFields,
+  addField,
+  removeField,
+  moveField,
+  changeFieldProp,
+} = formSlice.actions;
 export default formSlice.reducer;

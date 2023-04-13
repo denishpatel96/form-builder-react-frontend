@@ -17,22 +17,33 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, CircularProgress, IconButton, Typography } from "@mui/material";
 import { getFormDesignProps } from "./Utility";
 import _ from "lodash";
 import { IFormDesignProps } from "./Types";
 import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { addField, moveField, selectField } from "../../store/features/form/formSlice";
+import {
+  addField,
+  deselectFields,
+  fetchFields,
+  moveField,
+} from "../../store/features/form/formSlice";
+import { REQUEST_STATUS } from "../../constants";
+import Spinner from "../Reusable/Spinner";
 
 const FormBuilder = () => {
   const dispatch = useAppDispatch();
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
 
-  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
-  const formFields = useAppSelector((state) => state.form.fields);
+  const {
+    fields: formFields,
+    selectedFieldId,
+    reqStatus,
+    reqError,
+  } = useAppSelector((state) => state.form);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isFormFieldsOpen, setIsFormFieldsOpen] = React.useState<boolean>(true);
   const [isFormDesignOpen, setIsFormDesignOpen] = React.useState<boolean>(false);
@@ -171,6 +182,12 @@ const FormBuilder = () => {
     );
   };
 
+  React.useEffect(() => {
+    if (reqStatus === REQUEST_STATUS.IDLE) {
+      dispatch(fetchFields());
+    }
+  }, [dispatch, fetchFields]);
+
   return (
     <DndContext
       sensors={sensors}
@@ -201,15 +218,19 @@ const FormBuilder = () => {
         {renderFormFieldsButton()}
         <FormFieldsSidebar
           activeId={active?.id?.toString() || ""}
-          onDrawerClick={() => dispatch(selectField({ fieldId: "" }))}
+          onDrawerClick={() => dispatch(deselectFields())}
           isOpen={isFormFieldsOpen}
           setIsOpen={setIsFormFieldsOpen}
         />
-        <BuildArea
-          formFields={formFields}
-          formProperties={formProperties}
-          onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
-        />
+        {reqStatus === REQUEST_STATUS.LOADING ? (
+          <Spinner />
+        ) : (
+          <BuildArea
+            formFields={formFields}
+            formProperties={formProperties}
+            onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
+          />
+        )}
         <FormFieldPropertiesSidebar
           field={formFields.find((f) => f.id === selectedFieldId)}
           onTogglePin={() => setIsPropertiesOpen(true)}

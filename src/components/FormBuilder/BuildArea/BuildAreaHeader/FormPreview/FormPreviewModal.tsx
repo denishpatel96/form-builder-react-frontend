@@ -43,7 +43,7 @@ type FormPreviewModalProps = {
 
 const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps) => {
   const [open, setOpen] = React.useState(false);
-  const [device, setDevice] = React.useState("phone");
+  const [device, setDevice] = React.useState("laptop");
   const handleOpen = () => {
     setOpen(true);
   };
