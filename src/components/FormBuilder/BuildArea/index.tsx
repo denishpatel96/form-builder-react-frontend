@@ -30,7 +30,8 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
     [formFields, active]
   );
 
-  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
+  const selected = useAppSelector((state) => state.form.selected);
+  const selectedFieldId = selected.length === 1 ? selected[0] : "";
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
@@ -86,7 +87,6 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
     ) : (
       <form>
         <Grid
-          component={"ul"}
           container
           rowSpacing={`${formProperties.verticalSpacing}px`}
           columnSpacing={`${formProperties.horizontalSpacing}px`}

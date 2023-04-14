@@ -29,7 +29,7 @@ const Spinner = () => {
             y="-100%"
             width="300%"
             height="300%"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           >
             <feGaussianBlur in="SourceGraphic" stdDeviation="2.4000000000000004"></feGaussianBlur>
             <feComponentTransfer result="cutoff">

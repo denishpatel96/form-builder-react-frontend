@@ -40,7 +40,7 @@ const FormBuilder = () => {
 
   const {
     fields: formFields,
-    selectedFieldId,
+    selected,
     reqStatus,
     reqError,
   } = useAppSelector((state) => state.form);
@@ -232,7 +232,7 @@ const FormBuilder = () => {
           />
         )}
         <FormFieldPropertiesSidebar
-          field={formFields.find((f) => f.id === selectedFieldId)}
+          field={selected.length === 1 ? formFields.find((f) => f.id === selected[0]) : null}
           onTogglePin={() => setIsPropertiesOpen(true)}
           isOpen={isPropertiesOpen}
           setIsOpen={setIsPropertiesOpen}

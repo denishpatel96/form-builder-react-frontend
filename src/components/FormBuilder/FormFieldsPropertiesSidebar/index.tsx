@@ -28,10 +28,9 @@ import {
   ICheckboxGroupProps,
   ILongTextProps,
 } from "../Types";
-import { getCategoryColor } from "../FormFieldsSideBar";
 
 type IFormFieldProps = {
-  field: FieldProps | undefined;
+  field: FieldProps | undefined | null;
   onTogglePin: () => void;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -73,12 +72,9 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            ...(element && {
-              ".MuiSvgIcon-root": { color: getCategoryColor(element.category) },
-            }),
           }}
         >
-          {element?.icon}
+          {element?.icon({ height: 25, width: 25 })}
           <Typography pl={1} variant="subtitle1" textAlign={"center"}>
             {element ? `${element.label} Properties` : "Field Properties"}
           </Typography>

@@ -16,7 +16,7 @@ import { REQUEST_STATUS } from "../../../constants";
 
 interface FormState {
   count: number;
-  selectedFieldId: string;
+  selected: string[];
   fields: FieldProps[];
   reqStatus: REQUEST_STATUS;
   reqError?: string;
@@ -24,7 +24,7 @@ interface FormState {
 
 const initialState: FormState = {
   count: 8,
-  selectedFieldId: "",
+  selected: [],
   fields: [],
   reqStatus: REQUEST_STATUS.IDLE,
 };
@@ -54,12 +54,34 @@ const formSlice = createSlice({
 
     // select field
     selectField: (state, action: PayloadAction<{ fieldId: string }>) => {
-      state.selectedFieldId = action.payload.fieldId;
+      state.selected = [action.payload.fieldId];
+    },
+
+    // multi de/select field
+    toggleSelection: (state, action: PayloadAction<{ fieldId: string; contigous?: boolean }>) => {
+      if (state.selected.includes(action.payload.fieldId)) {
+        state.selected = state.selected.filter((id) => id !== action.payload.fieldId);
+      } else {
+        state.selected.push(action.payload.fieldId);
+      }
+      if (action.payload.contigous) {
+        const selectedIndices = state.selected.map((id) =>
+          state.fields.findIndex((f) => f.id === id)
+        );
+        const startIndex = Math.min(...selectedIndices);
+        const endIndex = Math.max(...selectedIndices);
+        state.selected = [];
+        state.fields.forEach((f, index) => {
+          if (index >= startIndex && index <= endIndex) {
+            state.selected.push(f.id);
+          }
+        });
+      }
     },
 
     // deselect all fields
     deselectFields: (state) => {
-      state.selectedFieldId = "";
+      state.selected = [];
     },
 
     // duplicate field/s
@@ -67,7 +89,8 @@ const formSlice = createSlice({
       const indexOfFieldToCopy = state.fields.findIndex((f) => f.id === action.payload.fieldId);
       if (indexOfFieldToCopy !== -1) {
         const cloneField = _.cloneDeep(state.fields[indexOfFieldToCopy]);
-        state.selectedFieldId = cloneField.id = cloneField.name = `q${state.count + 1}`;
+        cloneField.id = cloneField.name = `q${state.count + 1}`;
+        state.selected = [cloneField.id];
         state.fields.splice(indexOfFieldToCopy + 1, 0, cloneField);
         state.count++;
       }
@@ -91,7 +114,7 @@ const formSlice = createSlice({
         }
 
         state.count++;
-        state.selectedFieldId = fieldId;
+        state.selected = [fieldId];
       }
     },
 
@@ -108,13 +131,13 @@ const formSlice = createSlice({
       const element = state.fields.splice(oldIndex, 1);
       state.fields.splice(newIndex, 0, element[0]);
 
-      state.selectedFieldId = action.payload.activeId;
+      state.selected = [action.payload.activeId];
     },
 
     // edit properties of selected field
     changeFieldProp: (state, action: PayloadAction<{ path: string; value: any }>) => {
-      if (state.selectedFieldId !== null) {
-        const index = state.fields.findIndex((f) => f.id === state.selectedFieldId);
+      if (state.selected.length === 1) {
+        const index = state.fields.findIndex((f) => f.id === state.selected[0]);
         _.set(state.fields[index], action.payload.path, action.payload.value);
       }
     },
@@ -139,6 +162,7 @@ const formSlice = createSlice({
 export const {
   incrementCount,
   selectField,
+  toggleSelection,
   deselectFields,
   duplicateField,
   addField,

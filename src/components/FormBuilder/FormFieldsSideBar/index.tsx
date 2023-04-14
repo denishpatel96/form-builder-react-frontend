@@ -19,20 +19,9 @@ interface IFormFieldsProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
-  switch (category) {
-    case ELEMENT_CATEGORIES.TEXT:
-      return "info.main";
-    case ELEMENT_CATEGORIES.CHOICE:
-      return "success.main";
-    default:
-      return "transparent";
-  }
-};
-
 const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IFormFieldsProps) => {
   const dispatch = useAppDispatch();
-  const selectedFieldId = useAppSelector((state) => state.form.selectedFieldId);
+  const selected = useAppSelector((state) => state.form.selected);
   const activeElement = FORM_ELEMENTS_LIST.find((e) => e.id === activeId);
   return (
     <Drawer
@@ -96,19 +85,19 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IForm
               sx={{ height: 100, width: 100 }}
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(addField({ elementType: element.id, addAfter: selectedFieldId }));
+                dispatch(
+                  addField({
+                    elementType: element.id,
+                    addAfter: selected.length === 1 ? selected[0] : undefined,
+                  })
+                );
               }}
             >
               {isDragging ? (
                 <StyledFormFieldItemPlaceholder />
               ) : (
-                <StyledFormFieldItem
-                  key={element.id}
-                  sx={{
-                    ".MuiSvgIcon-root": { color: getCategoryColor(element.category) },
-                  }}
-                >
-                  {element.icon}
+                <StyledFormFieldItem key={element.id}>
+                  {element.icon()}
                   <Typography
                     pt={1}
                     color="grey.800"
@@ -126,15 +115,8 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IForm
       </Grid>
       <DragOverlay dropAnimation={null}>
         {activeId && activeElement && activeId.toString().includes("ctrl_") ? (
-          <StyledFormFieldItemDragOverlay
-            disablePadding
-            sx={{
-              ".MuiSvgIcon-root": { color: getCategoryColor(activeElement.category) },
-              height: 84,
-              width: 84,
-            }}
-          >
-            {activeElement.icon}
+          <StyledFormFieldItemDragOverlay disablePadding sx={{ height: 84, width: 84 }}>
+            {activeElement.icon()}
             <Typography pt={1} variant="caption" fontWeight={500} textAlign={"center"}>
               {activeElement.label}
             </Typography>

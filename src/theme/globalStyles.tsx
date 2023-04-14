@@ -14,6 +14,7 @@ const GlobalStyles = () => {
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
+          ":focus": { outline: "none" },
         },
         html: {
           width: "100%",

@@ -6,6 +6,7 @@ import {
   TextFieldsOutlined,
   TitleOutlined,
 } from "@mui/icons-material";
+import { SxProps } from "@mui/material";
 import React from "react";
 import { CheckGroupIcon } from "../components/CustomIcons";
 
@@ -36,7 +37,17 @@ export enum ELEMENT_CATEGORIES {
   RATING = "rating",
 }
 
-const formElementIconProps = { sx: { height: 35, width: 35 } };
+export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
+  switch (category) {
+    case ELEMENT_CATEGORIES.TEXT:
+      return "#3F497F";
+    case ELEMENT_CATEGORIES.CHOICE:
+      return "#7AA874";
+    default:
+      return "#BFCCB5";
+  }
+};
+
 export const FORM_ELEMENTS_LIST: {
   id: string;
   label: string;
@@ -48,56 +59,88 @@ export const FORM_ELEMENTS_LIST: {
     id: FORM_ELEMENTS.SHORT_TEXT,
     label: "Short Text",
     description: "Single line text input",
-    icon: <TitleOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <TitleOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.TEXT,
   },
   {
     id: FORM_ELEMENTS.LONG_TEXT,
     label: "Long Text",
     description: "Multiple line text area input",
-    icon: <TextFieldsOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <TextFieldsOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.TEXT,
   },
   {
     id: FORM_ELEMENTS.CHECKBOX,
     label: "Checkbox",
     description: "Toggle state of a single item",
-    icon: <CheckBoxOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <CheckBoxOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.CHECKBOX_GROUP,
     label: "CheckGroup",
     description: "Select one or more items from a set",
-    icon: <CheckGroupIcon {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <CheckGroupIcon
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.DROPDOWN,
     label: "Dropdown",
     description: "Select one or more option from a dropdown list",
-    icon: <ArrowDropDownCircleOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <ArrowDropDownCircleOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.COMBOBOX,
     label: "Combobox",
     description: "Select one or more option from a searchable dropdown list",
-    icon: <ArrowDropDownCircleOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <ArrowDropDownCircleOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.RADIO,
     label: "RadioGroup",
     description: "Select one option from a set",
-    icon: <RadioButtonCheckedOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <RadioButtonCheckedOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.CHOICE,
   },
   {
     id: FORM_ELEMENTS.SLIDER,
     label: "Slider",
     description: "Make selections from a range of values on slider",
-    icon: <CommitOutlined {...formElementIconProps} />,
+    icon: (sx?: SxProps) => (
+      <CommitOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+      />
+    ),
     category: ELEMENT_CATEGORIES.CHOICE,
   },
 ];
