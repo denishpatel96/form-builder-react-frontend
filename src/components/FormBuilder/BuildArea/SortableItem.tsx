@@ -5,16 +5,18 @@ import { FORM_ELEMENTS_LIST } from "../../../constants";
 import { lighten, useTheme } from "@mui/material/styles";
 import { FieldProps } from "../Types";
 import {
+  ContentCopyOutlined,
   DeleteOutlined,
   DragIndicator,
+  SettingsOutlined,
   TuneOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
 import RemoveFieldDialog from "./RemoveFieldDialog";
 import { StyledFormFieldItemPlaceholder } from "../FormFieldsSideBar/Styles";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { removeField, selectField } from "../../../store/features/form/formSlice";
-
+import { duplicateField, removeField, selectField } from "../../../store/features/form/formSlice";
+import { styled } from "@mui/material/styles";
 interface ISortableItemProps {
   field: FieldProps;
   renderElement: (field?: FieldProps) => JSX.Element;
@@ -50,7 +52,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
   // transform: CSS.Translate.toString(transform),
   const containerStyle = { transition };
 
-  const renderDragHandle = () => {
+  const renderButtonsPanel = () => {
     return (
       <Box
         sx={{
@@ -62,21 +64,80 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
           left: 0,
           zIndex: 10,
           display: "flex",
+          justifyContent: "space-between",
           backgroundColor: "transparent",
         }}
       >
         <Box
           sx={{
-            flexGrow: 1,
-            pt: 1,
+            pt: 4,
             display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
+            animationName: "slide-left",
+            animationDuration: "500ms",
+            animationIterationCount: 1,
+            animationTimingFunction: "ease-out",
+            "@keyframes slide-left": {
+              "0%": { transform: "translateX(20px)", opacity: 0 },
+              "100%": { transform: "translateX(0px)", opacity: 1 },
+            },
           }}
         >
-          <DragIndicator sx={{ transform: "rotate(90deg)" }} color="disabled" />
+          <DragIndicator color="disabled" />
         </Box>
-        {renderButtons()}
+        <Box
+          sx={{
+            mr: 2,
+            borderRadius: "15px 15px 0 0",
+            display: "flex",
+            justifyContent: "center",
+            // backgroundColor: "action.hover",
+            borderColor: "action.hover",
+            borderWidth: "2px 2px 0 2px",
+            borderStyle: "solid",
+            height: 25,
+            animationName: "slide-out",
+            animationDuration: "500ms",
+            animationIterationCount: 1,
+            animationTimingFunction: "ease-out",
+            "@keyframes slide-out": {
+              "0%": { transform: "translateY(20px)", opacity: 0 },
+              "100%": { transform: "translateY(0px)", opacity: 1 },
+            },
+          }}
+        >
+          <IconButton
+            title="Properties"
+            sx={{ width: 30, height: 30 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(selectField({ fieldId: id }));
+              onTogglePropertiesDrawer();
+            }}
+          >
+            <SettingsOutlined sx={{ width: 20, height: 20 }} />
+          </IconButton>
+          <IconButton
+            title="Duplicate"
+            sx={{ width: 30, height: 30 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(duplicateField({ fieldId: id }));
+            }}
+          >
+            <ContentCopyOutlined sx={{ width: 18, height: 18 }} />
+          </IconButton>
+          <IconButton
+            title="Remove"
+            color="error"
+            sx={{ width: 30, height: 30 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setConfirmDeleteFieldDialogOpen(true);
+            }}
+          >
+            <DeleteOutlined sx={{ width: 20, height: 20 }} />
+          </IconButton>
+        </Box>
       </Box>
     );
   };
@@ -95,42 +156,6 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
     );
   };
 
-  const renderButtons = (): JSX.Element => (
-    <Box
-      sx={{
-        pt: 1,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-      }}
-    >
-      <IconButton
-        title="Properties"
-        size="small"
-        sx={{ width: 30, height: 30 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          dispatch(selectField({ fieldId: id }));
-          onTogglePropertiesDrawer();
-        }}
-      >
-        <TuneOutlined sx={{ width: 20, height: 20 }} />
-      </IconButton>
-      <IconButton
-        title="Remove"
-        size="small"
-        color="error"
-        sx={{ ml: 1, width: 30, height: 30 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          setConfirmDeleteFieldDialogOpen(true);
-        }}
-      >
-        <DeleteOutlined sx={{ width: 20, height: 20 }} />
-      </IconButton>
-    </Box>
-  );
-
   const hiddenWarning = (
     <Box sx={{ width: "100%", display: "flex", alignItems: "center", p: 1 }}>
       <WarningAmberOutlined color="warning" sx={{ width: 15, height: 15 }} />
@@ -143,6 +168,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
   return (
     <>
       <Grid
+        component={"li"}
         ref={setNodeRef}
         style={containerStyle}
         {...attributes}
@@ -191,13 +217,9 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
             flexDirection: "column",
             borderRadius: 2,
             ...(hoveredFieldId === id && {
-              pr: 2,
-              pt: 3,
               backgroundColor: theme.palette.action.hover,
             }),
             ...(selectedFieldId === id && {
-              pr: 2,
-              pt: 3,
               borderLeftColor: theme.palette.secondary.light,
               borderLeftWidth: 4,
               borderLeftStyle: "solid",
@@ -221,7 +243,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
               }
             }}
           >
-            {(selectedFieldId === id || hoveredFieldId === id) && renderDragHandle()}
+            {hoveredFieldId === id && !isDragging && renderButtonsPanel()}
             {renderElement(field)}
           </Box>
 

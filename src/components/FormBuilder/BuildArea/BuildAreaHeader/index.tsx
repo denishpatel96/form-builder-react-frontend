@@ -23,16 +23,9 @@ const BuildAreaHeader = ({ formFields, formProperties }: IBuildAreaHeaderProps) 
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
       }}
     >
-      <Button
-        size="small"
-        sx={{ mr: 1 }}
-        color="secondary"
-        startIcon={<SaveOutlined />}
-        variant="contained"
-      >
-        Save
-      </Button>
-      <FormPreviewModal formFields={formFields} formProperties={formProperties} />
+      <Box sx={{ ml: "auto" }}>
+        <FormPreviewModal formFields={formFields} formProperties={formProperties} />
+      </Box>
     </Box>
   );
 };

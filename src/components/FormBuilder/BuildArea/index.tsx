@@ -67,7 +67,10 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
 
   const renderFormArea = (): JSX.Element =>
     formFields.length === 0 ? (
-      <Droppable id="form-builder" style={{ width: "100%", height: "100%" }}>
+      <Droppable
+        id="form-builder"
+        style={{ width: "100%", maxWidth: formProperties.formWidth, height: "100%" }}
+      >
         <Stack
           style={{
             width: "100%",
@@ -83,6 +86,7 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
     ) : (
       <form>
         <Grid
+          component={"ul"}
           container
           rowSpacing={`${formProperties.verticalSpacing}px`}
           columnSpacing={`${formProperties.horizontalSpacing}px`}

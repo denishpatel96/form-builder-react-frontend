@@ -23,7 +23,7 @@ interface FormState {
 }
 
 const initialState: FormState = {
-  count: 9,
+  count: 8,
   selectedFieldId: "",
   fields: [],
   reqStatus: REQUEST_STATUS.IDLE,
@@ -62,9 +62,20 @@ const formSlice = createSlice({
       state.selectedFieldId = "";
     },
 
+    // duplicate field/s
+    duplicateField: (state, action: PayloadAction<{ fieldId: string }>) => {
+      const indexOfFieldToCopy = state.fields.findIndex((f) => f.id === action.payload.fieldId);
+      if (indexOfFieldToCopy !== -1) {
+        const cloneField = _.cloneDeep(state.fields[indexOfFieldToCopy]);
+        state.selectedFieldId = cloneField.id = cloneField.name = `q${state.count + 1}`;
+        state.fields.splice(indexOfFieldToCopy + 1, 0, cloneField);
+        state.count++;
+      }
+    },
+
     // add field
     addField: (state, action: PayloadAction<{ elementType: string; addAfter?: string }>) => {
-      const fieldToAdd = getField(action.payload.elementType, state.count);
+      const fieldToAdd = getField(action.payload.elementType, state.count + 1);
 
       if (fieldToAdd) {
         const fieldId = fieldToAdd.id;
@@ -129,6 +140,7 @@ export const {
   incrementCount,
   selectField,
   deselectFields,
+  duplicateField,
   addField,
   removeField,
   moveField,
