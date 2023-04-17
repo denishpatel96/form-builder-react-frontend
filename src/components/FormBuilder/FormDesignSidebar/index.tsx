@@ -1,4 +1,4 @@
-import { ChevronRightOutlined, PaletteOutlined } from "@mui/icons-material";
+import { ChevronLeftOutlined, PaletteOutlined } from "@mui/icons-material";
 import {
   Typography,
   Box,
@@ -13,14 +13,13 @@ import {
   Tab,
 } from "@mui/material";
 import React from "react";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
 import { IFieldPropertiesChangeFunc, IFormDesignProps } from "../Types";
 import { NumberValueProperty } from "./Properties/NumberValue.Property";
 import { ColorValueProperty } from "./Properties/ColorValue.Property";
 import { ModeProperty } from "./Properties/Mode.Property";
 import { getTheme } from "../../../theme";
-import { cloneDeep } from "lodash";
 import { ImageURLProperty } from "./Properties/ImageURL.Property";
+import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
 
 type FormDesignSidebarProps = {
   formProperties: IFormDesignProps;
@@ -75,11 +74,12 @@ const FormDesignSidebar = ({
     <Drawer
       open={isOpen}
       onClose={() => setIsOpen(false)}
-      anchor={"right"}
+      anchor={"left"}
+      variant={isOpen ? "persistent" : "temporary"}
       PaperProps={{
         sx: {
-          width: { xs: DRAWER_WIDTH_TABLET, md: DRAWER_WIDTH_DESKTOP },
-          overflow: "hidden",
+          width: { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP },
+          ...(isOpen && { position: "relative" }),
         },
       }}
       sx={{
@@ -97,9 +97,6 @@ const FormDesignSidebar = ({
           alignItems: "center",
         }}
       >
-        <IconButton onClick={() => setIsOpen(false)}>
-          <ChevronRightOutlined />
-        </IconButton>
         <Box
           sx={{
             flexGrow: 1,
@@ -113,6 +110,10 @@ const FormDesignSidebar = ({
             Form Design
           </Typography>
         </Box>
+
+        <IconButton onClick={() => setIsOpen(false)} sx={{ ml: "auto" }}>
+          <ChevronLeftOutlined />
+        </IconButton>
       </Box>
       <Tabs
         value={tabValue}
@@ -176,7 +177,7 @@ const FormDesignSidebar = ({
             onChange={onPropsChange}
           />
 
-          <ListSubheader>
+          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
             <Typography variant="overline">Background</Typography>
           </ListSubheader>
           <ColorValueProperty
@@ -209,7 +210,7 @@ const FormDesignSidebar = ({
             path={"formImage"}
             onChange={onPropsChange}
           />
-          <ListSubheader>
+          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
             <Typography variant="overline">Text</Typography>
           </ListSubheader>
           <ColorValueProperty
@@ -236,7 +237,7 @@ const FormDesignSidebar = ({
             onChange={onPropsChange}
             path={"palette.text.disabled"}
           />
-          <ListSubheader>
+          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
             <Typography variant="overline">Primary Color</Typography>
           </ListSubheader>
           <ColorValueProperty
@@ -257,7 +258,7 @@ const FormDesignSidebar = ({
             onChange={onPropsChange}
             path={"palette.primary.contrastText"}
           />
-          <ListSubheader>
+          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
             <Typography variant="overline">Secondary Color</Typography>
           </ListSubheader>
           <ColorValueProperty

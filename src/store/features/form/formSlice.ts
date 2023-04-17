@@ -57,14 +57,18 @@ const formSlice = createSlice({
       state.selected = [action.payload.fieldId];
     },
 
+    // select all fields
+    selectAll: (state) => {
+      state.selected = state.fields.map((f) => f.id);
+    },
+
     // multi de/select field
+    // this handles the case of selection with ctrl and selection with shift keys
     toggleSelection: (state, action: PayloadAction<{ fieldId: string; contigous?: boolean }>) => {
-      if (state.selected.includes(action.payload.fieldId)) {
-        state.selected = state.selected.filter((id) => id !== action.payload.fieldId);
-      } else {
-        state.selected.push(action.payload.fieldId);
-      }
       if (action.payload.contigous) {
+        // shift key is pressed
+        // shift key let user select all the fields between last selction and current selection
+        state.selected.push(action.payload.fieldId);
         const selectedIndices = state.selected.map((id) =>
           state.fields.findIndex((f) => f.id === id)
         );
@@ -76,6 +80,14 @@ const formSlice = createSlice({
             state.selected.push(f.id);
           }
         });
+      } else {
+        // ctrl key is pressed
+        // ctrl key let user select/deselect field one by one
+        if (state.selected.includes(action.payload.fieldId)) {
+          state.selected = state.selected.filter((id) => id !== action.payload.fieldId);
+        } else {
+          state.selected.push(action.payload.fieldId);
+        }
       }
     },
 
@@ -162,6 +174,7 @@ const formSlice = createSlice({
 export const {
   incrementCount,
   selectField,
+  selectAll,
   toggleSelection,
   deselectFields,
   duplicateField,

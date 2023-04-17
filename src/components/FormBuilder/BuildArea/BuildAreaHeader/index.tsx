@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { FieldProps, IFormDesignProps } from "../../Types";
 import FormPreviewModal from "./FormPreview/FormPreviewModal";
-import { SaveOutlined } from "@mui/icons-material";
+import BatchOpsPanel from "./BatchOpsPanel";
 
 interface IBuildAreaHeaderProps {
   formFields: FieldProps[];
@@ -18,11 +18,12 @@ const BuildAreaHeader = ({ formFields, formProperties }: IBuildAreaHeaderProps) 
         backgroundColor: "grey.200",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
         width: "100%",
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+        columnGap: 2,
       }}
     >
+      <BatchOpsPanel />
       <Box sx={{ ml: "auto" }}>
         <FormPreviewModal formFields={formFields} formProperties={formProperties} />
       </Box>

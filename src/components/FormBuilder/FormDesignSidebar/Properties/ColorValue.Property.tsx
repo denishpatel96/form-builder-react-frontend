@@ -36,9 +36,16 @@ export const ColorValueProperty = ({
         </Grid>
         <Grid item xs={3} display="flex" justifyContent="flex-end">
           {value !== undefined ? (
-            <Button onClick={() => onChange(path, undefined)}>Reset</Button>
+            <Typography
+              sx={{ cursor: "pointer" }}
+              color={"primary"}
+              variant="subtitle2"
+              onClick={() => onChange(path, undefined)}
+            >
+              Reset
+            </Typography>
           ) : (
-            <Typography fontStyle={"italic"} fontWeight={500}>
+            <Typography variant="subtitle2" fontStyle={"italic"}>
               Auto
             </Typography>
           )}

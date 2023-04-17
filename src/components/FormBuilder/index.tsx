@@ -30,7 +30,7 @@ import {
   fetchFields,
   moveField,
 } from "../../store/features/form/formSlice";
-import { REQUEST_STATUS } from "../../constants";
+import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, REQUEST_STATUS } from "../../constants";
 import Spinner from "../Reusable/Spinner";
 
 const FormBuilder = () => {
@@ -109,35 +109,36 @@ const FormBuilder = () => {
   const renderFormDesignButton = () => {
     return (
       <Box
-        onClick={() => setIsFormDesignOpen((prev) => !prev)}
+        onClick={() => {
+          setIsFormDesignOpen((prev) => !prev);
+          setIsFormFieldsOpen(false);
+        }}
         sx={{
           position: "absolute",
           height: 40,
-          width: 40,
+          width: 100,
           zIndex: 12,
           cursor: "pointer",
-          borderRadius: "20px 0 0 20px",
-          right: 0,
+          borderRadius: "0 20px 20px 0",
+          left: isFormFieldsOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
           top: 60,
           boxShadow: (theme) => theme.shadows[1],
           background: `linear-gradient(to right, #fc5c7d, #6a82fb)`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          transform: "translateX(-60px)",
+          transition: "200ms ease",
           ":hover": {
             boxShadow: (theme) => theme.shadows[5],
-            transition: "width 500ms ease",
-            width: 100,
-            ":after": {
-              content: '"Form Designer"',
-              fontWeight: 500,
-              color: "white",
-              fontSize: 12,
-              textAlign: "center",
-            },
+            transform: "translateX(0px)",
+            transition: "200ms ease",
           },
         }}
       >
+        <Typography variant="caption" fontWeight={500} textAlign={"center"} color="white">
+          Form Designer
+        </Typography>
         <IconButton>
           <PaletteOutlined sx={{ color: "white" }} />
         </IconButton>
@@ -148,7 +149,10 @@ const FormBuilder = () => {
   const renderFormFieldsButton = () => {
     return (
       <Box
-        onClick={() => setIsFormFieldsOpen((prev) => !prev)}
+        onClick={() => {
+          setIsFormFieldsOpen((prev) => !prev);
+          setIsFormDesignOpen(false);
+        }}
         sx={{
           position: "absolute",
           height: 40,
@@ -156,19 +160,19 @@ const FormBuilder = () => {
           zIndex: 12,
           cursor: "pointer",
           borderRadius: "0 20px 20px 0",
-          left: 0,
-          top: 60,
+          left: isFormDesignOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
+          top: 110,
           boxShadow: (theme) => theme.shadows[1],
           background: (theme) => theme.palette.background.paper,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           transform: "translateX(-60px)",
-          transition: "500ms ease",
+          transition: "200ms ease",
           ":hover": {
             boxShadow: (theme) => theme.shadows[5],
             transform: "translateX(0px)",
-            transition: "500ms ease",
+            transition: "200ms ease",
           },
         }}
       >
@@ -212,7 +216,6 @@ const FormBuilder = () => {
           width: "100%",
           display: "flex",
           position: "relative",
-          overflowX: "hidden",
         }}
       >
         {renderFormFieldsButton()}
@@ -221,6 +224,13 @@ const FormBuilder = () => {
           onDrawerClick={() => dispatch(deselectFields())}
           isOpen={isFormFieldsOpen}
           setIsOpen={setIsFormFieldsOpen}
+        />
+        {renderFormDesignButton()}
+        <FormDesignSidebar
+          setIsOpen={setIsFormDesignOpen}
+          formProperties={formProperties}
+          onPropsChange={handleFormDesignPropsChange}
+          isOpen={isFormDesignOpen}
         />
         {reqStatus === REQUEST_STATUS.LOADING ? (
           <Spinner />
@@ -236,14 +246,6 @@ const FormBuilder = () => {
           onTogglePin={() => setIsPropertiesOpen(true)}
           isOpen={isPropertiesOpen}
           setIsOpen={setIsPropertiesOpen}
-        />
-
-        {renderFormDesignButton()}
-        <FormDesignSidebar
-          setIsOpen={setIsFormDesignOpen}
-          formProperties={formProperties}
-          onPropsChange={handleFormDesignPropsChange}
-          isOpen={isFormDesignOpen}
         />
       </Box>
     </DndContext>
