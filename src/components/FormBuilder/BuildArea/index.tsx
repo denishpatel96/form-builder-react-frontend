@@ -145,7 +145,6 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
         maxWidth: "100%",
         position: "relative",
       }}
-      onClick={() => dispatch(deselectFields())}
     >
       <BuildAreaHeader formFields={formFields} formProperties={formProperties} />
 
@@ -169,6 +168,7 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
               dispatch(deselectFields());
             }
           }}
+          onClick={() => dispatch(deselectFields())}
         >
           <Box
             sx={{

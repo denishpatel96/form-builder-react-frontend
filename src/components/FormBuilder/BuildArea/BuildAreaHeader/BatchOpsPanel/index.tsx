@@ -8,6 +8,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import React from "react";
 import { deselectFields, selectAll } from "../../../../../store/features/form/formSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
+import DuplicateMenu from "./DuplicateMenu";
 
 type Props = {};
 
@@ -58,9 +59,7 @@ const BatchOpsPanel = (props: Props) => {
         )}
       </Box>
       <Box sx={{ display: "flex", columnGap: 1, alignItems: "center" }}>
-        <Button size="small" variant="outlined" startIcon={<ContentCopyOutlined />}>
-          Duplicate
-        </Button>
+        <DuplicateMenu />
         <Button size="small" variant="outlined" color="error" startIcon={<DeleteOutlined />}>
           Delete
         </Button>

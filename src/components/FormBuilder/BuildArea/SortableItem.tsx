@@ -16,7 +16,7 @@ import RemoveFieldDialog from "./RemoveFieldDialog";
 import { StyledFormFieldItemPlaceholder } from "../FormFieldsSideBar/Styles";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
-  duplicateField,
+  duplicateFields,
   toggleSelection,
   removeField,
   selectField,
@@ -127,7 +127,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
               sx={{ width: 30, height: 30 }}
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(duplicateField({ fieldId: id }));
+                dispatch(duplicateFields());
               }}
             >
               <ContentCopyOutlined sx={{ width: 18, height: 18 }} />

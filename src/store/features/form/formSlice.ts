@@ -97,15 +97,40 @@ const formSlice = createSlice({
     },
 
     // duplicate field/s
-    duplicateField: (state, action: PayloadAction<{ fieldId: string }>) => {
-      const indexOfFieldToCopy = state.fields.findIndex((f) => f.id === action.payload.fieldId);
-      if (indexOfFieldToCopy !== -1) {
-        const cloneField = _.cloneDeep(state.fields[indexOfFieldToCopy]);
-        cloneField.id = cloneField.name = `q${state.count + 1}`;
-        state.selected = [cloneField.id];
-        state.fields.splice(indexOfFieldToCopy + 1, 0, cloneField);
-        state.count++;
-      }
+    duplicateFields: (
+      state,
+      action: PayloadAction<
+        | {
+            fieldIds?: string[];
+            placement?: "top" | "bottom" | "after";
+            afterElementId?: string;
+          }
+        | undefined
+      >
+    ) => {
+      const { fieldIds, placement, afterElementId } = action?.payload || {};
+
+      const fieldIdsToClone: string[] = fieldIds || state.selected;
+
+      const cloneFields: FieldProps[] = [];
+      const placementIndex: number =
+        placement === "top"
+          ? 0
+          : placement === "bottom"
+          ? state.fields.length
+          : state.fields.findIndex((f) => f.id === (afterElementId || fieldIdsToClone[0])) + 1;
+      fieldIdsToClone.forEach((id) => {
+        const indexOfFieldToCopy = state.fields.findIndex((f) => f.id === id);
+        if (indexOfFieldToCopy !== -1) {
+          const cloneField = _.cloneDeep(state.fields[indexOfFieldToCopy]);
+          cloneField.id = cloneField.name = `q${state.count + 1}`;
+          cloneFields.push(cloneField);
+          state.count++;
+        }
+      });
+
+      state.selected = cloneFields.map((f) => f.id);
+      state.fields.splice(placementIndex, 0, ...cloneFields);
     },
 
     // add field
@@ -177,7 +202,7 @@ export const {
   selectAll,
   toggleSelection,
   deselectFields,
-  duplicateField,
+  duplicateFields,
   addField,
   removeField,
   moveField,
