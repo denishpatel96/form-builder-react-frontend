@@ -31,7 +31,7 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
   );
 
   const selected = useAppSelector((state) => state.form.selected);
-  const selectedFieldId = selected.length === 1 ? selected[0] : "";
+  const selectedFieldId = selected[0];
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;

@@ -59,10 +59,10 @@ const DuplicateMenu = (props: Props) => {
               value={afterFieldId}
               onChange={(e) => setAfterFieldId(e.target.value)}
             >
-              {fields.map((f) => {
+              {fields.map((f, i) => {
                 return (
                   <MenuItem key={f.id} value={f.id}>
-                    {f.label}
+                    {i + 1}. {f.label}
                   </MenuItem>
                 );
               })}

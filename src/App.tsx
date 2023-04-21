@@ -19,9 +19,4 @@ const App = () => {
   );
 };
 
-// hot reload for development mode
-if (process.env.NODE_ENV !== "production" && module.hot) {
-  module.hot.accept();
-}
-
 export default App;
