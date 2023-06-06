@@ -24,12 +24,7 @@ import { IFormDesignProps } from "./Types";
 import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  addField,
-  deselectFields,
-  fetchFields,
-  moveField,
-} from "../../store/features/form/formSlice";
+import { addField, deselectFields, fetchFields, moveField } from "../../store/features/formSlice";
 import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, REQUEST_STATUS } from "../../constants";
 import Spinner from "../Reusable/Spinner";
 

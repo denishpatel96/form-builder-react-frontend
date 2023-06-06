@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { useAppDispatch } from "../../../../store/hooks";
-import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { changeFieldProp } from "../../../../store/features/formSlice";
 
 type PlaceholderPropertyProps = {
   value: string | undefined;

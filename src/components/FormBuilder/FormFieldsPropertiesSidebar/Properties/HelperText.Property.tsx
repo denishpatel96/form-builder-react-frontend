@@ -4,7 +4,7 @@ import { StyledListItem } from "../Styles";
 import PropTitle from "./PropTitle";
 import { Clear } from "@mui/icons-material";
 import { useAppDispatch } from "../../../../store/hooks";
-import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { changeFieldProp } from "../../../../store/features/formSlice";
 
 type HelperTextPropertyProps = {
   value: string | undefined;

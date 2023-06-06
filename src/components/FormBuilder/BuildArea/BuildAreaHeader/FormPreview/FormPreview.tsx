@@ -25,7 +25,7 @@ import {
 import { useForm } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
 import { CheckboxGroupElement } from "../Elements/CheckboxGroup.Element";
-import { ArrowCircleRight, ArrowRight, ArrowRightAlt, Refresh } from "@mui/icons-material";
+import { ArrowCircleRight, Refresh } from "@mui/icons-material";
 
 type FormPreviewProps = {
   formFields: FieldProps[];

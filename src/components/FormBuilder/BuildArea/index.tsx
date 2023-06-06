@@ -13,7 +13,7 @@ import { getFieldBuilder } from "./FieldBuilders";
 import { getTheme } from "../../../theme";
 import { cloneDeep } from "lodash";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { deselectFields } from "../../../store/features/form/formSlice";
+import { deselectFields } from "../../../store/features/formSlice";
 
 interface IBuildAreaProps {
   formFields: FieldProps[];

@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, Divider, Typography } from "@mui/material";
 import React from "react";
-import { deselectFields, selectAll } from "../../../../../store/features/form/formSlice";
+import { deselectFields, selectAll } from "../../../../../store/features/formSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import DuplicateMenu from "./DuplicateMenu";
 

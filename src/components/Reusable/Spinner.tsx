@@ -1,22 +1,42 @@
-import { Box } from "@mui/material";
 import React from "react";
-import "./Spinner.css";
+import { styled } from "@mui/material/styles";
+import { Typography } from "@mui/material";
 
-const Spinner = () => {
+const SpinnerStyle = styled("div")({
+  height: "100%",
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  ".ldio-p234v7wrd8b-st0": {
+    opacity: 0.8,
+    fill: "none",
+    strokeWidth: 0.4811,
+    strokeMiterlimit: 10,
+  },
+  ".ldio-p234v7wrd8b-st2": {
+    opacity: 0.8,
+  },
+  ".ldio-p234v7wrd8b-st3": {
+    fill: "none",
+    strokeWidth: 0.5,
+    strokeMiterlimit: 10,
+  },
+  ".ldio-p234v7wrd8b-st4": {
+    fill: "none",
+    strokeWidth: 0.4694,
+    strokeMiterlimit: 10,
+  },
+});
+
+const Spinner = ({ text }: { text?: string }) => {
   return (
-    <Box
-      sx={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <SpinnerStyle>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        style={{ margin: "auto", background: "transparent", display: "block" }}
+        style={{ background: "transparent", display: "block" }}
         width="200px"
         height="200px"
         viewBox="0 0 100 100"
@@ -155,7 +175,8 @@ const Spinner = () => {
           </g>
         </g>
       </svg>
-    </Box>
+      <Typography variant="subtitle1">{text}</Typography>
+    </SpinnerStyle>
   );
 };
 

@@ -20,7 +20,7 @@ import {
   toggleSelection,
   removeField,
   selectField,
-} from "../../../store/features/form/formSlice";
+} from "../../../store/features/formSlice";
 import { styled } from "@mui/material/styles";
 interface ISortableItemProps {
   field: FieldProps;

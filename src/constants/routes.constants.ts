@@ -1,1 +1,7 @@
 export const ROUTE_HOME = "/";
+export const ROUTE_LOGIN = "/login";
+export const ROUTE_SIGNUP = "/signup";
+export const ROUTE_CONFIRM_SIGNUP = "/confirmSignup";
+export const ROUTE_FORGOT_PASSWORD = "/forgotPassword";
+export const ROUTE_CONFIRM_FORGOT_PASSWORD = "/confirmForgotPassword";
+export const ROUTE_DASHBOARD = "/dashboard";

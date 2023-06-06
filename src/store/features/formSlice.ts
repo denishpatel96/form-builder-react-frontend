@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { FieldProps } from "../../../components/FormBuilder/Types";
+import { FieldProps } from "../../components/FormBuilder/Types";
 import {
   getCheckboxGroupProps,
   getCheckboxProps,
@@ -11,8 +11,8 @@ import {
   getRadioProps,
   getShortTextProps,
   getSliderProps,
-} from "../../../components/FormBuilder/Utility";
-import { REQUEST_STATUS } from "../../../constants";
+} from "../../components/FormBuilder/Utility";
+import { REQUEST_STATUS } from "../../constants";
 
 interface FormState {
   count: number;

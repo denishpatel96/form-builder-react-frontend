@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { duplicateFields } from "../../../../../store/features/form/formSlice";
+import { duplicateFields } from "../../../../../store/features/formSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import MenuPopover from "../../../../Reusable/MenuPopover";
 

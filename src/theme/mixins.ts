@@ -1,11 +1,8 @@
-import { APP_BAR_DESKTOP, APP_BAR_MOBILE } from "../constants";
+import { APP_BAR_HEIGHT } from "../constants";
 
 const mixins = {
   toolbar: {
-    minHeight: APP_BAR_MOBILE,
-    "@media (min-width:600px)": {
-      minHeight: APP_BAR_DESKTOP,
-    },
+    minHeight: APP_BAR_HEIGHT,
   },
 };
 export default mixins;

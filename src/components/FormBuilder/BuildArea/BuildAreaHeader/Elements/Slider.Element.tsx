@@ -46,7 +46,7 @@ export const SliderElement = ({
             <Stack direction={"row"} px={1}>
               <Slider
                 id={id}
-                onChange={(_ev, value, _activeThumb) => {
+                onChange={(_, value) => {
                   onChange(value);
                 }}
                 value={value}

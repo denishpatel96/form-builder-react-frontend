@@ -31,7 +31,7 @@ function responsiveFontSizes({
   };
 }
 
-const FONT_PRIMARY = "'Roboto', sans-serif";
+const FONT_PRIMARY = "'Montserrat', sans-serif";
 
 const typography: any = {
   fontFamily: FONT_PRIMARY,

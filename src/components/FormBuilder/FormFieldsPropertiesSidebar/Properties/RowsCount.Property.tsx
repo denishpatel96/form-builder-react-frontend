@@ -4,7 +4,7 @@ import { NumericFormat } from "react-number-format";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { useAppDispatch } from "../../../../store/hooks";
-import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { changeFieldProp } from "../../../../store/features/formSlice";
 
 type RowsCountPropertyProps = {
   value: {

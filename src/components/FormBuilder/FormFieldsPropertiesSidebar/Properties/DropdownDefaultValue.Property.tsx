@@ -16,7 +16,7 @@ import { ISelectableOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { useAppDispatch } from "../../../../store/hooks";
-import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { changeFieldProp } from "../../../../store/features/formSlice";
 
 type DropdownDefaultValuePropertyProps = {
   value: {

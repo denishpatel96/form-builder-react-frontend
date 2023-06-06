@@ -2,12 +2,14 @@ const prod = process.env.NODE_ENV === "production";
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
   mode: prod ? "production" : "development",
   entry: "./src/index.tsx",
   output: {
     path: __dirname + "/dist/",
+    publicPath: "/",
   },
   module: {
     rules: [
@@ -46,7 +48,11 @@ module.exports = {
     ],
   },
   devtool: prod ? undefined : "source-map",
+  devServer: {
+    historyApiFallback: true,
+  },
   plugins: [
+    !prod && new ReactRefreshPlugin(),
     new HtmlWebpackPlugin({
       template: "index.html",
     }),

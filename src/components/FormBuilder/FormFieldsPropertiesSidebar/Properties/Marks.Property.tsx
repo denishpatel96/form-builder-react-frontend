@@ -16,7 +16,7 @@ import { Mark } from "../../Types";
 import { Add, Remove } from "@mui/icons-material";
 import { NumericFormat } from "react-number-format";
 import { useAppDispatch } from "../../../../store/hooks";
-import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { changeFieldProp } from "../../../../store/features/formSlice";
 
 type MarksPropertyProps = {
   value: boolean | undefined;

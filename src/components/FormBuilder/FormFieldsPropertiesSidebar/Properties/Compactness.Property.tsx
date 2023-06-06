@@ -1,6 +1,6 @@
 import { FormHelperText, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
-import { changeFieldProp } from "../../../../store/features/form/formSlice";
+import { changeFieldProp } from "../../../../store/features/formSlice";
 import { useAppDispatch } from "../../../../store/hooks";
 import { StyledListItem } from "../Styles";
 import PropTitle from "./PropTitle";

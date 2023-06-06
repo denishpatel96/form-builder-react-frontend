@@ -15,7 +15,7 @@ import {
 } from "./Styles";
 import { ChevronLeftOutlined } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { addField } from "../../../store/features/form/formSlice";
+import { addField } from "../../../store/features/formSlice";
 
 interface IFormFieldsProps {
   isOpen: boolean;
