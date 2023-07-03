@@ -9,7 +9,6 @@ import {
   DeleteOutlined,
   DragIndicator,
   SettingsOutlined,
-  TuneOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
 import RemoveFieldDialog from "./RemoveFieldDialog";
@@ -21,7 +20,6 @@ import {
   removeField,
   selectField,
 } from "../../../store/features/formSlice";
-import { styled } from "@mui/material/styles";
 interface ISortableItemProps {
   field: FieldProps;
   renderElement: (field?: FieldProps) => JSX.Element;

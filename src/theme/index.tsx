@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode } from "react";
 import { CssBaseline } from "@mui/material";
 import {
   ThemeProvider,

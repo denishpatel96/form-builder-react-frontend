@@ -23,7 +23,7 @@ export const RangeSliderProperty = ({ value }: RangeSliderPropertyProps) => {
           <Switch
             name={"rangeSlider"}
             checked={isRangeSlider}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(_e: React.ChangeEvent<HTMLInputElement>) =>
               dispatch(
                 changeFieldProp({
                   path: "defaultValue",

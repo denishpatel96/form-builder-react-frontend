@@ -1,45 +1,37 @@
 import { ArrowForwardOutlined } from "@mui/icons-material";
-import { Box, Button, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Waves from "../components/Reusable/Waves";
 import { ROUTE_SIGNUP } from "../constants";
-import HomeLayout from "../layouts/HomeLayout";
+import HomeHOC from "../hoc/HomeHOC";
 
 export const HomePage = () => {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   return (
-    <HomeLayout>
+    <HomeHOC>
       <Box
         sx={{
           p: 4,
-          height: 400,
+          height: "80vh",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
           color: (theme) => theme.palette.text.disabled,
         }}
       >
         <Typography
           pt={5}
-          variant="h3"
-          textAlign={"center"}
+          textAlign="center"
+          variant="h1"
           sx={{ color: (theme) => theme.palette.text.disabled }}
         >
-          Take the power of creating beautiful
-          <Box component={"span"} sx={{ color: (theme) => theme.palette.secondary.main }}>
-            {" forms "}
-          </Box>
-          in your hand.
+          Create forms that Convert.
         </Typography>
-        <Typography variant="h3" textAlign={"center"} color="secondary">
-          Best part is, you don't have to write single line of code.
-        </Typography>
-        <Typography variant="h3" textAlign={"center"} color="secondary">
-          It's easy. It's fun.
+        <Typography textAlign="center" variant="h3">
+          Free Online Drag and Drop Form Builder
         </Typography>
         <Button
           sx={{ mt: 4, width: 200 }}
@@ -51,10 +43,10 @@ export const HomePage = () => {
           Get Started
         </Button>
       </Box>
-      <Box sx={{ height: 150, position: "relative" }}>
+      <Box sx={{ height: 100, position: "relative" }}>
         <Waves />
       </Box>
       <Box sx={{ height: 500, backgroundColor: (theme) => theme.palette.primary.main }}></Box>
-    </HomeLayout>
+    </HomeHOC>
   );
 };

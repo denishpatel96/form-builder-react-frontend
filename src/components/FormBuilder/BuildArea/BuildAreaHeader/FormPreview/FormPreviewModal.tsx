@@ -8,7 +8,6 @@ import {
 import {
   Box,
   Button,
-  Grid,
   IconButton,
   Modal,
   SxProps,
@@ -51,7 +50,7 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
     setOpen(false);
   };
 
-  const handleDevice = (event: React.MouseEvent<HTMLElement>, newDevice: string) => {
+  const handleDevice = (_event: React.MouseEvent<HTMLElement>, newDevice: string) => {
     if (newDevice) {
       setDevice(newDevice);
     }

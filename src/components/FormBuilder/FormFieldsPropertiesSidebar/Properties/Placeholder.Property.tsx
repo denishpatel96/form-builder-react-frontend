@@ -1,6 +1,6 @@
 import { Clear } from "@mui/icons-material";
 import { Grid, IconButton, TextField } from "@mui/material";
-import React, { ReactNode } from "react";
+import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";
 import { useAppDispatch } from "../../../../store/hooks";

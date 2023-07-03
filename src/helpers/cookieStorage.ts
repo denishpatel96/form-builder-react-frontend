@@ -21,10 +21,7 @@ const CookieStorage = {
   },
   clear: () => {
     const cookies = Cookies.get();
-    let index: number;
-    for (index = 0; index < Object.keys(cookies).length; ++index) {
-      Cookies.remove(cookies[index]);
-    }
+    Object.keys(cookies).forEach((key) => Cookies.remove(key));
   },
 };
 

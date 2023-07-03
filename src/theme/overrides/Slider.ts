@@ -1,4 +1,4 @@
-const Slider = (theme: any) => {
+const Slider = (_theme: any) => {
   return {
     MuiSlider: {
       styleOverrides: {

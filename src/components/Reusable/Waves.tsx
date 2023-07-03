@@ -1,4 +1,4 @@
-import { useTheme, styled, alpha, lighten } from "@mui/material/styles";
+import { useTheme, styled, lighten } from "@mui/material/styles";
 import React from "react";
 
 const WaveStyle = styled("div")({

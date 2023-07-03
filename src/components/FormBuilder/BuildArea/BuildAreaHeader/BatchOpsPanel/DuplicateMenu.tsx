@@ -11,8 +11,6 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
-  MenuList,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -22,9 +20,7 @@ import { duplicateFields } from "../../../../../store/features/formSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import MenuPopover from "../../../../Reusable/MenuPopover";
 
-type Props = {};
-
-const DuplicateMenu = (props: Props) => {
+const DuplicateMenu = () => {
   const anchorRef = React.useRef(null);
   const dispatch = useAppDispatch();
   const { fields } = useAppSelector((state) => state.form);

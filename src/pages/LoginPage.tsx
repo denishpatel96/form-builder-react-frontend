@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  TextField,
-  Box,
-  IconButton,
-  CircularProgress,
-} from "@mui/material";
+import { Grid, Typography, Button, TextField, Box, IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../store/hooks";
@@ -17,11 +8,11 @@ import {
   ROUTE_CONFIRM_SIGNUP,
   ROUTE_DASHBOARD,
   ROUTE_FORGOT_PASSWORD,
+  ROUTE_LOGIN,
   ROUTE_SIGNUP,
 } from "../constants";
 import {
   ArrowForwardOutlined,
-  Login,
   VisibilityOffOutlined,
   VisibilityOutlined,
 } from "@mui/icons-material";
@@ -31,8 +22,9 @@ import { validateEmail } from "../helpers/validators";
 import { useLoginMutation, useRefreshLoginMutation } from "../store/features/authApi";
 import { hideToast, showToast } from "../store/features/signalSlice";
 import { ErrorResponse } from "../declaration";
-import { setTokens } from "../store/features/authSlice";
 import { CookieStorage } from "../helpers/cookieStorage";
+import Spinner from "../components/Reusable/Spinner";
+import jwt_decode from "jwt-decode";
 
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -41,7 +33,13 @@ export const LoginPage = () => {
   const [login, { isLoading, isSuccess, isError, error, data }] = useLoginMutation();
   const [
     refreshLogin,
-    { isLoading: isRefreshLoginLoading, isSuccess: isRefreshLoginSuccess, data: refreshLoginData },
+    {
+      isUninitialized: isRefreshLoginUninitialised,
+      isLoading: isRefreshLoginLoading,
+      isSuccess: isRefreshLoginSuccess,
+      isError: isRefreshLoginError,
+      data: refreshLoginData,
+    },
   ] = useRefreshLoginMutation();
   const defaultValues = {
     email: "",
@@ -63,59 +61,56 @@ export const LoginPage = () => {
 
   React.useEffect(() => {
     const AsyncFunc = async () => {
-      const rT = CookieStorage.getItem("token");
-      if (rT) {
-        console.log("Refreshing tokens...");
-        await refreshLogin({ refreshToken: rT });
+      console.log("Login : Checking session...");
+      const { rT, idT } = CookieStorage.getAll();
+      // If idToken is present and not expired
+      if (idT) {
+        const decodedJWT: { sub: string; exp: number } = jwt_decode(idT);
+        if (decodedJWT && decodedJWT.exp * 1000 > Date.now()) {
+          navigate(ROUTE_DASHBOARD, { state: { from: ROUTE_LOGIN } });
+        } else if (rT) {
+          console.log("Refreshing session...");
+          await refreshLogin({ refreshToken: rT });
+        }
       }
     };
 
     AsyncFunc();
   }, []);
 
-  React.useEffect(() => {
-    const AsyncFunc = async () => {
-      if (isRefreshLoginSuccess && refreshLoginData) {
-        const accessToken = refreshLoginData?.data?.AuthenticationResult?.AccessToken;
-        const refreshToken = CookieStorage.getItem("token") as string;
-        const idToken = refreshLoginData?.data?.AuthenticationResult?.IdToken;
+  if (isRefreshLoginSuccess && refreshLoginData) {
+    const idToken = refreshLoginData?.AuthenticationResult?.IdToken;
 
-        dispatch(setTokens({ accessToken, refreshToken, idToken }));
-        CookieStorage.setItem("token", refreshToken);
-        navigate(ROUTE_DASHBOARD);
-      }
-    };
-
-    AsyncFunc();
-  }, [dispatch, isRefreshLoginSuccess]);
-
-  React.useEffect(() => {
-    const toastId = new Date().valueOf();
-    if (isError) {
-      console.log("error", error);
-      const errorName = error && "data" in error && (error?.data as ErrorResponse)?.error?.name;
-      if (errorName === "UserNotConfirmedException") {
-        navigate(ROUTE_CONFIRM_SIGNUP);
-      } else {
-        dispatch(
-          showToast({
-            id: toastId,
-            message: "Incorrect email or password",
-            severity: "error",
-          })
-        );
-      }
-      setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-    } else if (isSuccess && data) {
-      const accessToken = data?.data?.AuthenticationResult?.AccessToken;
-      const refreshToken = data?.data?.AuthenticationResult?.RefreshToken;
-      const idToken = data?.data?.AuthenticationResult?.IdToken;
-
-      dispatch(setTokens({ accessToken, refreshToken, idToken }));
-      CookieStorage.setItem("token", refreshToken);
-      navigate(ROUTE_DASHBOARD);
+    if (idToken) {
+      CookieStorage.setItem("idT", idToken);
+      navigate(ROUTE_DASHBOARD, { state: { from: ROUTE_LOGIN } });
     }
-  }, [isError, isSuccess, dispatch]);
+  }
+
+  if (isError) {
+    const toastId = new Date().valueOf();
+    console.log("Error logging in : ", error);
+    const errorName = error && "data" in error && (error?.data as ErrorResponse)?.error?.name;
+    if (errorName === "UserNotConfirmedException") {
+      navigate(ROUTE_CONFIRM_SIGNUP);
+    } else {
+      dispatch(
+        showToast({
+          id: toastId,
+          message: "Incorrect email or password",
+          severity: "error",
+        })
+      );
+    }
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  } else if (isSuccess && data) {
+    const idToken = data?.AuthenticationResult?.IdToken;
+    const refreshToken = data?.AuthenticationResult?.RefreshToken;
+
+    CookieStorage.setItem("rT", refreshToken);
+    CookieStorage.setItem("idT", idToken);
+    navigate(ROUTE_DASHBOARD);
+  }
 
   const form = (
     <form
@@ -138,7 +133,7 @@ export const LoginPage = () => {
             value={values.email}
             error={!!emailError}
             helperText={emailError}
-            onChange={(e) => setValues((prev) => ({ ...prev, email: e.target.value }))}
+            onChange={(e) => setValues((prev) => ({ ...prev, email: e.target.value?.trim() }))}
           />
         </Grid>
         <Grid item xs={12}>
@@ -148,7 +143,7 @@ export const LoginPage = () => {
             fullWidth
             type={values.showPassword ? "text" : "password"}
             value={values.password}
-            onChange={(e) => setValues((prev) => ({ ...prev, password: e.target.value }))}
+            onChange={(e) => setValues((prev) => ({ ...prev, password: e.target.value?.trim() }))}
             InputProps={{
               endAdornment: (
                 <IconButton
@@ -169,7 +164,7 @@ export const LoginPage = () => {
             fullWidth
             type="submit"
             variant="contained"
-            loading={isLoading || isRefreshLoginLoading}
+            loading={isLoading}
             loadingPosition={"end"}
             endIcon={<ArrowForwardOutlined />}
           >
@@ -212,6 +207,7 @@ export const LoginPage = () => {
       }}
     >
       <Logo />
+
       <Waves />
       <Box
         sx={{
@@ -223,10 +219,19 @@ export const LoginPage = () => {
           width: { xs: "100%", sm: "500px" },
         }}
       >
-        {/* login form */}
-        {form}
-        {/* forgot password and link to signup */}
-        {helperButtons}
+        {isRefreshLoginLoading ? (
+          // progressBar("Refreshing Session...")
+          <Spinner text={"Refreshing Session..."} />
+        ) : (
+          (isRefreshLoginUninitialised || isRefreshLoginError) && (
+            <>
+              {/* login form */}
+              {form}
+              {/* forgot password and link to signup */}
+              {helperButtons}
+            </>
+          )
+        )}
       </Box>
     </Grid>
   );

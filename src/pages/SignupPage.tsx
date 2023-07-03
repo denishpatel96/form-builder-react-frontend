@@ -6,10 +6,7 @@ import {
   TextField,
   Box,
   IconButton,
-  List,
   ListItem,
-  ListItemIcon,
-  ListItemText,
   Stack,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -37,7 +34,6 @@ import {
 import { useSignupMutation } from "../store/features/authApi";
 import { useAppDispatch } from "../store/hooks";
 import { hideToast, showToast } from "../store/features/signalSlice";
-import { ErrorResponse } from "../declaration";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -111,21 +107,18 @@ export const SignupPage = () => {
     }
   };
 
-  React.useEffect(() => {
+  if (isError) {
     const toastId = new Date().valueOf();
-    if (isError) {
-      dispatch(
-        showToast({
-          id: toastId,
-          message:
-            (error && "data" in error && (error?.data as ErrorResponse)?.error?.message) ||
-            "Error creating an account",
-          severity: "error",
-        })
-      );
-      setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-    }
-  }, [isError, dispatch]);
+    console.log("Error creating an account : ", error);
+    dispatch(
+      showToast({
+        id: toastId,
+        message: "Error creating an account",
+        severity: "error",
+      })
+    );
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  }
 
   const validations = [
     {
@@ -185,8 +178,8 @@ export const SignupPage = () => {
               Verification link sent
             </Typography>
             <Typography py={6}>
-              We have sent verification link to your email {values.email}. Kindly open your inbox
-              and click on the link to confirm your account.
+              We have sent verification link to your email <strong>{values.email}</strong>. Kindly
+              open your inbox and click on the link to confirm your account.
             </Typography>
           </Stack>
         ) : (
@@ -213,7 +206,9 @@ export const SignupPage = () => {
                     value={values.firstName}
                     error={!!errors.firstName}
                     helperText={errors.firstName}
-                    onChange={(e) => setValues((prev) => ({ ...prev, firstName: e.target.value }))}
+                    onChange={(e) =>
+                      setValues((prev) => ({ ...prev, firstName: e.target.value?.trim() }))
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -225,7 +220,9 @@ export const SignupPage = () => {
                     value={values.lastName}
                     error={!!errors.lastName}
                     helperText={errors.lastName}
-                    onChange={(e) => setValues((prev) => ({ ...prev, lastName: e.target.value }))}
+                    onChange={(e) =>
+                      setValues((prev) => ({ ...prev, lastName: e.target.value?.trim() }))
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -237,7 +234,9 @@ export const SignupPage = () => {
                     value={values.email}
                     error={!!errors.email}
                     helperText={errors.email}
-                    onChange={(e) => setValues((prev) => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setValues((prev) => ({ ...prev, email: e.target.value?.trim() }))
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -258,7 +257,7 @@ export const SignupPage = () => {
                         hasCapitalLetter: hasCapitalLetter(value),
                         hasSpecialCharacter: hasSpecialCharacter(value),
                       });
-                      setValues((prev) => ({ ...prev, password: e.target.value }));
+                      setValues((prev) => ({ ...prev, password: e.target.value?.trim() }));
                     }}
                     InputProps={{
                       endAdornment: (
@@ -306,7 +305,7 @@ export const SignupPage = () => {
                     type={"password"}
                     value={values.confirmPassword}
                     onChange={(e) =>
-                      setValues((prev) => ({ ...prev, confirmPassword: e.target.value }))
+                      setValues((prev) => ({ ...prev, confirmPassword: e.target.value?.trim() }))
                     }
                     error={!!errors.confirmPassword}
                     helperText={errors.confirmPassword}

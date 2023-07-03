@@ -3,6 +3,7 @@ const prod = process.env.NODE_ENV === "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
   mode: prod ? "production" : "development",
@@ -56,6 +57,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "index.html",
     }),
+    new NodePolyfillPlugin(),
     new MiniCssExtractPlugin(),
   ],
 };

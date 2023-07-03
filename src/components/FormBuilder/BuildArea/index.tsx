@@ -46,7 +46,7 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
     }
   };
 
-  const handleDragCancel = (event: DragCancelEvent) => {
+  const handleDragCancel = (_event: DragCancelEvent) => {
     setActive(null);
   };
 

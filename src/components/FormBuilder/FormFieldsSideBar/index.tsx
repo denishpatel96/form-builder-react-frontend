@@ -1,13 +1,8 @@
 import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 import React from "react";
-import { Drawer, Typography, Divider, Grid, Tooltip, Box, IconButton } from "@mui/material";
-import {
-  DRAWER_WIDTH_DESKTOP,
-  DRAWER_WIDTH_TABLET,
-  ELEMENT_CATEGORIES,
-  FORM_ELEMENTS_LIST,
-} from "../../../constants";
+import { Drawer, Typography, Divider, Grid, Box, IconButton } from "@mui/material";
+import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, FORM_ELEMENTS_LIST } from "../../../constants";
 import {
   StyledFormFieldItem,
   StyledFormFieldItemDragOverlay,

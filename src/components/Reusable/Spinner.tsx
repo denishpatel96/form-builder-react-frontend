@@ -60,7 +60,7 @@ const Spinner = ({ text }: { text?: string }) => {
         <g filter="url(#ldio-4mzun26lhp4-filter)">
           <g transform="translate(50 50)">
             <g>
-              <circle cx="17" cy="0" r="5" fill="#e15b64">
+              <circle cx="17" cy="0" r="5" fill="#faf0f6">
                 <animate
                   attributeName="r"
                   keyTimes="0;0.5;1"
@@ -83,7 +83,7 @@ const Spinner = ({ text }: { text?: string }) => {
           </g>
           <g transform="translate(50 50)">
             <g>
-              <circle cx="17" cy="0" r="5" fill="#f47e60">
+              <circle cx="17" cy="0" r="5" fill="#f2c2de">
                 <animate
                   attributeName="r"
                   keyTimes="0;0.5;1"
@@ -106,7 +106,7 @@ const Spinner = ({ text }: { text?: string }) => {
           </g>
           <g transform="translate(50 50)">
             <g>
-              <circle cx="17" cy="0" r="5" fill="#f8b26a">
+              <circle cx="17" cy="0" r="5" fill="#eb98c8">
                 <animate
                   attributeName="r"
                   keyTimes="0;0.5;1"
@@ -129,7 +129,7 @@ const Spinner = ({ text }: { text?: string }) => {
           </g>
           <g transform="translate(50 50)">
             <g>
-              <circle cx="17" cy="0" r="5" fill="#abbd81">
+              <circle cx="17" cy="0" r="5" fill="#de68ac">
                 <animate
                   attributeName="r"
                   keyTimes="0;0.5;1"
@@ -152,7 +152,7 @@ const Spinner = ({ text }: { text?: string }) => {
           </g>
           <g transform="translate(50 50)">
             <g>
-              <circle cx="17" cy="0" r="5" fill="#849b87">
+              <circle cx="17" cy="0" r="5" fill="#d34f9b">
                 <animate
                   attributeName="r"
                   keyTimes="0;0.5;1"

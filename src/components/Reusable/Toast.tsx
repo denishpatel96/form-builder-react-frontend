@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Snackbar, Stack, Slide, AlertProps } from "@mui/material";
+import { Alert, Snackbar, Stack, Slide } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { hideToast } from "../../store/features/signalSlice";
 

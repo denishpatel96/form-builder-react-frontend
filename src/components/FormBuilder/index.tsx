@@ -17,7 +17,7 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
-import { Box, CircularProgress, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { getFormDesignProps } from "./Utility";
 import _ from "lodash";
 import { IFormDesignProps } from "./Types";
@@ -33,12 +33,7 @@ const FormBuilder = () => {
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
 
-  const {
-    fields: formFields,
-    selected,
-    reqStatus,
-    reqError,
-  } = useAppSelector((state) => state.form);
+  const { fields: formFields, selected, reqStatus } = useAppSelector((state) => state.form);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isFormFieldsOpen, setIsFormFieldsOpen] = React.useState<boolean>(true);
   const [isFormDesignOpen, setIsFormDesignOpen] = React.useState<boolean>(false);
@@ -61,7 +56,7 @@ const FormBuilder = () => {
     setActive(active);
   };
 
-  const handleDragCancel = (event: DragCancelEvent) => {
+  const handleDragCancel = (_event: DragCancelEvent) => {
     //console.log("drag cancelled");
     setActive(null);
     setOver(null);

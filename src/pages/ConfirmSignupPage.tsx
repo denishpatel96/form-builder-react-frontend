@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Button, TextField, Box, Stack, CircularProgress } from "@mui/material";
+import { Grid, Typography, Button, TextField, Box, Stack } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch } from "../store/hooks";
@@ -10,7 +10,7 @@ import Waves from "../components/Reusable/Waves";
 import { validateEmail } from "../helpers/validators";
 import { useConfirmSignupMutation, useResendCodeMutation } from "../store/features/authApi";
 import { hideToast, showToast } from "../store/features/signalSlice";
-import { ErrorResponse } from "../declaration";
+import Spinner from "../components/Reusable/Spinner";
 
 export const ConfirmSignupPage = () => {
   const dispatch = useAppDispatch();
@@ -47,41 +47,30 @@ export const ConfirmSignupPage = () => {
     AsyncFunc();
   }, []);
 
-  React.useEffect(() => {
-    const AsyncFunc = async () => {
-      const toastId = new Date().valueOf();
-      if (isConfirmError) {
-        dispatch(
-          showToast({
-            id: toastId,
-            message:
-              (confirmationError &&
-                "data" in confirmationError &&
-                (confirmationError?.data as ErrorResponse)?.error?.message) ||
-              "Error confirming the account",
-            severity: "error",
-          })
-        );
-        setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-      }
-      if (isResendError) {
-        dispatch(
-          showToast({
-            id: toastId,
-            message:
-              (resendError &&
-                "data" in resendError &&
-                (resendError?.data as ErrorResponse)?.error?.message) ||
-              "Error resending account verification link",
-            severity: "error",
-          })
-        );
-        setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-      }
-    };
-
-    AsyncFunc();
-  }, [dispatch, isConfirmError, isResendError]);
+  if (isConfirmError) {
+    const toastId = new Date().valueOf();
+    console.log("Error confirming the account : ", confirmationError);
+    dispatch(
+      showToast({
+        id: toastId,
+        message: "Error confirming the account",
+        severity: "error",
+      })
+    );
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  }
+  if (isResendError) {
+    const toastId = new Date().valueOf();
+    console.log("Error resending account verification link : ", resendError);
+    dispatch(
+      showToast({
+        id: toastId,
+        message: "Error resending account verification link",
+        severity: "error",
+      })
+    );
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  }
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
@@ -94,13 +83,6 @@ export const ConfirmSignupPage = () => {
       }
     }
   };
-
-  const progressBar = (text: string) => (
-    <Stack spacing={2} alignItems="center">
-      <CircularProgress />
-      <Typography variant="subtitle1">{text}</Typography>
-    </Stack>
-  );
 
   const confirmationSuccessful = (
     <Stack>
@@ -219,7 +201,7 @@ export const ConfirmSignupPage = () => {
         }}
       >
         {/* If confirming show progress bar or spinner */}
-        {isConfirming && progressBar("Confirming your account...")}
+        {isConfirming && <Spinner text={"Confirming your account..."} />}
         {/* If confirmed show success message with login button */}
         {isConfirmed && confirmationSuccessful}
         {/* If confirmation failed show error message with resend code button  */}

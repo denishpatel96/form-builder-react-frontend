@@ -10,7 +10,6 @@ import Waves from "../components/Reusable/Waves";
 import { validateEmail } from "../helpers/validators";
 import { useForgotPasswordMutation } from "../store/features/authApi";
 import { hideToast, showToast } from "../store/features/signalSlice";
-import { ErrorResponse } from "../declaration";
 
 export const ForgotPasswordPage = () => {
   const dispatch = useAppDispatch();
@@ -21,26 +20,18 @@ export const ForgotPasswordPage = () => {
 
   const [forgotPassword, { isLoading, isSuccess, isError, error }] = useForgotPasswordMutation();
 
-  React.useEffect(() => {
-    const AsyncFunc = async () => {
-      const toastId = new Date().valueOf();
-      if (isError) {
-        console.log("Error sending password link", error);
-        dispatch(
-          showToast({
-            id: toastId,
-            message:
-              (error && "data" in error && (error?.data as ErrorResponse)?.error?.message) ||
-              "Error sending password reset link",
-            severity: "error",
-          })
-        );
-        setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-      }
-    };
-
-    AsyncFunc();
-  }, [dispatch, isError]);
+  if (isError) {
+    const toastId = new Date().valueOf();
+    console.log("Error sending password reset link : ", error);
+    dispatch(
+      showToast({
+        id: toastId,
+        message: "Error sending password reset link",
+        severity: "error",
+      })
+    );
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  }
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {

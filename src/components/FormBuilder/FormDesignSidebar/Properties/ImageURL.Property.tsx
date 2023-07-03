@@ -1,5 +1,5 @@
 import { Clear } from "@mui/icons-material";
-import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
+import { Grid, IconButton, TextField, Typography } from "@mui/material";
 import React from "react";
 import { StyledListItem } from "../Styles";
 

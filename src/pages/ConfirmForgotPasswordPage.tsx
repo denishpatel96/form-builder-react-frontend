@@ -6,7 +6,6 @@ import {
   TextField,
   Box,
   Stack,
-  CircularProgress,
   IconButton,
   ListItem,
 } from "@mui/material";
@@ -19,7 +18,6 @@ import {
   Cancel,
   CancelOutlined,
   CheckCircle,
-  MarkEmailRead,
   VisibilityOffOutlined,
   VisibilityOutlined,
 } from "@mui/icons-material";
@@ -31,12 +29,10 @@ import {
   hasProperCharacterCount,
   hasSmallLetter,
   hasSpecialCharacter,
-  validateEmail,
   validatePassword,
 } from "../helpers/validators";
 import { useConfirmForgotPasswordMutation } from "../store/features/authApi";
 import { hideToast, showToast } from "../store/features/signalSlice";
-import { ErrorResponse } from "../declaration";
 
 export const ConfirmForgotPasswordPage = () => {
   const dispatch = useAppDispatch();
@@ -71,26 +67,18 @@ export const ConfirmForgotPasswordPage = () => {
   const [confirmForgotPassword, { isLoading, isSuccess, isError, error }] =
     useConfirmForgotPasswordMutation();
 
-  React.useEffect(() => {
-    const AsyncFunc = async () => {
-      const toastId = new Date().valueOf();
-
-      if (isError) {
-        dispatch(
-          showToast({
-            id: toastId,
-            message:
-              (error && "data" in error && (error?.data as ErrorResponse)?.error?.message) ||
-              "Error reseting password",
-            severity: "error",
-          })
-        );
-        setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-      }
-    };
-
-    AsyncFunc();
-  }, [dispatch, isError]);
+  if (isError) {
+    const toastId = new Date().valueOf();
+    console.log("Error resetting password : ", error);
+    dispatch(
+      showToast({
+        id: toastId,
+        message: "Error reseting password",
+        severity: "error",
+      })
+    );
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  }
 
   const handleSubmit = async () => {
     const isPasswordValid: boolean = validatePassword(values.password);
@@ -143,13 +131,6 @@ export const ConfirmForgotPasswordPage = () => {
       isValid: passwordValidations.hasSpecialCharacter,
     },
   ];
-
-  const progressBar = (text: string) => (
-    <Stack spacing={2} alignItems="center">
-      <CircularProgress />
-      <Typography variant="subtitle1">{text}</Typography>
-    </Stack>
-  );
 
   const redirectToForgotPassword = (
     <Stack>

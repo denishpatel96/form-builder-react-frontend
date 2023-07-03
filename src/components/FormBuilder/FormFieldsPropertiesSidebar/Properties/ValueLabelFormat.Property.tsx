@@ -1,5 +1,4 @@
-import { Clear } from "@mui/icons-material";
-import { FormHelperText, Grid, IconButton, TextField } from "@mui/material";
+import { FormHelperText, Grid, TextField } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
 import { StyledListItem } from "../Styles";

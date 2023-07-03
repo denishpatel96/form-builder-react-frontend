@@ -1,18 +1,11 @@
-import {
-  ContentCopyOutlined,
-  DeleteOutlined,
-  DeselectOutlined,
-  SelectAllOutlined,
-} from "@mui/icons-material";
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { DeleteOutlined, DeselectOutlined, SelectAllOutlined } from "@mui/icons-material";
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { deselectFields, selectAll } from "../../../../../store/features/formSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import DuplicateMenu from "./DuplicateMenu";
 
-type Props = {};
-
-const BatchOpsPanel = (props: Props) => {
+const BatchOpsPanel = () => {
   const dispatch = useAppDispatch();
   const { fields, selected } = useAppSelector((state) => state.form);
   const selectedCount = selected.length;

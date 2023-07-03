@@ -181,7 +181,7 @@ const formSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFields.pending, (state, action) => {
+      .addCase(fetchFields.pending, (state) => {
         state.reqStatus = REQUEST_STATUS.LOADING;
       })
       .addCase(fetchFields.fulfilled, (state, action) => {

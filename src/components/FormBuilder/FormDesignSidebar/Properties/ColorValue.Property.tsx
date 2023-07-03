@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@mui/material";
-import React, { CSSProperties } from "react";
+import { Grid, Typography } from "@mui/material";
+import React from "react";
 import { StyledListItem } from "../Styles";
 import ColorPicker from "../../../Reusable/ColorPicker";
 

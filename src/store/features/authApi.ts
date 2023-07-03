@@ -1,56 +1,37 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../constants";
 
-type UserData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  id: string;
-  emailVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
-
 const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${API_URL}/user`,
+    baseUrl: `${API_URL}/auth`,
     prepareHeaders: (headers) => {
       return headers;
     },
   }),
   endpoints: (builder) => {
     return {
-      signup: builder.mutation<
-        { success: boolean; data: UserData },
-        {
+      signup: builder.mutation({
+        query: (body: {
           firstName: string;
           lastName: string;
           email: string;
           password: string;
-        }
-      >({
-        query: (body) => ({
+        }) => ({
           url: "/signup",
           method: "post",
           body,
         }),
       }),
-      confirmSignup: builder.mutation<
-        { success: boolean },
-        {
-          email: string;
-          code: string;
-        }
-      >({
-        query: (body) => ({
+      confirmSignup: builder.mutation({
+        query: (body: { email: string; code: string }) => ({
           url: "/confirmSignup",
           method: "post",
           body,
         }),
       }),
-      resendCode: builder.mutation<{ success: boolean }, { email: string }>({
-        query: (body) => ({
+      resendCode: builder.mutation({
+        query: (body: { email: string }) => ({
           url: "/resendCode",
           method: "post",
           body,

@@ -48,8 +48,6 @@ const FormDesignSidebar = ({
     horizontalPadding,
     horizontalSpacing,
     verticalSpacing,
-    labelFontWeight,
-    labelColor,
     palette,
     pageImage,
     formImage,
@@ -59,7 +57,7 @@ const FormDesignSidebar = ({
 
   const [tabValue, setTabValue] = React.useState(1);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
