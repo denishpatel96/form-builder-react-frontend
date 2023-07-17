@@ -1,18 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import formReducer from "./features/formSlice";
+import authReducer from "./features/authSlice";
 import signalReducer from "./features/signalSlice";
-import authApi from "./features/authApi";
-import userApi from "./features/userApi";
+import api from "./features/api";
 
 export const store = configureStore({
   reducer: {
     form: formReducer,
+    auth: authReducer,
     signal: signalReducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [userApi.reducerPath]: userApi.reducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(authApi.middleware).concat(userApi.middleware);
+    return getDefaultMiddleware().concat(api.middleware);
   },
 });
 

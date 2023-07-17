@@ -4,4 +4,6 @@ export const ROUTE_SIGNUP = "/signup";
 export const ROUTE_CONFIRM_SIGNUP = "/confirmSignup";
 export const ROUTE_FORGOT_PASSWORD = "/forgotPassword";
 export const ROUTE_CONFIRM_FORGOT_PASSWORD = "/confirmForgotPassword";
-export const ROUTE_DASHBOARD = "/dashboard";
+export const ROUTE_WORKSPACES = "/accounts/:userId/workspaces/:workspaceId?";
+export const ROUTE_ACCOUNT_SETTINGS = "/settings";
+export const ROUTE_ORGANIZATION_SETTINGS = "/accounts/:userId/settings";

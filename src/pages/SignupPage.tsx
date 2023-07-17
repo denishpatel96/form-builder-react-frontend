@@ -31,7 +31,7 @@ import {
   validateEmail,
   validatePassword,
 } from "../helpers/validators";
-import { useSignupMutation } from "../store/features/authApi";
+import { useSignupMutation } from "../store/features/api";
 import { useAppDispatch } from "../store/hooks";
 import { hideToast, showToast } from "../store/features/signalSlice";
 

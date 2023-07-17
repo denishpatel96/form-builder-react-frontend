@@ -31,7 +31,7 @@ import {
   hasSpecialCharacter,
   validatePassword,
 } from "../helpers/validators";
-import { useConfirmForgotPasswordMutation } from "../store/features/authApi";
+import { useConfirmForgotPasswordMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
 
 export const ConfirmForgotPasswordPage = () => {

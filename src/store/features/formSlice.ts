@@ -178,6 +178,9 @@ const formSlice = createSlice({
         _.set(state.fields[index], action.payload.path, action.payload.value);
       }
     },
+
+    // reset
+    resetFormState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -206,6 +209,7 @@ export const {
   addField,
   removeField,
   moveField,
+  resetFormState,
   changeFieldProp,
 } = formSlice.actions;
 export default formSlice.reducer;

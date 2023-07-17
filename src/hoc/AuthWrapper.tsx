@@ -1,39 +1,37 @@
 import { Box, Typography } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { ReactNode } from "react";
 import { APP_BAR_HEIGHT, FOOTER_HEIGHT, ROUTE_LOGIN } from "../constants";
-import { useAppDispatch } from "../store/hooks";
 import { CookieStorage } from "../helpers/cookieStorage";
 import { getPayload } from "../helpers/jwtHandler";
+import { useAppDispatch } from "../store/hooks";
+import { setTokens } from "../store/features/authSlice";
 
-type DashboardLayoutProps = {
-  children: ReactNode;
-};
-
-const DashboardHOC = ({ children }: DashboardLayoutProps) => {
+const AuthWrapper = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     const AsyncFunc = async () => {
       console.log("Dashboard : Checking session...");
-      const { idT } = CookieStorage.getAll();
+      const { rT, idT } = CookieStorage.getAll();
       if (!(idT && getPayload(idT).exp * 1000 > Date.now())) {
         navigate(ROUTE_LOGIN);
+      } else {
+        dispatch(setTokens({ idToken: idT, refreshToken: rT }));
       }
     };
 
     AsyncFunc();
-  }, [dispatch, navigate, location]);
+  }, [navigate]);
 
   return (
-    <Box component="div" sx={{ minHeight: "100%", overflow: "hidden" }}>
+    <Box component="div" sx={{ height: "100%", overflow: "hidden" }}>
       <Box
         sx={{
           flexGrow: 1,
           overflow: "auto",
-          minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)`,
+          height: `calc(100vh - ${FOOTER_HEIGHT}px)`,
           paddingTop: `${APP_BAR_HEIGHT}px`,
           display: "flex",
           backgroundColor: (theme) => theme.palette.background.paper,
@@ -56,4 +54,4 @@ const DashboardHOC = ({ children }: DashboardLayoutProps) => {
   );
 };
 
-export default DashboardHOC;
+export default AuthWrapper;

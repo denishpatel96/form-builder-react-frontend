@@ -1,2 +1,6 @@
-export const API_URL = "https://501irs1gz4.execute-api.us-west-2.amazonaws.com/dev";
-export const WEB_URL = "http://localhost:3000";
+export const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://api.vtwinforms.com"
+    : "https://dev-api.vtwinforms.com";
+export const WEB_URL =
+  process.env.NODE_ENV === "production" ? "https://vtwinforms.com" : "http://localhost:3000";

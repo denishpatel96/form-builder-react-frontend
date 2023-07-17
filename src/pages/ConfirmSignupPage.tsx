@@ -8,7 +8,7 @@ import { ArrowForwardOutlined, CheckCircle, MarkEmailRead } from "@mui/icons-mat
 import Logo from "../components/Reusable/Logo";
 import Waves from "../components/Reusable/Waves";
 import { validateEmail } from "../helpers/validators";
-import { useConfirmSignupMutation, useResendCodeMutation } from "../store/features/authApi";
+import { useConfirmSignupMutation, useResendCodeMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
 import Spinner from "../components/Reusable/Spinner";
 

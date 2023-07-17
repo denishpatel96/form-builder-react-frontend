@@ -2,14 +2,13 @@ import React from "react";
 import { Grid, Typography, Button, TextField, Box, IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   HIDE_TOAST_DURATION,
   ROUTE_CONFIRM_SIGNUP,
-  ROUTE_DASHBOARD,
   ROUTE_FORGOT_PASSWORD,
-  ROUTE_LOGIN,
   ROUTE_SIGNUP,
+  ROUTE_WORKSPACES,
 } from "../constants";
 import {
   ArrowForwardOutlined,
@@ -19,12 +18,13 @@ import {
 import Logo from "../components/Reusable/Logo";
 import Waves from "../components/Reusable/Waves";
 import { validateEmail } from "../helpers/validators";
-import { useLoginMutation, useRefreshLoginMutation } from "../store/features/authApi";
+import { useLoginMutation, useRefreshLoginMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
 import { ErrorResponse } from "../declaration";
 import { CookieStorage } from "../helpers/cookieStorage";
 import Spinner from "../components/Reusable/Spinner";
 import jwt_decode from "jwt-decode";
+import { setTokens } from "../store/features/authSlice";
 
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -48,6 +48,7 @@ export const LoginPage = () => {
   };
   const [values, setValues] = React.useState<typeof defaultValues>(defaultValues);
   const [emailError, setEmailError] = React.useState<string>("");
+  const userId = useAppSelector((state) => state.auth.userId);
 
   const handleSubmit = async () => {
     const isEmailValid = validateEmail(values.email);
@@ -60,6 +61,12 @@ export const LoginPage = () => {
   };
 
   React.useEffect(() => {
+    if (userId) {
+      navigate(ROUTE_WORKSPACES.replace(":userId", userId));
+    }
+  }, [userId]);
+
+  React.useEffect(() => {
     const AsyncFunc = async () => {
       console.log("Login : Checking session...");
       const { rT, idT } = CookieStorage.getAll();
@@ -67,9 +74,9 @@ export const LoginPage = () => {
       if (idT) {
         const decodedJWT: { sub: string; exp: number } = jwt_decode(idT);
         if (decodedJWT && decodedJWT.exp * 1000 > Date.now()) {
-          navigate(ROUTE_DASHBOARD, { state: { from: ROUTE_LOGIN } });
+          dispatch(setTokens({ refreshToken: rT, idToken: idT }));
         } else if (rT) {
-          console.log("Refreshing session...");
+          dispatch(setTokens({ refreshToken: rT }));
           await refreshLogin({ refreshToken: rT });
         }
       }
@@ -83,7 +90,7 @@ export const LoginPage = () => {
 
     if (idToken) {
       CookieStorage.setItem("idT", idToken);
-      navigate(ROUTE_DASHBOARD, { state: { from: ROUTE_LOGIN } });
+      dispatch(setTokens({ idToken }));
     }
   }
 
@@ -106,10 +113,9 @@ export const LoginPage = () => {
   } else if (isSuccess && data) {
     const idToken = data?.AuthenticationResult?.IdToken;
     const refreshToken = data?.AuthenticationResult?.RefreshToken;
-
     CookieStorage.setItem("rT", refreshToken);
     CookieStorage.setItem("idT", idToken);
-    navigate(ROUTE_DASHBOARD);
+    dispatch(setTokens({ refreshToken, idToken }));
   }
 
   const form = (

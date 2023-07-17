@@ -1,0 +1,123 @@
+import { ArrowForwardOutlined, EditOutlined } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import * as React from "react";
+import { HIDE_TOAST_DURATION } from "../../constants";
+import { hideToast, showToast } from "../../store/features/signalSlice";
+import { useUpdateWorkspaceMutation } from "../../store/features/api";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+
+const RenameWorkspaceDialog = ({
+  workspaceId,
+  workspaceName,
+  onSuccess,
+  button,
+}: {
+  workspaceId: string;
+  workspaceName: string;
+  onSuccess?: () => void;
+  button: React.ReactNode;
+  disabled?: boolean;
+}) => {
+  const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state.auth.userId);
+  const [open, setOpen] = React.useState(false);
+  const [updateWorkspace, { isLoading, reset }] = useUpdateWorkspaceMutation();
+  const [name, setName] = React.useState<string>(workspaceName);
+  const handleClickOpen = () => {
+    setOpen(true);
+    setName("");
+    reset();
+  };
+
+  const handleClose = () => {
+    if (!isLoading) setOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    if (workspaceName === name) return;
+    const toastId = new Date().valueOf();
+    try {
+      await updateWorkspace({ userSub: userId, workspaceId, name }).unwrap();
+      if (onSuccess) onSuccess();
+      dispatch(
+        showToast({
+          id: toastId,
+          message: "Workspace renamed successfully",
+          severity: "success",
+        })
+      );
+      handleClose();
+    } catch (error) {
+      console.log("Error renaming workspace : ", error);
+      dispatch(
+        showToast({
+          id: toastId,
+          message: "Error renaming workspace",
+          severity: "error",
+        })
+      );
+    }
+    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+  };
+
+  return (
+    <div>
+      <Box onClick={handleClickOpen}>
+        {button || (
+          <Button fullWidth startIcon={<EditOutlined />} onClick={handleClickOpen}>
+            Rename
+          </Button>
+        )}
+      </Box>
+      <Dialog open={open} onClose={handleClose}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <DialogTitle>Rename Workspace</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Please enter the updated name for the workspace.</DialogContentText>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              label="Workspace Name"
+              fullWidth
+              variant="standard"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <LoadingButton
+              loading={isLoading}
+              variant="contained"
+              loadingPosition={"end"}
+              disabled={workspaceName === name}
+              endIcon={<ArrowForwardOutlined />}
+              type="submit"
+            >
+              Submit
+            </LoadingButton>
+          </DialogActions>
+        </form>
+      </Dialog>
+    </div>
+  );
+};
+
+export default RenameWorkspaceDialog;

@@ -8,7 +8,7 @@ import { ArrowForwardOutlined, MarkEmailRead } from "@mui/icons-material";
 import Logo from "../components/Reusable/Logo";
 import Waves from "../components/Reusable/Waves";
 import { validateEmail } from "../helpers/validators";
-import { useForgotPasswordMutation } from "../store/features/authApi";
+import { useForgotPasswordMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
 
 export const ForgotPasswordPage = () => {

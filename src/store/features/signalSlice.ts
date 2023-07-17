@@ -37,8 +37,9 @@ const signalSlice = createSlice({
       const toastId = action.payload;
       state.toasts = state.toasts.filter((t) => t.id !== toastId);
     },
+    resetSignalState: () => initialState,
   },
 });
 
-export const { showToast, hideToast } = signalSlice.actions;
+export const { showToast, hideToast, resetSignalState } = signalSlice.actions;
 export default signalSlice.reducer;

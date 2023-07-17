@@ -4,20 +4,22 @@ import { Route, Routes as Switch } from "react-router-dom";
 import {
   ConfirmForgotPasswordPage,
   ConfirmSignupPage,
-  DashboardPage,
   ForgotPasswordPage,
   HomePage,
   LoginPage,
   SignupPage,
+  UserSettingsPage,
+  WorkspacesPage,
 } from "./pages";
 import {
+  ROUTE_ACCOUNT_SETTINGS,
   ROUTE_CONFIRM_FORGOT_PASSWORD,
   ROUTE_CONFIRM_SIGNUP,
-  ROUTE_DASHBOARD,
   ROUTE_FORGOT_PASSWORD,
   ROUTE_HOME,
   ROUTE_LOGIN,
   ROUTE_SIGNUP,
+  ROUTE_WORKSPACES,
 } from "./constants";
 
 const Routes = () => (
@@ -28,7 +30,8 @@ const Routes = () => (
     <Route path={ROUTE_CONFIRM_SIGNUP} element={<ConfirmSignupPage />} />
     <Route path={ROUTE_FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
     <Route path={ROUTE_CONFIRM_FORGOT_PASSWORD} element={<ConfirmForgotPasswordPage />} />
-    <Route path={ROUTE_DASHBOARD} element={<DashboardPage />} />
+    <Route path={ROUTE_WORKSPACES} element={<WorkspacesPage />} />
+    <Route path={ROUTE_ACCOUNT_SETTINGS} element={<UserSettingsPage />} />
   </Switch>
 );
 

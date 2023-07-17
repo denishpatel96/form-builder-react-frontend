@@ -4,4 +4,5 @@ export * from "./SignupPage";
 export * from "./ConfirmSignupPage";
 export * from "./ConfirmForgotPasswordPage";
 export * from "./ForgotPasswordPage";
-export * from "./DashboardPage";
+export * from "./WorkspacesPage";
+export * from "./UserSettingsPage";
