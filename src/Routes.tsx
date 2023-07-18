@@ -13,6 +13,7 @@ import {
 } from "./pages";
 import {
   ROUTE_ACCOUNT_SETTINGS,
+  ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS,
   ROUTE_CONFIRM_FORGOT_PASSWORD,
   ROUTE_CONFIRM_SIGNUP,
   ROUTE_FORGOT_PASSWORD,
@@ -32,6 +33,7 @@ const Routes = () => (
     <Route path={ROUTE_CONFIRM_FORGOT_PASSWORD} element={<ConfirmForgotPasswordPage />} />
     <Route path={ROUTE_WORKSPACES} element={<WorkspacesPage />} />
     <Route path={ROUTE_ACCOUNT_SETTINGS} element={<UserSettingsPage />} />
+    <Route path={ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS} element={<UserSettingsPage />} />
   </Switch>
 );
 

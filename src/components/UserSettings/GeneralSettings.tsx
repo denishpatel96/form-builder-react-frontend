@@ -2,10 +2,13 @@ import {
   Alert,
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Container,
+  Divider,
   IconButton,
+  LinearProgress,
   Skeleton,
   Stack,
   Typography,
@@ -16,6 +19,7 @@ import MHidden from "../Reusable/MHidden";
 import { useGetUserQuery } from "../../store/features/api";
 import { useAppSelector } from "../../store/hooks";
 import { ANIMATION_SKELETON } from "../../constants";
+import ChangeNameDialog from "./ChangeNameDialog";
 
 interface MainProps {
   toggleSidebarState: () => void;
@@ -33,37 +37,75 @@ const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => 
   } = useGetUserQuery(userId, { skip: !userId });
   let content;
 
-  if (isUserFetching) {
+  if (isUserFetching && !user) {
     content = (
       <Skeleton variant="rectangular" animation={ANIMATION_SKELETON} height="100%" width={"100%"} />
     );
   } else if (isUserSuccess && user) {
     const userName = `${user.firstName} ${user.lastName}`;
     content = (
-      <Container sx={{ background: (theme) => theme.palette.background.default }}>
-        <Box sx={{ py: 2, display: "flex", alignItems: "center", height: 50 }}>
-          <MHidden width="lgUp">
-            <IconButton onClick={toggleSidebarState}>
-              {leftSidebarOpen ? <MenuOpenOutlined /> : <MenuOutlined />}
-            </IconButton>
-          </MHidden>
-          <Typography variant="h5">General Settings</Typography>
-          <Box sx={{ flexGrow: 1 }} />
-        </Box>
-        <Card>
-          <CardContent>
-            <Stack direction={"row"} spacing={1} p={2}>
-              <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}>
-                <PersonOutlined />
-              </Avatar>
-              <Stack>
-                <Typography variant="subtitle1">{userName}</Typography>
-                <Typography variant="caption">{user.email}</Typography>
+      <Box sx={{ background: (theme) => theme.palette.background.default, flexGrow: 1 }}>
+        <Container>
+          <Box sx={{ p: { md: 4 }, display: "flex", alignItems: "center", height: 50 }}>
+            <MHidden width="lgUp">
+              <IconButton onClick={toggleSidebarState}>
+                {leftSidebarOpen ? <MenuOpenOutlined /> : <MenuOutlined />}
+              </IconButton>
+            </MHidden>
+            <Typography variant="h5">General Settings</Typography>
+            <Box sx={{ flexGrow: 1 }} />
+          </Box>
+          {isUserFetching && <LinearProgress />}
+          <Card sx={{ m: { md: 4 } }}>
+            <CardContent>
+              <Stack spacing={4}>
+                <Stack direction={"row"} spacing={2}>
+                  <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}>
+                    <PersonOutlined />
+                  </Avatar>
+                  <Stack>
+                    <Typography variant="subtitle1">{userName}</Typography>
+                    <Typography variant="body2">
+                      Joined on{" "}
+                      {new Date(user.createdAt).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Box>
+                  <ChangeNameDialog />
+                  <Button sx={{ ml: 2 }} variant="contained">
+                    Change Gravatar
+                  </Button>
+                </Box>
+                <Divider />
+                <Typography variant="subtitle1">LOGIN DETAILS</Typography>
+                <Typography>Your email : {user.email}</Typography>
+                <Box>
+                  <Button variant="contained">Change Email</Button>
+                  <Button sx={{ ml: 2 }} variant="contained">
+                    Change Password
+                  </Button>
+                </Box>
+                <Divider />
+                <Typography variant="subtitle1">DELETE ACCOUNT</Typography>
+                <Typography>
+                  If you delete your account, all the forms and collected responses will be removed
+                  from the system permanently.
+                </Typography>
+                <Box>
+                  <Button variant="contained" color="error">
+                    Delete Account
+                  </Button>
+                </Box>
               </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
-      </Container>
+            </CardContent>
+          </Card>
+        </Container>
+      </Box>
     );
   } else if (isUserError) {
     console.log("Error fetching user :", userError);

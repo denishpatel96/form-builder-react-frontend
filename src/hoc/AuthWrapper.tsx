@@ -46,6 +46,8 @@ const AuthWrapper = ({ children }: { children: ReactNode }) => {
           height: FOOTER_HEIGHT,
           justifyContent: "center",
           alignItems: "center",
+          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+          backgroundColor: (theme) => theme.palette.background.paper,
         }}
       >
         <Typography>©2023 vTwinForms</Typography>

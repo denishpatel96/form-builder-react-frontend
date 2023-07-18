@@ -12,13 +12,25 @@ import {
 import { ConnectWithoutContactOutlined, NavigateNext, SettingsOutlined } from "@mui/icons-material";
 import AppbarContent from "./AppbarContent";
 import GeneralSettings from "./GeneralSettings";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ROUTE_ACCOUNT_SETTINGS, ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS } from "../../constants";
+import CommunicationsSettings from "./CommunicationsSettings";
 
 const UserSettings = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = React.useState<boolean>(false);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const links = (
     <MenuList disablePadding>
-      <ListItemButton>
+      <ListItemButton
+        sx={{
+          ...(pathname === ROUTE_ACCOUNT_SETTINGS && {
+            backgroundColor: (theme) => theme.palette.background.default,
+          }),
+        }}
+        onClick={() => navigate(ROUTE_ACCOUNT_SETTINGS)}
+      >
         <ListItemIcon>
           <SettingsOutlined fontSize="small" />
         </ListItemIcon>
@@ -28,7 +40,14 @@ const UserSettings = () => {
         <NavigateNext />
       </ListItemButton>
       <Divider />
-      <ListItemButton>
+      <ListItemButton
+        sx={{
+          ...(pathname === ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS && {
+            backgroundColor: (theme) => theme.palette.background.default,
+          }),
+        }}
+        onClick={() => navigate(ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS)}
+      >
         <ListItemIcon>
           <ConnectWithoutContactOutlined fontSize="small" />
         </ListItemIcon>
@@ -52,10 +71,17 @@ const UserSettings = () => {
         <Divider />
         {links}
       </LeftSidebar>
-      <GeneralSettings
-        leftSidebarOpen={leftSidebarOpen}
-        toggleSidebarState={() => setLeftSidebarOpen((prev) => !prev)}
-      />
+      {pathname === ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS ? (
+        <CommunicationsSettings
+          leftSidebarOpen={leftSidebarOpen}
+          toggleSidebarState={() => setLeftSidebarOpen((prev) => !prev)}
+        />
+      ) : (
+        <GeneralSettings
+          leftSidebarOpen={leftSidebarOpen}
+          toggleSidebarState={() => setLeftSidebarOpen((prev) => !prev)}
+        />
+      )}
     </>
   );
 };

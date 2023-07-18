@@ -6,4 +6,5 @@ export const ROUTE_FORGOT_PASSWORD = "/forgotPassword";
 export const ROUTE_CONFIRM_FORGOT_PASSWORD = "/confirmForgotPassword";
 export const ROUTE_WORKSPACES = "/accounts/:userId/workspaces/:workspaceId?";
 export const ROUTE_ACCOUNT_SETTINGS = "/settings";
+export const ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS = "/settings/communications";
 export const ROUTE_ORGANIZATION_SETTINGS = "/accounts/:userId/settings";

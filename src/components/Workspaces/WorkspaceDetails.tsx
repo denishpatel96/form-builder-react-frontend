@@ -1,4 +1,4 @@
-import { Alert, Box, IconButton, Skeleton, Typography } from "@mui/material";
+import { Alert, Box, Container, IconButton, Skeleton, Typography } from "@mui/material";
 import React from "react";
 import { MenuOpenOutlined, MenuOutlined } from "@mui/icons-material";
 import MHidden from "../Reusable/MHidden";
@@ -36,27 +36,31 @@ const WorkspaceDetails = ({ leftSidebarOpen, toggleSidebarState }: MainProps) =>
     const activeWorkspace = wsData.find((w) => w.id === activeWorkspaceId);
 
     content = activeWorkspace && (
-      <Box
-        sx={{
-          p: 4,
-          flexGrow: 1,
-          display: "flex",
-          alignItems: "center",
-          height: 50,
-        }}
-      >
-        <MHidden width="lgUp">
-          <IconButton onClick={toggleSidebarState}>
-            {leftSidebarOpen ? <MenuOpenOutlined /> : <MenuOutlined />}
-          </IconButton>
-        </MHidden>
-        <Typography variant="h5">{activeWorkspace.name}</Typography>
-        <WorkspaceMenu
-          workspace={activeWorkspace}
-          open={menuOpen}
-          onChange={(open) => setMenuOpen(open)}
-        />
-        <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ background: (theme) => theme.palette.background.default, flexGrow: 1 }}>
+        <Container>
+          <Box
+            sx={{
+              p: 4,
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+              height: 50,
+            }}
+          >
+            <MHidden width="lgUp">
+              <IconButton onClick={toggleSidebarState}>
+                {leftSidebarOpen ? <MenuOpenOutlined /> : <MenuOutlined />}
+              </IconButton>
+            </MHidden>
+            <Typography variant="h5">{activeWorkspace.name}</Typography>
+            <WorkspaceMenu
+              workspace={activeWorkspace}
+              open={menuOpen}
+              onChange={(open) => setMenuOpen(open)}
+            />
+            <Box sx={{ flexGrow: 1 }} />
+          </Box>
+        </Container>
       </Box>
     );
   } else if (isWsError) {

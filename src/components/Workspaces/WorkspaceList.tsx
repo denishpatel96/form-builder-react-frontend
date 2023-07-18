@@ -39,7 +39,9 @@ const WorkspaceList = () => {
   } = useGetWorkspacesQuery(userId, { skip: !userId });
 
   const gotoWorkspace = (id: string) => {
-    navigate(ROUTE_WORKSPACES.replace(":userId", userId).replace(":workspaceId", id));
+    navigate(ROUTE_WORKSPACES.replace(":userId", userId).replace(":workspaceId", id), {
+      replace: true,
+    });
   };
 
   React.useEffect(() => {
@@ -74,7 +76,7 @@ const WorkspaceList = () => {
               <Person />
             </ListItemIcon>
             <ListItemText>
-              <Typography variant="subtitle1">Private</Typography>
+              <Typography variant="subtitle1">Private ({privateWorkspaces.length})</Typography>
             </ListItemText>
             {expandedPersonal ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
@@ -105,40 +107,38 @@ const WorkspaceList = () => {
               );
             })}
           </Collapse>
-          {sharedWorkspaces.length > 0 && (
-            <>
-              <ListItemButton onClick={() => setExpandedShared((prev) => !prev)}>
-                <ListItemIcon>
-                  <People />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography variant="subtitle1">Shared</Typography>
-                </ListItemText>
+          <>
+            <ListItemButton onClick={() => setExpandedShared((prev) => !prev)}>
+              <ListItemIcon>
+                <People />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography variant="subtitle1">Shared ({sharedWorkspaces.length})</Typography>
+              </ListItemText>
 
-                {expandedShared ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={expandedPersonal}>
-                {sharedWorkspaces.map((w, index) => {
-                  return (
-                    <ListItemButton
-                      sx={{
-                        ...(activeWorkspaceId === w.id && {
-                          backgroundColor: (theme) => theme.palette.background.default,
-                        }),
-                      }}
-                      key={index}
-                      onClick={() => gotoWorkspace(w.id)}
-                    >
-                      <ListItemText>
-                        <Typography>{w.name}</Typography>
-                      </ListItemText>
-                      <ListItemSecondaryAction>{w.formCount}</ListItemSecondaryAction>
-                    </ListItemButton>
-                  );
-                })}
-              </Collapse>
-            </>
-          )}
+              {expandedShared ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={expandedPersonal}>
+              {sharedWorkspaces.map((w, index) => {
+                return (
+                  <ListItemButton
+                    sx={{
+                      ...(activeWorkspaceId === w.id && {
+                        backgroundColor: (theme) => theme.palette.background.default,
+                      }),
+                    }}
+                    key={index}
+                    onClick={() => gotoWorkspace(w.id)}
+                  >
+                    <ListItemText>
+                      <Typography>{w.name}</Typography>
+                    </ListItemText>
+                    <ListItemSecondaryAction>{w.formCount}</ListItemSecondaryAction>
+                  </ListItemButton>
+                );
+              })}
+            </Collapse>
+          </>
         </Box>
       </>
     );

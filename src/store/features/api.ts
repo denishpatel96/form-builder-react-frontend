@@ -85,7 +85,7 @@ export interface User {
 const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Workspace"],
+  tagTypes: ["Workspace", "User"],
   endpoints: (builder) => {
     return {
       signup: builder.mutation({
@@ -155,6 +155,18 @@ const api = createApi({
           url: `/users/${userSub}`,
           method: "get",
         }),
+        providesTags: ["User"],
+      }),
+      updateUser: builder.mutation<
+        User,
+        { userSub: string; firstName?: string; lastName?: string; email?: string; orgName?: string }
+      >({
+        query: (body) => ({
+          url: `/users`,
+          method: "put",
+          body,
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["User"]),
       }),
       getWorkspaces: builder.query<Workspace[], string>({
         query: (userSub) => ({
@@ -195,6 +207,7 @@ const api = createApi({
 
 export const {
   useGetUserQuery,
+  useUpdateUserMutation,
   useGetWorkspacesQuery,
   useCreateWorkspaceMutation,
   useUpdateWorkspaceMutation,
