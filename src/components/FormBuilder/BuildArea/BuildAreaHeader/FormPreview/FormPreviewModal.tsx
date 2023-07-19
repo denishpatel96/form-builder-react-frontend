@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { FieldProps, IFormDesignProps } from "../../../Types";
 import FormPreview from "./FormPreview";
-import { getTheme } from "../../../../../theme";
+import { getCustomTheme } from "../../../../../theme";
 import { cloneDeep } from "lodash";
 
 const modalStyle: SxProps = {
@@ -86,7 +86,7 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
             </Typography>
           </Box>
 
-          <ThemeProvider theme={getTheme({ palette: cloneDeep(formProperties.palette) })}>
+          <ThemeProvider theme={getCustomTheme({ ...cloneDeep(formProperties.palette) })}>
             <Box
               sx={{
                 flexGrow: 1,

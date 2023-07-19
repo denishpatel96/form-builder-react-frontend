@@ -62,7 +62,7 @@ const CreateWorkspaceDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
       <Button fullWidth startIcon={<Add />} variant="contained" onClick={handleClickOpen}>
         Create Workspace
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();

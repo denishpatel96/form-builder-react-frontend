@@ -25,6 +25,7 @@ import { CookieStorage } from "../helpers/cookieStorage";
 import Spinner from "../components/Reusable/Spinner";
 import jwt_decode from "jwt-decode";
 import { setTokens } from "../store/features/authSlice";
+import { alpha } from "@mui/material/styles";
 
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -218,7 +219,7 @@ export const LoginPage = () => {
       <Box
         sx={{
           zIndex: 2,
-          backgroundColor: "rgba(255,255,255,0.95)",
+          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.95),
           borderRadius: 2,
           mt: 2,
           p: 5,

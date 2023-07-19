@@ -83,7 +83,7 @@ const DeleteWorkspaceDialog = ({
           </Button>
         )}
       </Box>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();

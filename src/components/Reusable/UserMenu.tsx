@@ -1,7 +1,7 @@
 import {
+  AccountCircle,
   HelpCenterOutlined,
   LogoutOutlined,
-  PersonOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
 import {
@@ -20,6 +20,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ANIMATION_SKELETON, ROUTE_ACCOUNT_SETTINGS, ROUTE_HOME } from "../../constants";
 import { CookieStorage } from "../../helpers/cookieStorage";
+import { getGravatarURL } from "../../helpers/functions";
 import api, { useGetUserQuery, useLogoutMutation } from "../../store/features/api";
 import { resetAuthState } from "../../store/features/authSlice";
 import { resetFormState } from "../../store/features/formSlice";
@@ -88,12 +89,14 @@ const UserMenu = () => {
             sx={{
               backgroundColor: (theme) => theme.palette.background.paper,
               boxShadow: (theme) => (open ? theme.shadows[5] : theme.shadows[1]),
+              cursor: "pointer",
             }}
             ref={anchorRef}
             component={"div"}
             onClick={handleOpen}
+            src={getGravatarURL(user.email)}
           >
-            <PersonOutlined color="secondary" />
+            <AccountCircle color="secondary" />
           </Avatar>
         </Tooltip>
         <MenuPopover
@@ -103,9 +106,12 @@ const UserMenu = () => {
           sx={{ width: { xs: "100%", sm: 250 }, maxWidth: 250 }}
         >
           <Stack>
-            <Stack direction={"row"} spacing={1} p={2}>
-              <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}>
-                <PersonOutlined />
+            <Stack direction={"row"} spacing={2} p={2}>
+              <Avatar
+                sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}
+                src={getGravatarURL(user.email)}
+              >
+                <AccountCircle />
               </Avatar>
               <Stack>
                 <Typography variant="subtitle1">{userName}</Typography>
@@ -126,7 +132,6 @@ const UserMenu = () => {
               </ListItemIcon>
               <ListItemText>Manage Account</ListItemText>
             </MenuItem>
-            <Divider />
             <ListSubheader>
               <Typography variant="overline">RESOURCES</Typography>
             </ListSubheader>

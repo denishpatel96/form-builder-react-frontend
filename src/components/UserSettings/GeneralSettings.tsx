@@ -14,12 +14,13 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { MenuOpenOutlined, MenuOutlined, PersonOutlined } from "@mui/icons-material";
+import { AccountCircle, MenuOpenOutlined, MenuOutlined } from "@mui/icons-material";
 import MHidden from "../Reusable/MHidden";
 import { useGetUserQuery } from "../../store/features/api";
 import { useAppSelector } from "../../store/hooks";
 import { ANIMATION_SKELETON } from "../../constants";
 import ChangeNameDialog from "./ChangeNameDialog";
+import { getGravatarURL } from "../../helpers/functions";
 
 interface MainProps {
   toggleSidebarState: () => void;
@@ -44,7 +45,13 @@ const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => 
   } else if (isUserSuccess && user) {
     const userName = `${user.firstName} ${user.lastName}`;
     content = (
-      <Box sx={{ background: (theme) => theme.palette.background.default, flexGrow: 1 }}>
+      <Box
+        sx={{
+          background: (theme) => theme.palette.background.default,
+          flexGrow: 1,
+          overflow: "auto",
+        }}
+      >
         <Container>
           <Box sx={{ p: { md: 4 }, display: "flex", alignItems: "center", height: 50 }}>
             <MHidden width="lgUp">
@@ -60,8 +67,11 @@ const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => 
             <CardContent>
               <Stack spacing={4}>
                 <Stack direction={"row"} spacing={2}>
-                  <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}>
-                    <PersonOutlined />
+                  <Avatar
+                    sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}
+                    src={getGravatarURL(user.email)}
+                  >
+                    <AccountCircle />
                   </Avatar>
                   <Stack>
                     <Typography variant="subtitle1">{userName}</Typography>
@@ -77,7 +87,11 @@ const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => 
                 </Stack>
                 <Box>
                   <ChangeNameDialog />
-                  <Button sx={{ ml: 2 }} variant="contained">
+                  <Button
+                    sx={{ ml: 2 }}
+                    variant="contained"
+                    onClick={() => window.open("https://www.gravatar.com", "_blank")}
+                  >
                     Change Gravatar
                   </Button>
                 </Box>

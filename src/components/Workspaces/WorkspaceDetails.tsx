@@ -1,4 +1,12 @@
-import { Alert, Box, Container, IconButton, Skeleton, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Container,
+  IconButton,
+  LinearProgress,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { MenuOpenOutlined, MenuOutlined } from "@mui/icons-material";
 import MHidden from "../Reusable/MHidden";
@@ -28,7 +36,7 @@ const WorkspaceDetails = ({ leftSidebarOpen, toggleSidebarState }: MainProps) =>
 
   let content;
 
-  if (isWsFetching) {
+  if (isWsFetching && !wsData) {
     content = (
       <Skeleton variant="rectangular" animation={ANIMATION_SKELETON} height="100%" width={"100%"} />
     );
@@ -36,7 +44,13 @@ const WorkspaceDetails = ({ leftSidebarOpen, toggleSidebarState }: MainProps) =>
     const activeWorkspace = wsData.find((w) => w.id === activeWorkspaceId);
 
     content = activeWorkspace && (
-      <Box sx={{ background: (theme) => theme.palette.background.default, flexGrow: 1 }}>
+      <Box
+        sx={{
+          background: (theme) => theme.palette.background.default,
+          flexGrow: 1,
+          overflow: "auto",
+        }}
+      >
         <Container>
           <Box
             sx={{
@@ -60,6 +74,7 @@ const WorkspaceDetails = ({ leftSidebarOpen, toggleSidebarState }: MainProps) =>
             />
             <Box sx={{ flexGrow: 1 }} />
           </Box>
+          {isWsFetching && <LinearProgress />}
         </Container>
       </Box>
     );

@@ -112,7 +112,6 @@ export const HomePage = () => {
               </Button>
             </Stack>
           </MHidden>
-          <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}></Stack>
         </Toolbar>
       </AppBar>
       <Box

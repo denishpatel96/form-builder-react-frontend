@@ -17,7 +17,7 @@ import { IFieldPropertiesChangeFunc, IFormDesignProps } from "../Types";
 import { NumberValueProperty } from "./Properties/NumberValue.Property";
 import { ColorValueProperty } from "./Properties/ColorValue.Property";
 import { ModeProperty } from "./Properties/Mode.Property";
-import { getTheme } from "../../../theme";
+import { getCustomTheme } from "../../../theme";
 import { ImageURLProperty } from "./Properties/ImageURL.Property";
 import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
 
@@ -53,7 +53,7 @@ const FormDesignSidebar = ({
     formImage,
   } = formProperties;
 
-  const defaultTheme = getTheme({ palette: { mode: formProperties.palette?.mode || "light" } });
+  const defaultTheme = getCustomTheme({ mode: formProperties.palette?.mode || "light" });
 
   const [tabValue, setTabValue] = React.useState(1);
 

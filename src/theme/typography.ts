@@ -1,5 +1,7 @@
 // ----------------------------------------------------------------------
 
+import { ThemeOptions } from "@mui/material";
+
 function pxToRem(value: number) {
   return `${value / 16}rem`;
 }
@@ -33,11 +35,10 @@ function responsiveFontSizes({
 
 const FONT_PRIMARY = "'Montserrat', sans-serif";
 
-const typography: any = {
+export const typography: ThemeOptions["typography"] = {
   fontFamily: FONT_PRIMARY,
   fontWeightRegular: 400,
   fontWeightMedium: 500,
-  fontWeightSemiBold: 600,
   fontWeightBold: 700,
   h1: {
     fontWeight: 600,
@@ -111,12 +112,10 @@ const typography: any = {
     ...responsiveFontSizes({ xs: 10, sm: 10, md: 12, lg: 12 }),
   },
   button: {
-    fontWeight: 600,
-    lineHeight: 24 / 14,
+    fontWeight: 500,
+    lineHeight: 1.5,
     fontSize: pxToRem(14),
     textTransform: "none",
-    ...responsiveFontSizes({ xs: 12, sm: 12, md: 14, lg: 16 }),
+    ...responsiveFontSizes({ xs: 12, sm: 12, md: 14, lg: 14 }),
   },
 };
-
-export default typography;

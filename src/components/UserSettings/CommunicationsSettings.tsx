@@ -40,7 +40,13 @@ const CommunicationsSettings = ({ leftSidebarOpen, toggleSidebarState }: MainPro
     );
   } else if (isUserSuccess && user) {
     content = (
-      <Box sx={{ background: (theme) => theme.palette.background.default, flexGrow: 1 }}>
+      <Box
+        sx={{
+          background: (theme) => theme.palette.background.default,
+          flexGrow: 1,
+          overflow: "auto",
+        }}
+      >
         <Container>
           <Box sx={{ p: { md: 4 }, display: "flex", alignItems: "center", height: 50 }}>
             <MHidden width="lgUp">

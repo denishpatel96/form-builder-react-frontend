@@ -1,6 +1,6 @@
 import {
   GroupOutlined,
-  GroupsOutlined,
+  GroupWork,
   ReceiptLongOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
@@ -83,12 +83,12 @@ const OrganizationMenu = () => {
           >
             <Avatar
               sx={{
-                mr: 1,
+                mr: 2,
                 backgroundColor: (theme) => theme.palette.background.paper,
                 boxShadow: (theme) => (open ? theme.shadows[5] : theme.shadows[1]),
               }}
             >
-              <GroupsOutlined color="secondary" />
+              <GroupWork color="secondary" />
             </Avatar>
           </Tooltip>
           <MHidden width="lgDown">
@@ -138,9 +138,9 @@ const OrganizationMenu = () => {
               <ListItemText>Plan and Billing</ListItemText>
             </MenuItem>
             <Divider />
-            <Stack direction={"row"} spacing={1} p={2}>
+            <Stack direction={"row"} spacing={2} p={2}>
               <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}>
-                <GroupsOutlined />
+                <GroupWork />
               </Avatar>
               <Stack>
                 <Typography variant="subtitle1">{orgName}</Typography>

@@ -10,7 +10,7 @@ import { FieldProps, IFormDesignProps } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
 import { getFieldBuilder } from "./FieldBuilders";
-import { getTheme } from "../../../theme";
+import { getCustomTheme } from "../../../theme";
 import { cloneDeep } from "lodash";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { deselectFields } from "../../../store/features/formSlice";
@@ -23,7 +23,7 @@ interface IBuildAreaProps {
 
 const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBuildAreaProps) => {
   const dispatch = useAppDispatch();
-  const customTheme = getTheme({ palette: cloneDeep(formProperties.palette) });
+  const customTheme = getCustomTheme({ ...cloneDeep(formProperties.palette) });
   const [active, setActive] = React.useState<Active | null>(null);
   const activeField = React.useMemo(
     () => formFields.find((el) => el.id === active?.id),

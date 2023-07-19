@@ -20,11 +20,13 @@ const RenameWorkspaceDialog = ({
   workspaceId,
   workspaceName,
   onSuccess,
+  onClose,
   button,
 }: {
   workspaceId: string;
   workspaceName: string;
   onSuccess?: () => void;
+  onClose?: () => void;
   button: React.ReactNode;
   disabled?: boolean;
 }) => {
@@ -35,12 +37,15 @@ const RenameWorkspaceDialog = ({
   const [name, setName] = React.useState<string>(workspaceName);
   const handleClickOpen = () => {
     setOpen(true);
-    setName("");
+    setName(workspaceName);
     reset();
   };
 
   const handleClose = () => {
-    if (!isLoading) setOpen(false);
+    if (!isLoading) {
+      if (onClose) onClose();
+      setOpen(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -79,7 +84,7 @@ const RenameWorkspaceDialog = ({
           </Button>
         )}
       </Box>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();

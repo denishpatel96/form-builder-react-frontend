@@ -33,7 +33,7 @@ const WorkspaceMenu = ({ open, onChange, workspace }: WorkspcaeMenuProps) => {
       >
         <RenameWorkspaceDialog
           workspaceName={workspace.name}
-          onSuccess={() => onChange(false)}
+          onClose={() => onChange(false)}
           workspaceId={workspace.id}
           disabled={workspace.isDefault}
           button={

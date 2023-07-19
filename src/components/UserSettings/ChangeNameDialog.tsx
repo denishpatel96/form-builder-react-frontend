@@ -65,7 +65,7 @@ const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
       <Button variant="contained" onClick={handleClickOpen}>
         Change Name
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();
