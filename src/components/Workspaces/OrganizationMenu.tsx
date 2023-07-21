@@ -27,7 +27,7 @@ import MHidden from "../Reusable/MHidden";
 const OrganizationMenu = () => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState<boolean>(false);
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const {
     //isLoading: isUserLoading,
     isFetching: isUserFetching,
@@ -35,7 +35,7 @@ const OrganizationMenu = () => {
     isError: isUserError,
     data: user,
     error: userError,
-  } = useGetUserQuery(userId, { skip: !userId });
+  } = useGetUserQuery(username, { skip: !username });
 
   let content;
 

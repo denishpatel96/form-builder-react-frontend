@@ -18,7 +18,7 @@ import { useGetUserQuery } from "../../store/features/api";
 import { useAppSelector } from "../../store/hooks";
 
 const NavigationLinks = () => {
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const {
     //isLoading: isUserLoading,
     isFetching: isUserFetching,
@@ -26,7 +26,7 @@ const NavigationLinks = () => {
     isError: isUserError,
     data: user,
     error: userError,
-  } = useGetUserQuery(userId, { skip: !userId });
+  } = useGetUserQuery(username, { skip: !username });
 
   let content;
 

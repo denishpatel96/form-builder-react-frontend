@@ -8,10 +8,11 @@ import {
   IconButton,
   ListItem,
   Stack,
+  Alert,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
-import { HIDE_TOAST_DURATION, ROUTE_LOGIN } from "../constants";
+import { ROUTE_LOGIN } from "../constants";
 import {
   ArrowForwardOutlined,
   CancelOutlined,
@@ -32,12 +33,9 @@ import {
   validatePassword,
 } from "../helpers/validators";
 import { useSignupMutation } from "../store/features/api";
-import { useAppDispatch } from "../store/hooks";
-import { hideToast, showToast } from "../store/features/signalSlice";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [signup, { isLoading, isSuccess, isError, error }] = useSignupMutation();
   const defaultValues = {
     firstName: "",
@@ -108,16 +106,7 @@ export const SignupPage = () => {
   };
 
   if (isError) {
-    const toastId = new Date().valueOf();
     console.log("Error creating an account : ", error);
-    dispatch(
-      showToast({
-        id: toastId,
-        message: "Error creating an account",
-        severity: "error",
-      })
-    );
-    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
   }
 
   const validations = [
@@ -196,6 +185,24 @@ export const SignupPage = () => {
                     {`Create an account`}
                   </Typography>
                 </Grid>
+                {isError && error && (
+                  <Grid item xs={12}>
+                    <Alert severity="error">
+                      {
+                        (
+                          error as {
+                            data: {
+                              name: string;
+                              message: string;
+                              stack: string;
+                            };
+                            status: number;
+                          }
+                        )?.data?.message
+                      }
+                    </Alert>
+                  </Grid>
+                )}
 
                 <Grid item xs={12} sm={6}>
                   <TextField

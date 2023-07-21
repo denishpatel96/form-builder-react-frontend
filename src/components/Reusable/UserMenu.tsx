@@ -34,7 +34,7 @@ const UserMenu = () => {
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
   const [open, setOpen] = React.useState<boolean>(false);
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const {
     //isLoading: isUserLoading,
     isFetching: isUserFetching,
@@ -42,7 +42,21 @@ const UserMenu = () => {
     isError: isUserError,
     data: user,
     error: userError,
-  } = useGetUserQuery(userId, { skip: !userId });
+  } = useGetUserQuery(username, { skip: !username });
+
+  const handleLogout = () => {
+    const { rT, idT } = CookieStorage.getAll();
+    if (rT && idT) logout({ token: rT });
+    // clear api cache
+    dispatch(api.util.resetApiState());
+    dispatch(resetFormState());
+    dispatch(resetAuthState());
+    dispatch(resetSignalState());
+    // remove from cookie
+    CookieStorage.clear();
+    // go to home page
+    navigate(ROUTE_HOME);
+  };
 
   let content;
 
@@ -59,20 +73,6 @@ const UserMenu = () => {
     };
     const handleClose = () => {
       setOpen(false);
-    };
-
-    const handleLogout = () => {
-      const { rT, idT } = CookieStorage.getAll();
-      if (rT && idT) logout({ token: rT, idToken: idT });
-      // clear api cache
-      dispatch(api.util.resetApiState());
-      dispatch(resetFormState());
-      dispatch(resetAuthState());
-      dispatch(resetSignalState());
-      // remove from cookie
-      CookieStorage.clear();
-      // go to home page
-      navigate(ROUTE_HOME);
     };
 
     content = (
@@ -165,6 +165,7 @@ const UserMenu = () => {
     );
   } else if (isUserError) {
     console.log("Error fetching user :", userError);
+    handleLogout();
   }
 
   return <>{content}</>;

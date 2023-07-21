@@ -24,14 +24,14 @@ interface MainProps {
 }
 
 const CommunicationsSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => {
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const {
     isFetching: isUserFetching,
     isSuccess: isUserSuccess,
     isError: isUserError,
     data: user,
     error: userError,
-  } = useGetUserQuery(userId, { skip: !userId });
+  } = useGetUserQuery(username, { skip: !username });
   let content;
 
   if (isUserFetching) {

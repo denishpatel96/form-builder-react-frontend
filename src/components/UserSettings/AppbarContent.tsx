@@ -9,12 +9,12 @@ import UserMenu from "../Reusable/UserMenu";
 
 const AppbarContent = () => {
   const navigate = useNavigate();
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   return (
     <>
       <Button
         startIcon={<ArrowBackOutlined />}
-        onClick={() => navigate(ROUTE_WORKSPACES.replace(":userId", userId))}
+        onClick={() => navigate(ROUTE_WORKSPACES.replace(":username", username))}
       >
         Workspaces
       </Button>

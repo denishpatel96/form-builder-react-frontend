@@ -26,7 +26,7 @@ const WorkspaceList = () => {
   const [expandedPersonal, setExpandedPersonal] = React.useState<boolean>(true);
   const [expandedShared, setExpandedShared] = React.useState<boolean>(false);
 
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const { workspaceId: activeWorkspaceId } = useParams();
 
   const {
@@ -36,10 +36,10 @@ const WorkspaceList = () => {
     isError: isWsError,
     data: workspaces,
     error: wsError,
-  } = useGetWorkspacesQuery(userId, { skip: !userId });
+  } = useGetWorkspacesQuery(username, { skip: !username });
 
   const gotoWorkspace = (id: string) => {
-    navigate(ROUTE_WORKSPACES.replace(":userId", userId).replace(":workspaceId", id), {
+    navigate(ROUTE_WORKSPACES.replace(":username", username).replace(":workspaceId", id), {
       replace: true,
     });
   };
@@ -47,13 +47,13 @@ const WorkspaceList = () => {
   React.useEffect(() => {
     if (
       (!activeWorkspaceId || activeWorkspaceId === ":workspaceId") &&
-      userId &&
+      username &&
       workspaces &&
       workspaces.length > 0
     ) {
       gotoWorkspace(workspaces[0].id);
     }
-  }, [workspaces, navigate, userId]);
+  }, [workspaces, navigate, username]);
 
   let content;
   if (isWsLoading || (isWsFetching && !workspaces)) {
@@ -66,7 +66,7 @@ const WorkspaceList = () => {
     content = (
       <>
         <Stack spacing={2} p={2}>
-          <CreateWorkspaceDialog />
+          <CreateWorkspaceDialog onSuccess={() => gotoWorkspace("")} />
           <SearchDialog workspaces={workspaces} onSelect={(id) => gotoWorkspace(id)} />
         </Stack>
         {isWsFetching && <LinearProgress />}

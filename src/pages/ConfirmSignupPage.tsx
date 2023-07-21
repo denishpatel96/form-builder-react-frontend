@@ -16,10 +16,10 @@ export const ConfirmSignupPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const emailParam = params.get("email") || "";
+  const username = params.get("username");
   const code = params.get("code");
 
-  const [email, setEmail] = React.useState<string>(emailParam);
+  const [email, setEmail] = React.useState<string>("");
   const [emailError, setEmailError] = React.useState<boolean>(false);
 
   const [
@@ -39,8 +39,8 @@ export const ConfirmSignupPage = () => {
 
   React.useEffect(() => {
     const AsyncFunc = async () => {
-      if (email && code) {
-        await confirmSignup({ email, code });
+      if (username && code) {
+        await confirmSignup({ username, code });
       }
     };
 

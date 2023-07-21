@@ -31,7 +31,7 @@ const RenameWorkspaceDialog = ({
   disabled?: boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const [open, setOpen] = React.useState(false);
   const [updateWorkspace, { isLoading, reset }] = useUpdateWorkspaceMutation();
   const [name, setName] = React.useState<string>(workspaceName);
@@ -52,7 +52,7 @@ const RenameWorkspaceDialog = ({
     if (workspaceName === name) return;
     const toastId = new Date().valueOf();
     try {
-      await updateWorkspace({ userSub: userId, workspaceId, name }).unwrap();
+      await updateWorkspace({ username: username, workspaceId, name }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
@@ -95,19 +95,22 @@ const RenameWorkspaceDialog = ({
           <DialogContent>
             <DialogContentText>Please enter the updated name for the workspace.</DialogContentText>
             <TextField
+              sx={{ mt: 2 }}
               autoFocus
               required
               margin="dense"
               id="name"
               label="Workspace Name"
               fullWidth
-              variant="standard"
+              variant="outlined"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
             <LoadingButton
               loading={isLoading}
               variant="contained"

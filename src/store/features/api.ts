@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "../../constants";
 import { CookieStorage } from "../../helpers/cookieStorage";
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { resetAuthState, setTokens } from "./authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}`,
@@ -34,15 +35,17 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     );
     if (refreshResult.data) {
       // store the new token
-      console.log("tokens", refreshResult);
       const idToken = (refreshResult.data as any)?.AuthenticationResult.IdToken;
-      if (idToken) {
-        CookieStorage.setItem("idT", idToken);
-      }
+      const accessToken = (refreshResult.data as any)?.AuthenticationResult.AccessToken;
+
+      CookieStorage.setItem("idT", idToken);
+      CookieStorage.setItem("aT", accessToken);
+      api.dispatch(setTokens({ accessToken, idToken }));
       // retry the initial query
       result = await baseQuery(args, api, extraOptions);
     } else {
       CookieStorage.clear();
+      api.dispatch(resetAuthState());
     }
   }
   return result;
@@ -101,7 +104,7 @@ const api = createApi({
         }),
       }),
       confirmSignup: builder.mutation({
-        query: (body: { email: string; code: string }) => ({
+        query: (body: { username: string; code: string }) => ({
           url: "/auth/confirmSignup",
           method: "post",
           body,
@@ -143,23 +146,73 @@ const api = createApi({
         }),
       }),
       logout: builder.mutation({
-        query: (params: { token: string; idToken: string }) => ({
+        query: (params: { token: string }) => ({
           url: "/auth/logout",
           method: "post",
           body: { token: params.token },
-          headers: { Authorization: params.idToken },
+        }),
+      }),
+      updateCognitoUserEmail: builder.mutation({
+        query: (params: { password: string; email: string }) => ({
+          url: "/auth/updateUserAttributes",
+          method: "post",
+          body: {
+            password: params.password,
+            attributes: [
+              {
+                name: "email",
+                value: params.email,
+              },
+            ],
+          },
+        }),
+      }),
+      verifyCognitoUserEmail: builder.mutation({
+        query: (params: { accessToken: string; code: string }) => ({
+          url: "/auth/verifyUserAttribute",
+          method: "post",
+          body: {
+            accessToken: params.accessToken,
+            attributeName: "email",
+            code: params.code,
+          },
+        }),
+      }),
+      updateCognitoUserName: builder.mutation({
+        query: (params: { accessToken: string; firstName: string; lastName: string }) => ({
+          url: "/auth/updateUserAttributes",
+          method: "post",
+          body: {
+            accessToken: params.accessToken,
+            attributes: [
+              {
+                name: "given_name",
+                value: params.firstName,
+              },
+              {
+                name: "family_name",
+                value: params.lastName,
+              },
+            ],
+          },
         }),
       }),
       getUser: builder.query<User, string>({
-        query: (userSub) => ({
-          url: `/users/${userSub}`,
+        query: (username) => ({
+          url: `/users/${username}`,
           method: "get",
         }),
         providesTags: ["User"],
       }),
       updateUser: builder.mutation<
         User,
-        { userSub: string; firstName?: string; lastName?: string; email?: string; orgName?: string }
+        {
+          username: string;
+          firstName?: string;
+          lastName?: string;
+          email?: string;
+          orgName?: string;
+        }
       >({
         query: (body) => ({
           url: `/users`,
@@ -169,13 +222,13 @@ const api = createApi({
         invalidatesTags: (_result, error) => (error ? [] : ["User"]),
       }),
       getWorkspaces: builder.query<Workspace[], string>({
-        query: (userSub) => ({
-          url: `/workspaces/${userSub}`,
+        query: (username) => ({
+          url: `/workspaces/${username}`,
           method: "get",
         }),
         providesTags: ["Workspace"],
       }),
-      createWorkspace: builder.mutation<Workspace, { userSub: string; name: string }>({
+      createWorkspace: builder.mutation<Workspace, { username: string; name: string }>({
         query: (body) => ({
           url: "/workspaces",
           method: "post",
@@ -185,7 +238,7 @@ const api = createApi({
       }),
       updateWorkspace: builder.mutation<
         Workspace,
-        { userSub: string; workspaceId: string; name: string }
+        { username: string; workspaceId: string; name: string }
       >({
         query: (body) => ({
           url: "/workspaces",
@@ -194,9 +247,9 @@ const api = createApi({
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
       }),
-      deleteWorkspace: builder.mutation<Workspace, { userSub: string; workspaceId: string }>({
+      deleteWorkspace: builder.mutation<Workspace, { username: string; workspaceId: string }>({
         query: (params) => ({
-          url: `/workspaces/${params.userSub}/${params.workspaceId}`,
+          url: `/workspaces/${params.username}/${params.workspaceId}`,
           method: "delete",
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
@@ -220,5 +273,8 @@ export const {
   useForgotPasswordMutation,
   useConfirmForgotPasswordMutation,
   useLogoutMutation,
+  useUpdateCognitoUserEmailMutation,
+  useVerifyCognitoUserEmailMutation,
+  useUpdateCognitoUserNameMutation,
 } = api;
 export default api;

@@ -21,6 +21,7 @@ import { useAppSelector } from "../../store/hooks";
 import { ANIMATION_SKELETON } from "../../constants";
 import ChangeNameDialog from "./ChangeNameDialog";
 import { getGravatarURL } from "../../helpers/functions";
+import ChangeEmailDialog from "./ChangeEmailDialog";
 
 interface MainProps {
   toggleSidebarState: () => void;
@@ -28,14 +29,14 @@ interface MainProps {
 }
 
 const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => {
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const {
     isFetching: isUserFetching,
     isSuccess: isUserSuccess,
     isError: isUserError,
     data: user,
     error: userError,
-  } = useGetUserQuery(userId, { skip: !userId });
+  } = useGetUserQuery(username, { skip: !username });
   let content;
 
   if (isUserFetching && !user) {
@@ -99,7 +100,7 @@ const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => 
                 <Typography variant="subtitle1">LOGIN DETAILS</Typography>
                 <Typography>Your email : {user.email}</Typography>
                 <Box>
-                  <Button variant="contained">Change Email</Button>
+                  <ChangeEmailDialog />
                   <Button sx={{ ml: 2 }} variant="contained">
                     Change Password
                   </Button>

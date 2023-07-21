@@ -12,32 +12,44 @@ import {
 import * as React from "react";
 import { HIDE_TOAST_DURATION } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
-import { useGetUserQuery, useUpdateUserMutation } from "../../store/features/api";
+import {
+  useGetUserQuery,
+  useUpdateCognitoUserNameMutation,
+  useUpdateUserMutation,
+} from "../../store/features/api";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.auth.userId);
-  const { isFetching: isUserFetching, data: user } = useGetUserQuery(userId, { skip: !userId });
+  const { accessToken, username } = useAppSelector((state) => state.auth);
+  const { isFetching: isUserFetching, data: user } = useGetUserQuery(username, { skip: !username });
+  const [
+    updateCognitoUser,
+    { isLoading: isUpdateCognitoUserLoading, reset: resetUpdateCognitoUser },
+  ] = useUpdateCognitoUserNameMutation();
+  const [updateUser, { isLoading: isUpdateUserLoading, reset: resetUpdateUser }] =
+    useUpdateUserMutation();
+
   const [open, setOpen] = React.useState(false);
-  const [updateUser, { isLoading, reset }] = useUpdateUserMutation();
   const [firstName, setFirstName] = React.useState<string>(user ? user.firstName : "");
   const [lastName, setLastName] = React.useState<string>(user ? user.lastName : "");
   const handleClickOpen = () => {
     setOpen(true);
     setFirstName(user ? user.firstName : "");
     setLastName(user ? user.lastName : "");
-    reset();
+    resetUpdateUser();
+    resetUpdateCognitoUser();
   };
 
   const handleClose = () => {
-    if (!isLoading) setOpen(false);
+    if (!isUpdateCognitoUserLoading && !isUpdateUserLoading) setOpen(false);
   };
 
   const handleSubmit = async () => {
     const toastId = new Date().valueOf();
     try {
-      await updateUser({ userSub: userId, firstName, lastName }).unwrap();
+      await updateCognitoUser({ accessToken, firstName, lastName }).unwrap();
+      await updateUser({ username: username, firstName, lastName }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
@@ -83,7 +95,7 @@ const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
                   margin="dense"
                   id="first-name"
                   label="First Name"
-                  variant="standard"
+                  variant="outlined"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={isUserFetching}
@@ -96,7 +108,7 @@ const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
                   margin="dense"
                   id="last-name"
                   label="Last Name"
-                  variant="standard"
+                  variant="outlined"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   disabled={isUserFetching}
@@ -105,9 +117,11 @@ const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
             <LoadingButton
-              loading={isLoading}
+              loading={isUpdateCognitoUserLoading || isUpdateUserLoading}
               variant="contained"
               loadingPosition={"end"}
               endIcon={<ArrowForwardOutlined />}

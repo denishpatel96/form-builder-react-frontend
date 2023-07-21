@@ -23,7 +23,7 @@ interface MainProps {
 
 const WorkspaceDetails = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const { workspaceId: activeWorkspaceId } = useParams();
   const {
     //isLoading: isWsLoading,
@@ -32,7 +32,7 @@ const WorkspaceDetails = ({ leftSidebarOpen, toggleSidebarState }: MainProps) =>
     isError: isWsError,
     data: wsData,
     error: wsError,
-  } = useGetWorkspacesQuery(userId, { skip: !userId });
+  } = useGetWorkspacesQuery(username, { skip: !username });
 
   let content;
 

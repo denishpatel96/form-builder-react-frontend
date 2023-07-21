@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { ReactNode } from "react";
 import { APP_BAR_HEIGHT, FOOTER_HEIGHT, ROUTE_LOGIN } from "../constants";
 import { CookieStorage } from "../helpers/cookieStorage";
-import { getPayload } from "../helpers/jwtHandler";
+import { getIdTokenPayload } from "../helpers/jwtHandler";
 import { useAppDispatch } from "../store/hooks";
 import { setTokens } from "../store/features/authSlice";
 
@@ -14,11 +14,11 @@ const AuthWrapper = ({ children }: { children: ReactNode }) => {
   React.useEffect(() => {
     const AsyncFunc = async () => {
       console.log("Dashboard : Checking session...");
-      const { rT, idT } = CookieStorage.getAll();
-      if (!(idT && getPayload(idT).exp * 1000 > Date.now())) {
+      const { rT, idT, aT } = CookieStorage.getAll();
+      if (!(idT && getIdTokenPayload(idT).exp * 1000 > Date.now())) {
         navigate(ROUTE_LOGIN);
       } else {
-        dispatch(setTokens({ idToken: idT, refreshToken: rT }));
+        dispatch(setTokens({ idToken: idT, refreshToken: rT, accessToken: aT }));
       }
     };
 

@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const CreateWorkspaceDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const [open, setOpen] = React.useState(false);
   const [createWorkspace, { isLoading, reset }] = useCreateWorkspaceMutation();
   const [name, setName] = React.useState<string>("");
@@ -34,7 +34,7 @@ const CreateWorkspaceDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   const handleSubmit = async () => {
     const toastId = new Date().valueOf();
     try {
-      await createWorkspace({ userSub: userId, name }).unwrap();
+      await createWorkspace({ username: username, name }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
@@ -73,19 +73,22 @@ const CreateWorkspaceDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
           <DialogContent>
             <DialogContentText>Please enter name to create a new workspace.</DialogContentText>
             <TextField
+              sx={{ mt: 2 }}
               autoFocus
               required
               margin="dense"
               id="name"
               label="Workspace Name"
               fullWidth
-              variant="standard"
+              variant="outlined"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
             <LoadingButton
               loading={isLoading}
               variant="contained"

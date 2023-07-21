@@ -33,7 +33,7 @@ const DeleteWorkspaceDialog = ({
   disabled?: boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.auth.userId);
+  const username = useAppSelector((state) => state.auth.username);
   const [open, setOpen] = React.useState(false);
   const [deleteWorkspace, { isLoading, reset }] = useDeleteWorkspaceMutation();
   const [name, setName] = React.useState<string>("");
@@ -51,7 +51,7 @@ const DeleteWorkspaceDialog = ({
   const handleSubmit = async () => {
     const toastId = new Date().valueOf();
     try {
-      await deleteWorkspace({ userSub: userId, workspaceId }).unwrap();
+      await deleteWorkspace({ username: username, workspaceId }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
@@ -106,19 +106,22 @@ const DeleteWorkspaceDialog = ({
                 </Typography>
               </DialogContentText>
               <TextField
+                sx={{ mt: 2 }}
                 autoFocus
                 required
                 margin="dense"
                 id="name"
                 fullWidth
-                variant="standard"
+                variant="outlined"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
             <LoadingButton
               loading={isLoading}
               variant="contained"

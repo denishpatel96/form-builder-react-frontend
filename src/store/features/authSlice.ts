@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import jwt_decode from "jwt-decode";
+import { getAccessTokenPayload, getIdTokenPayload } from "../../helpers/jwtHandler";
 
 interface AuthState {
   accessToken: string;
   idToken: string;
   refreshToken: string;
-  userId: string;
+  username: string;
 }
 
 const initialState: AuthState = {
   accessToken: "",
   idToken: "",
   refreshToken: "",
-  userId: "",
+  username: "",
 };
 
 const authSlice = createSlice({
@@ -27,10 +27,10 @@ const authSlice = createSlice({
       if (accessToken) state.accessToken = accessToken;
       if (refreshToken) state.refreshToken = refreshToken;
       if (idToken) state.idToken = idToken;
-      if (idToken || accessToken) {
-        const token = (idToken || accessToken) as string;
-        const decodedJWT: { sub: string } = jwt_decode(token);
-        state.userId = decodedJWT.sub;
+      if (idToken) {
+        state.username = getIdTokenPayload(idToken)["cognito:username"];
+      } else if (accessToken) {
+        state.username = getAccessTokenPayload(accessToken).username;
       }
     },
     resetAuthState: () => initialState,
