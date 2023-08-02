@@ -42,7 +42,6 @@ export const SignupPage = () => {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
     showPassword: false,
   };
   const [values, setValues] = React.useState<typeof defaultValues>(defaultValues);
@@ -51,7 +50,6 @@ export const SignupPage = () => {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
   };
   const [errors, setErrors] = React.useState<typeof defaultErrors>(defaultErrors);
 
@@ -71,9 +69,6 @@ export const SignupPage = () => {
     const isLastNameValid: boolean = !!values.lastName;
     const isEmailValid: boolean = validateEmail(values.email);
     const isPasswordValid: boolean = validatePassword(values.password);
-    const areBothPasswordsSame: boolean = !!(
-      values.password && values.password === values.confirmPassword
-    );
 
     // reset errors
     setErrors(defaultErrors);
@@ -89,11 +84,6 @@ export const SignupPage = () => {
         ...prev,
         password:
           "Please enter password that contains atleast 8 chars, capital letter, small letter, special letter and number.",
-      }));
-    } else if (!areBothPasswordsSame) {
-      setErrors((prev) => ({
-        ...prev,
-        confirmPassword: "Please enter matching passwords.",
       }));
     } else {
       await signup({
@@ -302,21 +292,6 @@ export const SignupPage = () => {
                       );
                     })}
                   </Stack>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    label="Confirm Password"
-                    autoComplete="off"
-                    fullWidth
-                    type={"password"}
-                    value={values.confirmPassword}
-                    onChange={(e) =>
-                      setValues((prev) => ({ ...prev, confirmPassword: e.target.value?.trim() }))
-                    }
-                    error={!!errors.confirmPassword}
-                    helperText={errors.confirmPassword}
-                  />
                 </Grid>
                 <Grid item xs={12}>
                   <LoadingButton

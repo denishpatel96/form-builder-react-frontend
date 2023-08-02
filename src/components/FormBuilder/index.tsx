@@ -19,7 +19,7 @@ import FormFieldsSidebar from "./FormFieldsSideBar";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import { getFormDesignProps } from "./Utility";
-import _ from "lodash";
+import { set } from "lodash";
 import { IFormDesignProps } from "./Types";
 import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
@@ -45,7 +45,7 @@ const FormBuilder = () => {
   const handleFormDesignPropsChange = (path: string, value: any) => {
     setFormProperties((prev) => {
       const updated = { ...prev };
-      _.set(updated, path, value);
+      set(updated, path, value);
       return updated;
     });
   };

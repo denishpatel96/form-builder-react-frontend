@@ -1,8 +1,6 @@
 import { Switch, Tooltip } from "@mui/material";
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { setThemeMode } from "../../store/features/signalSlice";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 70,
@@ -52,14 +50,13 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const ThemeToggle = () => {
-  const dispatch = useAppDispatch();
-  const themeMode = useAppSelector((state) => state.signal.themeMode);
+  const [isDark, setIsDark] = React.useState<boolean>(false);
   return (
-    <Tooltip title={`Switch to ${themeMode === "dark" ? "light" : "dark"} mode`}>
+    <Tooltip title={`Switch to ${isDark ? "light" : "dark"} mode`}>
       <MaterialUISwitch
         sx={{ m: 1 }}
-        checked={themeMode === "dark"}
-        onChange={(_e, checked) => dispatch(setThemeMode(checked ? "dark" : "light"))}
+        checked={isDark}
+        onChange={(_e, checked) => setIsDark(checked)}
       />
     </Tooltip>
   );

@@ -26,6 +26,7 @@ import { getIdTokenPayload } from "../helpers/jwtHandler";
 
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
+  const [isOnline, setIsOnline] = React.useState(navigator.onLine);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const event = searchParams.get("event");
@@ -50,6 +51,7 @@ export const LoginPage = () => {
   const username = useAppSelector((state) => state.auth.username);
 
   const handleSubmit = async () => {
+    if (!isOnline) return;
     const isEmailValid = validateEmail(values.email);
     setEmailError("");
     if (!isEmailValid) {
@@ -66,6 +68,11 @@ export const LoginPage = () => {
   }, [username]);
 
   React.useEffect(() => {
+    const onlineHandler = () => setIsOnline(true);
+    const offlineHandler = () => setIsOnline(false);
+    window.addEventListener("online", onlineHandler);
+    window.addEventListener("offline", offlineHandler);
+
     const AsyncFunc = async () => {
       console.log("Login : Checking session...");
       const { rT, idT, aT } = CookieStorage.getAll();
@@ -80,6 +87,11 @@ export const LoginPage = () => {
     };
 
     AsyncFunc();
+
+    return () => {
+      window.removeEventListener("online", onlineHandler);
+      window.removeEventListener("offline", offlineHandler);
+    };
   }, []);
 
   if (isRefreshLoginSuccess && refreshLoginData) {
@@ -182,21 +194,26 @@ export const LoginPage = () => {
                       {`Login`}
                     </Typography>
                   </Grid>
-                  {isError && error && (
+                  {isOnline && isError && error && (
                     <Grid item xs={12}>
                       <Alert severity="error">
-                        {
-                          (
-                            error as {
-                              data: {
-                                name: string;
-                                message: string;
-                                stack: string;
-                              };
-                              status: number;
-                            }
-                          )?.data?.message
-                        }
+                        {(
+                          error as {
+                            data: {
+                              name: string;
+                              message: string;
+                              stack: string;
+                            };
+                            status: number;
+                          }
+                        )?.data?.message || "Oops! Something went wrong!"}
+                      </Alert>
+                    </Grid>
+                  )}
+                  {!isOnline && (
+                    <Grid item xs={12}>
+                      <Alert severity="error">
+                        You are currently offline. Please check your internet connection.
                       </Alert>
                     </Grid>
                   )}

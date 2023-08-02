@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import _ from "lodash";
+import { set, cloneDeep } from "lodash";
 import { FieldProps } from "../../components/FormBuilder/Types";
 import {
   getCheckboxGroupProps,
@@ -122,7 +122,7 @@ const formSlice = createSlice({
       fieldIdsToClone.forEach((id) => {
         const indexOfFieldToCopy = state.fields.findIndex((f) => f.id === id);
         if (indexOfFieldToCopy !== -1) {
-          const cloneField = _.cloneDeep(state.fields[indexOfFieldToCopy]);
+          const cloneField = cloneDeep(state.fields[indexOfFieldToCopy]);
           cloneField.id = cloneField.name = `q${state.count + 1}`;
           cloneFields.push(cloneField);
           state.count++;
@@ -175,7 +175,7 @@ const formSlice = createSlice({
     changeFieldProp: (state, action: PayloadAction<{ path: string; value: any }>) => {
       if (state.selected.length === 1) {
         const index = state.fields.findIndex((f) => f.id === state.selected[0]);
-        _.set(state.fields[index], action.payload.path, action.payload.value);
+        set(state.fields[index], action.payload.path, action.payload.value);
       }
     },
 

@@ -1,15 +1,16 @@
 import { Add, ArrowForwardOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
+  Typography,
 } from "@mui/material";
-import * as React from "react";
+import React from "react";
 import { HIDE_TOAST_DURATION } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
 import { useCreateWorkspaceMutation } from "../../store/features/api";
@@ -58,29 +59,28 @@ const CreateWorkspaceDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   };
 
   return (
-    <div>
-      <Button fullWidth startIcon={<Add />} variant="contained" onClick={handleClickOpen}>
-        Create Workspace
+    <Box>
+      <Button endIcon={<Add />} variant="contained" onClick={handleClickOpen}>
+        Create
       </Button>
-      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
+      <Dialog fullWidth maxWidth={"sm"} open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
           }}
         >
-          <DialogTitle>Create Workspace</DialogTitle>
+          <DialogTitle>Create a workspace</DialogTitle>
           <DialogContent>
-            <DialogContentText>Please enter name to create a new workspace.</DialogContentText>
+            <Typography pt={2}>Enter a name for the workspace</Typography>
             <TextField
-              sx={{ mt: 2 }}
               autoFocus
               required
               margin="dense"
               id="name"
               label="Workspace Name"
               fullWidth
-              variant="outlined"
+              variant="filled"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -101,7 +101,7 @@ const CreateWorkspaceDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import React, { ReactNode } from "react";
-import { APP_BAR_HEIGHT, FOOTER_HEIGHT, ROUTE_LOGIN } from "../constants";
+import { STANDARD_HEIGHT, FOOTER_HEIGHT, ROUTE_LOGIN } from "../constants";
 import { CookieStorage } from "../helpers/cookieStorage";
 import { getIdTokenPayload } from "../helpers/jwtHandler";
 import { useAppDispatch } from "../store/hooks";
@@ -32,9 +32,8 @@ const AuthWrapper = ({ children }: { children: ReactNode }) => {
           flexGrow: 1,
           overflow: "auto",
           height: `calc(100vh - ${FOOTER_HEIGHT}px)`,
-          paddingTop: `${APP_BAR_HEIGHT}px`,
+          paddingTop: `${STANDARD_HEIGHT}px`,
           display: "flex",
-          backgroundColor: (theme) => theme.palette.background.paper,
         }}
       >
         {children}

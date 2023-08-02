@@ -1,16 +1,41 @@
-const prod = process.env.NODE_ENV === "production";
+import path from "path";
+import webpack from "webpack";
+import "webpack-dev-server";
 
+const prod = process.env.NODE_ENV === "production";
+const withReport = process.env.WITH_REPORT;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
-module.exports = {
+const prodPlugins: webpack.Configuration["plugins"] = [
+  new HtmlWebpackPlugin({
+    template: path.resolve("./index.html"),
+  }),
+  new NodePolyfillPlugin(),
+  new MiniCssExtractPlugin(),
+  ...(prod && withReport ? new BundleAnalyzerPlugin() : []),
+];
+
+const devPlugins: webpack.Configuration["plugins"] = [
+  new HtmlWebpackPlugin({
+    template: path.resolve("./index.html"),
+  }),
+  new NodePolyfillPlugin(),
+  new MiniCssExtractPlugin(),
+  new ReactRefreshPlugin(),
+];
+
+const config: webpack.Configuration = {
   mode: prod ? "production" : "development",
   entry: "./src/index.tsx",
+  target: "web",
   output: {
-    path: __dirname + "/dist/",
+    path: path.resolve(__dirname + "/build"),
     publicPath: "/",
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -49,15 +74,12 @@ module.exports = {
     ],
   },
   devtool: prod ? undefined : "source-map",
-  devServer: {
-    historyApiFallback: true,
-  },
-  plugins: [
-    !prod && new ReactRefreshPlugin(),
-    new HtmlWebpackPlugin({
-      template: "index.html",
-    }),
-    new NodePolyfillPlugin(),
-    new MiniCssExtractPlugin(),
-  ],
+  devServer: prod
+    ? undefined
+    : {
+        historyApiFallback: true,
+      },
+  plugins: prod ? prodPlugins : devPlugins,
 };
+
+export default config;

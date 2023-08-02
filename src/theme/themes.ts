@@ -1,5 +1,5 @@
 import { ThemeOptions } from "@mui/material";
-import { APP_BAR_HEIGHT } from "../constants";
+import { STANDARD_HEIGHT } from "../constants";
 import { typography } from "./typography";
 
 const shape: ThemeOptions["shape"] = {
@@ -8,7 +8,7 @@ const shape: ThemeOptions["shape"] = {
 
 const mixins: ThemeOptions["mixins"] = {
   toolbar: {
-    minHeight: APP_BAR_HEIGHT,
+    minHeight: STANDARD_HEIGHT,
   },
 };
 

@@ -4,7 +4,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_WORKSPACES } from "../../constants";
 import { useAppSelector } from "../../store/hooks";
-import ThemeToggle from "../Reusable/ThemeToggle";
 import UserMenu from "../Reusable/UserMenu";
 
 const AppbarContent = () => {
@@ -19,7 +18,6 @@ const AppbarContent = () => {
         Workspaces
       </Button>
       <Box sx={{ flexGrow: 1 }} />
-      <ThemeToggle />
       <UserMenu />
     </>
   );

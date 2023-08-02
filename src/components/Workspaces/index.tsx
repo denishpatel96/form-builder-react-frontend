@@ -1,30 +1,32 @@
 import React from "react";
 import Appbar from "../Reusable/Appbar";
-import LeftSidebar from "../Reusable/LeftSidebar";
 import WorkspaceList from "./WorkspaceList";
-import WorkspaceDetails from "./WorkspaceDetails";
 import AppbarContent from "./AppbarContent";
-import { Divider } from "@mui/material";
-import NavigationLinks from "./NavigationLinks";
+import { Grid, Stack, Typography } from "@mui/material";
+import CreateWorkspaceDialog from "./CreateWorkspaceDialog";
 
 const Workspaces = () => {
-  const [leftSidebarOpen, setLeftSidebarOpen] = React.useState<boolean>(false);
-
   return (
-    <>
+    <Stack sx={{ width: "100%" }}>
       <Appbar>
         <AppbarContent />
       </Appbar>
-      <LeftSidebar open={leftSidebarOpen} onChange={(open) => setLeftSidebarOpen(open)}>
-        <WorkspaceList />
-        <Divider />
-        <NavigationLinks />
-      </LeftSidebar>
-      <WorkspaceDetails
-        leftSidebarOpen={leftSidebarOpen}
-        toggleSidebarState={() => setLeftSidebarOpen((prev) => !prev)}
-      />
-    </>
+      <Grid container p={1}>
+        <Grid item xs={12} md={6} p={4}>
+          <Stack spacing={3}>
+            <Typography variant="h4">Workspaces</Typography>
+            <Typography>
+              Use workspaces to group your forms by categories, divisions or departments.
+            </Typography>
+
+            <CreateWorkspaceDialog />
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <WorkspaceList />
+        </Grid>
+      </Grid>
+    </Stack>
   );
 };
 

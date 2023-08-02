@@ -1,19 +1,13 @@
-import {
-  AccountCircle,
-  HelpCenterOutlined,
-  LogoutOutlined,
-  SettingsOutlined,
-} from "@mui/icons-material";
+import { LogoutOutlined, SettingsOutlined } from "@mui/icons-material";
 import {
   Avatar,
+  Card,
   Divider,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   MenuItem,
   Skeleton,
   Stack,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -64,7 +58,7 @@ const UserMenu = () => {
     content = <Skeleton variant="circular" animation={ANIMATION_SKELETON} height={40} width={40} />;
   } else if (isUserSuccess && user) {
     const userName = `${user.firstName} ${user.lastName}`;
-    // const initials = `${userName.split(" ")[0][0]}${userName.split(" ")[1][0]}`;
+    const initials = `${userName.split(" ")[0][0]}${userName.split(" ")[1][0]}`;
     const userEmail = user.email;
 
     const handleOpen = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -77,28 +71,26 @@ const UserMenu = () => {
 
     content = (
       <>
-        <Tooltip
-          title={
-            <Stack>
-              <Typography variant="subtitle1">{userName}</Typography>
-              <Typography variant="caption">{userEmail}</Typography>
-            </Stack>
-          }
+        <Card
+          title={userName}
+          sx={{
+            cursor: "pointer",
+            width: 48,
+            height: 48,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={handleOpen}
+          ref={anchorRef}
         >
           <Avatar
-            sx={{
-              backgroundColor: (theme) => theme.palette.background.paper,
-              boxShadow: (theme) => (open ? theme.shadows[5] : theme.shadows[1]),
-              cursor: "pointer",
-            }}
-            ref={anchorRef}
-            component={"div"}
-            onClick={handleOpen}
+            sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}
             src={getGravatarURL(user.email)}
           >
-            <AccountCircle color="secondary" />
+            {initials}
           </Avatar>
-        </Tooltip>
+        </Card>
         <MenuPopover
           open={open}
           onClose={handleClose}
@@ -108,10 +100,10 @@ const UserMenu = () => {
           <Stack>
             <Stack direction={"row"} spacing={2} p={2}>
               <Avatar
-                sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}
+                sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}
                 src={getGravatarURL(user.email)}
               >
-                <AccountCircle />
+                {initials}
               </Avatar>
               <Stack>
                 <Typography variant="subtitle1">{userName}</Typography>
@@ -119,9 +111,6 @@ const UserMenu = () => {
               </Stack>
             </Stack>
             <Divider />
-            <ListSubheader>
-              <Typography variant="overline">ACCOUNT</Typography>
-            </ListSubheader>
             <MenuItem
               onClick={() => {
                 navigate(ROUTE_ACCOUNT_SETTINGS);
@@ -130,23 +119,8 @@ const UserMenu = () => {
               <ListItemIcon>
                 <SettingsOutlined fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Manage Account</ListItemText>
+              <ListItemText>Account Settings</ListItemText>
             </MenuItem>
-            <ListSubheader>
-              <Typography variant="overline">RESOURCES</Typography>
-            </ListSubheader>
-            <MenuItem
-              onClick={() => {
-                // TODO : do something
-              }}
-            >
-              <ListItemIcon>
-                <HelpCenterOutlined fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Help Center</ListItemText>
-            </MenuItem>
-
-            <Divider />
             <MenuItem
               onClick={() => {
                 handleLogout();

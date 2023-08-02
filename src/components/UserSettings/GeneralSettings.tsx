@@ -7,6 +7,7 @@ import {
   CardContent,
   Container,
   Divider,
+  Grid,
   IconButton,
   LinearProgress,
   Skeleton,
@@ -22,6 +23,7 @@ import { ANIMATION_SKELETON } from "../../constants";
 import ChangeNameDialog from "./ChangeNameDialog";
 import { getGravatarURL } from "../../helpers/functions";
 import ChangeEmailDialog from "./ChangeEmailDialog";
+import ChangePasswordDialog from "./ChangePasswordDialog";
 
 interface MainProps {
   toggleSidebarState: () => void;
@@ -99,23 +101,10 @@ const GeneralSettings = ({ leftSidebarOpen, toggleSidebarState }: MainProps) => 
                 <Divider />
                 <Typography variant="subtitle1">LOGIN DETAILS</Typography>
                 <Typography>Your email : {user.email}</Typography>
-                <Box>
+                <Grid container sx={{ columnGap: 2 }}>
                   <ChangeEmailDialog />
-                  <Button sx={{ ml: 2 }} variant="contained">
-                    Change Password
-                  </Button>
-                </Box>
-                <Divider />
-                <Typography variant="subtitle1">DELETE ACCOUNT</Typography>
-                <Typography>
-                  If you delete your account, all the forms and collected responses will be removed
-                  from the system permanently.
-                </Typography>
-                <Box>
-                  <Button variant="contained" color="error">
-                    Delete Account
-                  </Button>
-                </Box>
+                  <ChangePasswordDialog />
+                </Grid>
               </Stack>
             </CardContent>
           </Card>

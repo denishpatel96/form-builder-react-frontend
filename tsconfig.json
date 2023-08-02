@@ -7,9 +7,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "lib": ["es6", "dom", "esnext"],
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "sourceMap": true,
     "target": "esnext"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   },
   "exclude": ["node_modules"],
   "include": ["src", "./src/declaration.d.ts"]

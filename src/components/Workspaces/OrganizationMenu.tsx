@@ -1,20 +1,19 @@
 import {
+  Business,
   GroupOutlined,
-  GroupWork,
   ReceiptLongOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
 import {
   Avatar,
   Box,
+  Card,
   Divider,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   MenuItem,
   Skeleton,
   Stack,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -73,24 +72,23 @@ const OrganizationMenu = () => {
           component={"div"}
           sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
         >
-          <Tooltip
-            title={
-              <Stack>
-                <Typography variant="subtitle1">{orgName}</Typography>
-                <Typography variant="caption">Gold plan</Typography>
-              </Stack>
-            }
+          <Card
+            title={orgName}
+            sx={{
+              cursor: "pointer",
+              width: 48,
+              height: 48,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={handleOpen}
+            ref={anchorRef}
           >
-            <Avatar
-              sx={{
-                mr: 2,
-                backgroundColor: (theme) => theme.palette.background.paper,
-                boxShadow: (theme) => (open ? theme.shadows[5] : theme.shadows[1]),
-              }}
-            >
-              <GroupWork color="secondary" />
+            <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
+              <Business />
             </Avatar>
-          </Tooltip>
+          </Card>
           <MHidden width="lgDown">
             <Typography variant="subtitle1" color="secondary">
               {orgName}
@@ -104,9 +102,6 @@ const OrganizationMenu = () => {
           sx={{ width: { xs: "100%", sm: 250 }, maxWidth: 250 }}
         >
           <Stack>
-            <ListSubheader>
-              <Typography variant="overline">ORGANIZATION</Typography>
-            </ListSubheader>
             <MenuItem
               onClick={() => {
                 // TODO : do something
@@ -139,8 +134,8 @@ const OrganizationMenu = () => {
             </MenuItem>
             <Divider />
             <Stack direction={"row"} spacing={2} p={2}>
-              <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.light }}>
-                <GroupWork />
+              <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
+                <Business />
               </Avatar>
               <Stack>
                 <Typography variant="subtitle1">{orgName}</Typography>

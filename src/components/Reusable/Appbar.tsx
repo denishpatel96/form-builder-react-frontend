@@ -13,7 +13,7 @@ const Appbar = ({ children }: { children: React.ReactNode }) => {
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
       }}
     >
-      <Toolbar>{children}</Toolbar>
+      <Toolbar disableGutters>{children}</Toolbar>
     </AppBar>
   );
 };

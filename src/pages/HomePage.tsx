@@ -23,7 +23,7 @@ import {
   MenuOutlined,
 } from "@mui/icons-material";
 import {
-  APP_BAR_HEIGHT,
+  STANDARD_HEIGHT,
   DRAWER_WIDTH_TABLET,
   FOOTER_HEIGHT,
   ROUTE_LOGIN,
@@ -62,7 +62,7 @@ export const HomePage = () => {
         <Stack>
           <Box
             sx={{
-              height: APP_BAR_HEIGHT,
+              height: STANDARD_HEIGHT,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -121,7 +121,7 @@ export const HomePage = () => {
           flexGrow: 1,
           overflow: "auto",
           minHeight: `calc(100vh - ${FOOTER_HEIGHT}px)`,
-          paddingTop: `${APP_BAR_HEIGHT}px`,
+          paddingTop: `${STANDARD_HEIGHT}px`,
           display: "flex",
           flexDirection: "column",
           backgroundColor: (theme) => theme.palette.background.paper,

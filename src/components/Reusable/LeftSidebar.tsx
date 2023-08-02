@@ -1,9 +1,8 @@
 import { Box, Drawer, IconButton } from "@mui/material";
 import React from "react";
 import { MenuOpenOutlined } from "@mui/icons-material";
-import _ from "lodash";
 import MHidden from "../Reusable/MHidden";
-import { APP_BAR_HEIGHT, DRAWER_WIDTH_TABLET } from "../../constants";
+import { STANDARD_HEIGHT, DRAWER_WIDTH_TABLET } from "../../constants";
 import Logo from "../Reusable/Logo";
 
 export interface LeftSidebarProps {
@@ -61,7 +60,7 @@ const LeftSidebar = ({ open, onChange, children }: LeftSidebarProps) => {
           >
             <Box
               sx={{
-                height: APP_BAR_HEIGHT,
+                height: STANDARD_HEIGHT,
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
                 display: "flex",
                 justifyContent: "space-between",

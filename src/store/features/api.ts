@@ -131,6 +131,17 @@ const api = createApi({
           body,
         }),
       }),
+      changePassword: builder.mutation({
+        query: (body: {
+          accessToken: string;
+          previousPassword: string;
+          proposedPassword: string;
+        }) => ({
+          url: "/auth/changePassword",
+          method: "post",
+          body,
+        }),
+      }),
       forgotPassword: builder.mutation({
         query: (body: { email: string }) => ({
           url: "/auth/forgotPassword",
@@ -270,6 +281,7 @@ export const {
   useRefreshLoginMutation,
   useConfirmSignupMutation,
   useResendCodeMutation,
+  useChangePasswordMutation,
   useForgotPasswordMutation,
   useConfirmForgotPasswordMutation,
   useLogoutMutation,

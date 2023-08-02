@@ -6,116 +6,73 @@ function pxToRem(value: number) {
   return `${value / 16}rem`;
 }
 
-function responsiveFontSizes({
-  xs,
-  sm,
-  md,
-  lg,
-}: {
-  xs: number;
-  sm: number;
-  md: number;
-  lg: number;
-}) {
-  return {
-    "@media (min-width:200px)": {
-      fontSize: pxToRem(xs),
-    },
-    "@media (min-width:600px)": {
-      fontSize: pxToRem(sm),
-    },
-    "@media (min-width:900px)": {
-      fontSize: pxToRem(md),
-    },
-    "@media (min-width:1200px)": {
-      fontSize: pxToRem(lg),
-    },
-  };
-}
-
-const FONT_PRIMARY = "'Montserrat', sans-serif";
+const FONT_PRIMARY = "'Open Sans', sans-serif";
 
 export const typography: ThemeOptions["typography"] = {
   fontFamily: FONT_PRIMARY,
-  fontWeightRegular: 400,
-  fontWeightMedium: 500,
-  fontWeightBold: 700,
+  fontWeightRegular: 300,
+  fontWeightMedium: 400,
+  fontWeightBold: 500,
   h1: {
-    fontWeight: 600,
-    lineHeight: 80 / 64,
-    fontSize: pxToRem(40),
-    ...responsiveFontSizes({ xs: 48, sm: 48, md: 56, lg: 64 }),
+    fontWeight: 400,
+    fontSize: "2.5rem",
   },
   h2: {
-    fontWeight: 600,
-    lineHeight: 64 / 48,
-    fontSize: pxToRem(32),
-    ...responsiveFontSizes({ xs: 36, sm: 36, md: 42, lg: 48 }),
+    fontWeight: 400,
+    fontSize: "2.25rem",
   },
   h3: {
-    fontWeight: 600,
-    lineHeight: 1.5,
-    fontSize: pxToRem(24),
-    ...responsiveFontSizes({ xs: 24, sm: 24, md: 28, lg: 32 }),
+    fontWeight: 400,
+    fontSize: "2rem",
   },
   h4: {
-    fontWeight: 600,
-    lineHeight: 1.5,
-    fontSize: pxToRem(20),
-    ...responsiveFontSizes({ xs: 18, sm: 18, md: 20, lg: 24 }),
+    fontWeight: 400,
+    fontSize: "1.75rem",
   },
   h5: {
-    fontWeight: 600,
-    lineHeight: 1.5,
-    fontSize: pxToRem(18),
-    ...responsiveFontSizes({ xs: 16, sm: 16, md: 18, lg: 20 }),
+    fontWeight: 400,
+    fontSize: "1.5rem",
   },
   h6: {
-    fontWeight: 600,
-    lineHeight: 28 / 18,
-    fontSize: pxToRem(16),
-    ...responsiveFontSizes({ xs: 14, sm: 14, md: 16, lg: 18 }),
+    fontWeight: 400,
+    fontSize: "1.375rem",
   },
   subtitle1: {
     fontWeight: 600,
-    lineHeight: 1.5,
-    fontSize: pxToRem(16),
-    ...responsiveFontSizes({ xs: 14, sm: 14, md: 16, lg: 16 }),
+    lineHeight: 1.375,
+    fontSize: "1rem",
   },
   subtitle2: {
-    fontWeight: 600,
-    lineHeight: 22 / 14,
-    fontSize: pxToRem(14),
-    ...responsiveFontSizes({ xs: 12, sm: 12, md: 14, lg: 14 }),
+    fontWeight: 500,
+    lineHeight: 1.375,
+    fontSize: "1rem",
   },
   body1: {
-    lineHeight: 1.5,
-    fontSize: pxToRem(16),
-    ...responsiveFontSizes({ xs: 14, sm: 14, md: 16, lg: 16 }),
+    fontWeight: 400,
+    lineHeight: 1.25,
+    fontSize: "0.875rem",
   },
   body2: {
-    lineHeight: 22 / 14,
-    fontSize: pxToRem(14),
-    ...responsiveFontSizes({ xs: 12, sm: 12, md: 14, lg: 14 }),
+    fontWeight: 300,
+    lineHeight: 1.25,
+    fontSize: "0.875rem",
   },
   caption: {
+    fontWeight: 300,
     lineHeight: 1.5,
-    fontSize: pxToRem(12),
-    ...responsiveFontSizes({ xs: 10, sm: 10, md: 12, lg: 12 }),
+    fontSize: "0.75rem",
   },
   overline: {
-    fontWeight: 600,
-    lineHeight: 1.5,
-    fontSize: pxToRem(12),
-    letterSpacing: 1.1,
-    textTransform: "uppercase",
-    ...responsiveFontSizes({ xs: 10, sm: 10, md: 12, lg: 12 }),
-  },
-  button: {
     fontWeight: 500,
     lineHeight: 1.5,
-    fontSize: pxToRem(14),
+    fontSize: pxToRem(10),
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
+  },
+  button: {
+    fontWeight: 400,
+    lineHeight: 1.5,
+    fontSize: "0.875rem",
     textTransform: "none",
-    ...responsiveFontSizes({ xs: 12, sm: 12, md: 14, lg: 14 }),
   },
 };
