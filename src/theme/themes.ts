@@ -1,10 +1,5 @@
 import { ThemeOptions } from "@mui/material";
 import { STANDARD_HEIGHT } from "../constants";
-import { typography } from "./typography";
-
-const shape: ThemeOptions["shape"] = {
-  borderRadius: 8,
-};
 
 const mixins: ThemeOptions["mixins"] = {
   toolbar: {
@@ -19,6 +14,77 @@ const breakpoints: ThemeOptions["breakpoints"] = {
     md: 900,
     lg: 1200,
     xl: 1536,
+  },
+};
+
+const FONT_PRIMARY = "'Open Sans', sans-serif";
+
+const typography: ThemeOptions["typography"] = {
+  fontFamily: FONT_PRIMARY,
+  fontWeightRegular: 300,
+  fontWeightMedium: 400,
+  fontWeightBold: 500,
+  h1: {
+    fontWeight: 400,
+    fontSize: "2.5rem",
+  },
+  h2: {
+    fontWeight: 400,
+    fontSize: "2.25rem",
+  },
+  h3: {
+    fontWeight: 400,
+    fontSize: "2rem",
+  },
+  h4: {
+    fontWeight: 400,
+    fontSize: "1.75rem",
+  },
+  h5: {
+    fontWeight: 400,
+    fontSize: "1.5rem",
+  },
+  h6: {
+    fontWeight: 400,
+    fontSize: "1.375rem",
+  },
+  subtitle1: {
+    fontWeight: 600,
+    lineHeight: 1.375,
+    fontSize: "1rem",
+  },
+  subtitle2: {
+    fontWeight: 500,
+    lineHeight: 1.375,
+    fontSize: "1rem",
+  },
+  body1: {
+    fontWeight: 400,
+    lineHeight: 1.25,
+    fontSize: "0.875rem",
+  },
+  body2: {
+    fontWeight: 300,
+    lineHeight: 1.25,
+    fontSize: "0.875rem",
+  },
+  caption: {
+    fontWeight: 300,
+    lineHeight: 1.5,
+    fontSize: "0.75rem",
+  },
+  overline: {
+    fontWeight: 500,
+    lineHeight: 1.5,
+    fontSize: "0.875rem",
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
+  },
+  button: {
+    fontWeight: 600,
+    lineHeight: 1.5,
+    fontSize: "0.875rem",
+    textTransform: "none",
   },
 };
 
@@ -39,8 +105,6 @@ export const darkTheme: ThemeOptions = {
     },
   },
   mixins,
-
-  shape,
   typography,
   breakpoints,
 };
@@ -66,7 +130,6 @@ export const lightTheme: ThemeOptions = {
       paper: "#ffffff",
     },
   },
-  shape,
   mixins,
   typography,
   breakpoints,

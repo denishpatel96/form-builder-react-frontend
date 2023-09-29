@@ -6,17 +6,17 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
+  Stack,
   TextField,
 } from "@mui/material";
 import * as React from "react";
-import { HIDE_TOAST_DURATION } from "../../constants";
+import { HIDE_TOAST_DURATION, WS_NAME_CHARACTER_LIMIT } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
 import { useUpdateWorkspaceMutation } from "../../store/features/api";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-const RenameWorkspaceDialog = ({
+const UpdateWorkspaceDialog = ({
   workspaceId,
   workspaceName,
   onSuccess,
@@ -49,25 +49,25 @@ const RenameWorkspaceDialog = ({
   };
 
   const handleSubmit = async () => {
-    if (workspaceName === name) return;
+    if (isLoading || workspaceName === name) return;
     const toastId = new Date().valueOf();
     try {
-      await updateWorkspace({ username: username, workspaceId, name }).unwrap();
+      await updateWorkspace({ orgId: username, workspaceId, name }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
           id: toastId,
-          message: "Workspace renamed successfully",
+          message: "Workspace updated successfully",
           severity: "success",
         })
       );
       handleClose();
     } catch (error) {
-      console.log("Error renaming workspace : ", error);
+      console.log("Error updating workspace : ", error);
       dispatch(
         showToast({
           id: toastId,
-          message: "Error renaming workspace",
+          message: "Error updating workspace",
           severity: "error",
         })
       );
@@ -80,32 +80,34 @@ const RenameWorkspaceDialog = ({
       <Box onClick={handleClickOpen}>
         {button || (
           <Button fullWidth startIcon={<EditOutlined />} onClick={handleClickOpen}>
-            Rename
+            Update
           </Button>
         )}
       </Box>
-      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
           }}
         >
-          <DialogTitle>Rename Workspace</DialogTitle>
+          <DialogTitle>Update Workspace</DialogTitle>
           <DialogContent>
-            <DialogContentText>Please enter the updated name for the workspace.</DialogContentText>
-            <TextField
-              sx={{ mt: 2 }}
-              autoFocus
-              required
-              margin="dense"
-              id="name"
-              label="Workspace Name"
-              fullWidth
-              variant="outlined"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <Stack spacing={2} py={2}>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                label="Workspace Name"
+                fullWidth
+                variant="filled"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                inputProps={{ maxlength: WS_NAME_CHARACTER_LIMIT }}
+                helperText={`${name.length}/${WS_NAME_CHARACTER_LIMIT}`}
+              />
+            </Stack>
           </DialogContent>
           <DialogActions>
             <Button variant="outlined" onClick={handleClose}>
@@ -128,4 +130,4 @@ const RenameWorkspaceDialog = ({
   );
 };
 
-export default RenameWorkspaceDialog;
+export default UpdateWorkspaceDialog;

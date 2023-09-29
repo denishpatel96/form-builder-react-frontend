@@ -2,7 +2,10 @@ import {
   ArrowDropDownCircleOutlined,
   CheckBoxOutlined,
   CommitOutlined,
+  GroupOutlined,
   RadioButtonCheckedOutlined,
+  ReceiptLongOutlined,
+  SettingsOutlined,
   TextFieldsOutlined,
   TitleOutlined,
 } from "@mui/icons-material";
@@ -37,6 +40,12 @@ export enum ELEMENT_CATEGORIES {
   RATING = "rating",
 }
 
+export const ORG_MEMBER_ROLES = [
+  { label: "Admin", description: "Can view/edit members, workspaces and billing plan" },
+  { label: "Editor", description: "Can view/edit workspaces, view members" },
+] as const;
+export type OrgMemberRole = (typeof ORG_MEMBER_ROLES)[number]["label"];
+
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   switch (category) {
     case ELEMENT_CATEGORIES.TEXT:
@@ -47,6 +56,24 @@ export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
       return "#BFCCB5";
   }
 };
+
+export const ORG_MENU_ITEMS = [
+  {
+    id: "admin",
+    label: "Admin Settings",
+    icon: <SettingsOutlined />,
+  },
+  {
+    id: "members",
+    label: "Members",
+    icon: <GroupOutlined />,
+  },
+  {
+    id: "plan-and-billing",
+    label: "Plan & Billing",
+    icon: <ReceiptLongOutlined />,
+  },
+];
 
 export const FORM_ELEMENTS_LIST: {
   id: string;

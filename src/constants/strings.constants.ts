@@ -1,6 +1,6 @@
 export const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://api.vtwinforms.com"
-    : "https://dev-api.vtwinforms.com";
+    ? "https://api.vTwinsForm.com"
+    : "https://dev-api.vTwinsForm.com";
 export const WEB_URL =
-  process.env.NODE_ENV === "production" ? "https://vtwinforms.com" : "http://localhost:3000";
+  process.env.NODE_ENV === "production" ? "https://vTwinsForm.com" : "http://localhost:3000";

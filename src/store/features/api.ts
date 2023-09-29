@@ -51,44 +51,64 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   return result;
 };
 
-interface role {
-  orgId: string;
-  orgName: string;
-  role: string;
-  updatedAt: string;
-  createdAt: string;
-}
-
 export interface Workspace {
-  id: string;
+  orgId: string;
+  workspaceId: string;
   name: string;
   createdAt: string;
+  createdBy: string;
   updatedAt: string;
   memberCount: number;
   formCount: number;
   responseCount: number;
-  isDefault?: boolean;
+  bookmarked: boolean;
+}
+
+export interface OrgMember {
+  userId: string;
+  orgId: string;
+  orgName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+}
+
+export interface OrgMemberInvite {
+  inviter: {
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    orgName: string;
+    role?: string;
+  };
+  orgId: string;
+  email: string;
+  role: string;
+  createdAt: string;
 }
 
 export interface User {
-  id: string;
+  userId: string;
   firstName: string;
   lastName: string;
   createdAt: string;
   updatedAt: string;
   email: string;
-  emailVerified: string;
   orgName: string;
   memberCount: number;
   formCount: number;
   responseCount: number;
-  roles: role[];
 }
 
 const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Workspace", "User"],
+  tagTypes: ["Workspace", "User", "OrgInvitation", "OrgMember"],
   endpoints: (builder) => {
     return {
       signup: builder.mutation({
@@ -222,7 +242,7 @@ const api = createApi({
           firstName?: string;
           lastName?: string;
           email?: string;
-          orgName?: string;
+          orgName?: string; // orgName
         }
       >({
         query: (body) => ({
@@ -233,13 +253,13 @@ const api = createApi({
         invalidatesTags: (_result, error) => (error ? [] : ["User"]),
       }),
       getWorkspaces: builder.query<Workspace[], string>({
-        query: (username) => ({
-          url: `/workspaces/${username}`,
+        query: (orgId) => ({
+          url: `/workspaces/${orgId}`,
           method: "get",
         }),
         providesTags: ["Workspace"],
       }),
-      createWorkspace: builder.mutation<Workspace, { username: string; name: string }>({
+      createWorkspace: builder.mutation<Workspace, { orgId: string; workspaceName: string }>({
         query: (body) => ({
           url: "/workspaces",
           method: "post",
@@ -249,7 +269,12 @@ const api = createApi({
       }),
       updateWorkspace: builder.mutation<
         Workspace,
-        { username: string; workspaceId: string; name: string }
+        {
+          orgId: string;
+          workspaceId: string;
+          name?: string;
+          bookmarked?: boolean;
+        }
       >({
         query: (body) => ({
           url: "/workspaces",
@@ -258,12 +283,84 @@ const api = createApi({
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
       }),
-      deleteWorkspace: builder.mutation<Workspace, { username: string; workspaceId: string }>({
+      deleteWorkspace: builder.mutation<Workspace, { orgId: string; workspaceId: string }>({
         query: (params) => ({
-          url: `/workspaces/${params.username}/${params.workspaceId}`,
+          url: `/workspaces/${params.orgId}/${params.workspaceId}`,
           method: "delete",
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
+      }),
+      createOrgMemberInvitation: builder.mutation<
+        Workspace,
+        { orgId: string; email: string; role: string }
+      >({
+        query: (body) => ({
+          url: "/memberInvitations",
+          method: "post",
+          body,
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
+      }),
+      getOrgMemberInvitations: builder.query<OrgMemberInvite[], { orgId?: string; email?: string }>(
+        {
+          query: (params) => ({
+            url: `/memberInvitations?${
+              params.orgId ? `orgId=${params.orgId}` : params.email ? `email=${params.email}` : ""
+            }`,
+            method: "get",
+          }),
+          providesTags: ["OrgInvitation"],
+        }
+      ),
+      respondToOrgMemberInvitation: builder.mutation<
+        Workspace,
+        { orgId: string; accepted: boolean }
+      >({
+        query: (body) => ({
+          url: "/memberInvitations/respond",
+          method: "post",
+          body,
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
+      }),
+      deleteOrgMemberInvitation: builder.mutation<
+        OrgMemberInvite,
+        { orgId: string; email: string }
+      >({
+        query: (params) => ({
+          url: `/memberInvitations/${params.orgId}/${params.email}`,
+          method: "delete",
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
+      }),
+      getOrgMembers: builder.query<OrgMember[], string>({
+        query: (orgId) => ({
+          url: `/members/${orgId}`,
+          method: "get",
+        }),
+        providesTags: ["OrgMember"],
+      }),
+      deleteOrgMember: builder.mutation<OrgMember, { orgId: string; userId: string }>({
+        query: (params) => ({
+          url: `/members/${params.orgId}/${params.userId}`,
+          method: "delete",
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["OrgMember"]),
+      }),
+      updateOrgMember: builder.mutation<
+        OrgMember,
+        {
+          orgId: string;
+          userId: string;
+          role: string;
+        }
+      >({
+        query: (body) => ({
+          url: "/members",
+          method: "put",
+          body,
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["OrgMember"]),
       }),
     };
   },
@@ -288,5 +385,12 @@ export const {
   useUpdateCognitoUserEmailMutation,
   useVerifyCognitoUserEmailMutation,
   useUpdateCognitoUserNameMutation,
+  useGetOrgMembersQuery,
+  useDeleteOrgMemberMutation,
+  useUpdateOrgMemberMutation,
+  useGetOrgMemberInvitationsQuery,
+  useRespondToOrgMemberInvitationMutation,
+  useDeleteOrgMemberInvitationMutation,
+  useCreateOrgMemberInvitationMutation,
 } = api;
 export default api;

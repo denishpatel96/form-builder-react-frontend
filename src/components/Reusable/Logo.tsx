@@ -12,12 +12,12 @@ const Logo = ({ width = 150, height, invert = false }: LogoProps) => {
   const navigate = useNavigate();
   return (
     <img
-      src="https://drive.google.com/uc?export=view&id=1Uv3kdd0QYBFA3ZsK9ntz2BzYcTtaQEXp"
+      src="https://drive.google.com/uc?export=view&id=1p_AoLW8_3U0XuqEZkghBiP8SArrTnkBJ"
       width={width}
       height={height}
       onClick={() => navigate(ROUTE_HOME)}
-      style={{ filter: invert ? "invert(100%)" : "", cursor: "pointer" }}
-      alt="vTwinForms"
+      style={{ filter: invert ? "brightness(0%) invert(100%)" : "", cursor: "pointer" }}
+      alt="vTwinsForm"
     />
   );
 };

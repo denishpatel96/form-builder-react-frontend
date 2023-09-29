@@ -11,6 +11,7 @@ import { validateEmail } from "../helpers/validators";
 import { useConfirmSignupMutation, useResendCodeMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
 import Spinner from "../components/Reusable/Spinner";
+import { alpha } from "@mui/material/styles";
 
 export const ConfirmSignupPage = () => {
   const dispatch = useAppDispatch();
@@ -22,64 +23,67 @@ export const ConfirmSignupPage = () => {
   const [email, setEmail] = React.useState<string>("");
   const [emailError, setEmailError] = React.useState<boolean>(false);
 
-  const [
-    confirmSignup,
-    {
-      isLoading: isConfirming,
-      isSuccess: isConfirmed,
-      isError: isConfirmError,
-      error: confirmationError,
-    },
-  ] = useConfirmSignupMutation();
+  const [confirmSignup, { isLoading: isConfirming, isSuccess: isConfirmed }] =
+    useConfirmSignupMutation();
 
-  const [
-    resendCode,
-    { isLoading: isResending, isSuccess: isResent, isError: isResendError, error: resendError },
-  ] = useResendCodeMutation();
+  const [resendCode, { isLoading: isResending, isSuccess: isResent }] = useResendCodeMutation();
 
   React.useEffect(() => {
+    console.log("Use Effect..");
     const AsyncFunc = async () => {
       if (username && code) {
-        await confirmSignup({ username, code });
+        try {
+          await confirmSignup({ username, code }).unwrap();
+        } catch (error: any) {
+          const toastId = new Date().valueOf();
+          console.log("Error confirming the account : ", error);
+          if (
+            error?.data?.name === "NotAuthorizedException" &&
+            error?.data?.message === "User cannot be confirmed. Current status is CONFIRMED"
+          ) {
+            dispatch(
+              showToast({
+                id: toastId,
+                message: "Account is already confirmed",
+                severity: "success",
+              })
+            );
+            setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+            navigate(ROUTE_LOGIN);
+          } else {
+            dispatch(
+              showToast({
+                id: toastId,
+                message: error?.data?.message || "Error confirming the account",
+                severity: "error",
+              })
+            );
+            setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
+          }
+        }
       }
     };
 
     AsyncFunc();
   }, []);
 
-  if (isConfirmError) {
-    const toastId = new Date().valueOf();
-    console.log("Error confirming the account : ", confirmationError);
-    dispatch(
-      showToast({
-        id: toastId,
-        message: "Error confirming the account",
-        severity: "error",
-      })
-    );
-    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-  }
-  if (isResendError) {
-    const toastId = new Date().valueOf();
-    console.log("Error resending account verification link : ", resendError);
-    dispatch(
-      showToast({
-        id: toastId,
-        message: "Error resending account verification link",
-        severity: "error",
-      })
-    );
-    setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
-  }
-
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
       setEmailError(true);
     } else {
       try {
-        await resendCode({ email });
+        await resendCode({ email }).unwrap();
       } catch (error: any) {
-        console.log("Error sending account confirmation link", error);
+        const toastId = new Date().valueOf();
+        console.log("Error resending account verification link : ", error);
+        dispatch(
+          showToast({
+            id: toastId,
+            message: error?.data?.message || "Error resending account verification link",
+            severity: "error",
+          })
+        );
+        setTimeout(() => dispatch(hideToast(toastId)), HIDE_TOAST_DURATION);
       }
     }
   };
@@ -193,7 +197,7 @@ export const ConfirmSignupPage = () => {
       <Box
         sx={{
           zIndex: 2,
-          backgroundColor: "rgba(255,255,255,0.95)",
+          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.95),
           borderRadius: 2,
           mt: 2,
           p: 5,

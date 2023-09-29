@@ -46,6 +46,12 @@ const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   };
 
   const handleSubmit = async () => {
+    if (
+      isUpdateCognitoUserLoading ||
+      isUpdateUserLoading ||
+      (firstName === user?.firstName && lastName === user.lastName)
+    )
+      return;
     const toastId = new Date().valueOf();
     try {
       await updateCognitoUser({ accessToken, firstName, lastName }).unwrap();
@@ -77,7 +83,7 @@ const ChangeNameDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
       <Button variant="contained" onClick={handleClickOpen}>
         Change Name
       </Button>
-      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();

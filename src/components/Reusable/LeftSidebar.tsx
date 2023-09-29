@@ -34,6 +34,18 @@ const LeftSidebar = ({ open, onChange, children }: LeftSidebarProps) => {
               backgroundColor: (theme) => theme.palette.background.paper,
             }}
           >
+            <Box
+              sx={{
+                height: STANDARD_HEIGHT,
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                pl: 2,
+              }}
+            >
+              <Logo />
+            </Box>
             {children}
           </Box>
         </Drawer>
@@ -65,7 +77,7 @@ const LeftSidebar = ({ open, onChange, children }: LeftSidebarProps) => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                px: 2,
+                pl: 2,
               }}
             >
               <Logo />

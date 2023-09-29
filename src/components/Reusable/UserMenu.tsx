@@ -1,7 +1,7 @@
-import { LogoutOutlined, SettingsOutlined } from "@mui/icons-material";
+import { LogoutOutlined, Person, SettingsOutlined } from "@mui/icons-material";
 import {
   Avatar,
-  Card,
+  Box,
   Divider,
   ListItemIcon,
   ListItemText,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ANIMATION_SKELETON, ROUTE_ACCOUNT_SETTINGS, ROUTE_HOME } from "../../constants";
+import { ANIMATION_SKELETON, ROUTE_USER_SETTINGS, ROUTE_HOME } from "../../constants";
 import { CookieStorage } from "../../helpers/cookieStorage";
 import { getGravatarURL } from "../../helpers/functions";
 import api, { useGetUserQuery, useLogoutMutation } from "../../store/features/api";
@@ -58,7 +58,6 @@ const UserMenu = () => {
     content = <Skeleton variant="circular" animation={ANIMATION_SKELETON} height={40} width={40} />;
   } else if (isUserSuccess && user) {
     const userName = `${user.firstName} ${user.lastName}`;
-    const initials = `${userName.split(" ")[0][0]}${userName.split(" ")[1][0]}`;
     const userEmail = user.email;
 
     const handleOpen = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,7 +70,7 @@ const UserMenu = () => {
 
     content = (
       <>
-        <Card
+        <Box
           title={userName}
           sx={{
             cursor: "pointer",
@@ -85,12 +84,19 @@ const UserMenu = () => {
           ref={anchorRef}
         >
           <Avatar
-            sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}
+            variant="circular"
+            sx={{
+              backgroundColor: (theme) => theme.palette.background.paper,
+              border: (theme) => `1px solid ${theme.palette.divider}`,
+              ":hover": {
+                backgroundColor: (theme) => theme.palette.action.hover,
+              },
+            }}
             src={getGravatarURL(user.email)}
           >
-            {initials}
+            <Person color="secondary" />
           </Avatar>
-        </Card>
+        </Box>
         <MenuPopover
           open={open}
           onClose={handleClose}
@@ -100,10 +106,13 @@ const UserMenu = () => {
           <Stack>
             <Stack direction={"row"} spacing={2} p={2}>
               <Avatar
-                sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}
+                variant="circular"
+                sx={{
+                  backgroundColor: (theme) => theme.palette.secondary.main,
+                }}
                 src={getGravatarURL(user.email)}
               >
-                {initials}
+                <Person />
               </Avatar>
               <Stack>
                 <Typography variant="subtitle1">{userName}</Typography>
@@ -113,7 +122,7 @@ const UserMenu = () => {
             <Divider />
             <MenuItem
               onClick={() => {
-                navigate(ROUTE_ACCOUNT_SETTINGS);
+                navigate(ROUTE_USER_SETTINGS);
               }}
             >
               <ListItemIcon>

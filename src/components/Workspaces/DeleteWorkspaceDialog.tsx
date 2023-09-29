@@ -1,12 +1,12 @@
 import { ArrowForwardOutlined, DeleteOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Stack,
   TextField,
@@ -29,7 +29,7 @@ const DeleteWorkspaceDialog = ({
   workspaceId: string;
   workspaceName: string;
   onSuccess?: () => void;
-  button: ReactNode;
+  button?: ReactNode;
   disabled?: boolean;
 }) => {
   const dispatch = useAppDispatch();
@@ -49,9 +49,10 @@ const DeleteWorkspaceDialog = ({
   };
 
   const handleSubmit = async () => {
+    if (isLoading || name !== workspaceName) return;
     const toastId = new Date().valueOf();
     try {
-      await deleteWorkspace({ username: username, workspaceId }).unwrap();
+      await deleteWorkspace({ orgId: username, workspaceId }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
@@ -83,7 +84,7 @@ const DeleteWorkspaceDialog = ({
           </Button>
         )}
       </Box>
-      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -93,20 +94,20 @@ const DeleteWorkspaceDialog = ({
           <DialogTitle>Delete Workspace</DialogTitle>
 
           <DialogContent>
-            <Stack spacing={2}>
-              <DialogContentText>
-                <Typography>
-                  Please note that deleting this workspace will delete all the containing forms and
-                  their responses permanently.
-                </Typography>
-                <Typography>It will be impossible to recover them later.</Typography>
+            <Stack spacing={2} py={2}>
+              <Alert severity="error" variant="standard">
+                Please note that deleting this workspace will delete all the containing forms and
+                their responses permanently. It will be impossible to recover them later.
+              </Alert>
 
-                <Typography pt={2}>
-                  Type workspace name <strong>{workspaceName}</strong> to confirm delete action.
-                </Typography>
-              </DialogContentText>
+              <Typography py={2}>
+                Type workspace name{" "}
+                <em>
+                  <strong>{workspaceName}</strong>
+                </em>{" "}
+                to confirm delete action.
+              </Typography>
               <TextField
-                sx={{ mt: 2 }}
                 autoFocus
                 required
                 margin="dense"

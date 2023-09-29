@@ -7,7 +7,6 @@ import {
 import {
   Avatar,
   Box,
-  Card,
   Divider,
   ListItemIcon,
   ListItemText,
@@ -17,14 +16,16 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { ANIMATION_SKELETON } from "../../constants";
+import { useNavigate, useParams } from "react-router-dom";
+import { ANIMATION_SKELETON, ROUTE_ORGANIZATION_SETTINGS } from "../../constants";
 import { useGetUserQuery } from "../../store/features/api";
 import { useAppSelector } from "../../store/hooks";
-import MenuPopover from "../Reusable/MenuPopover";
-import MHidden from "../Reusable/MHidden";
+import MenuPopover from "./MenuPopover";
 
 const OrganizationMenu = () => {
   const anchorRef = React.useRef(null);
+  const navigate = useNavigate();
+  const { orgId } = useParams() as { orgId: string };
   const [open, setOpen] = React.useState<boolean>(false);
   const username = useAppSelector((state) => state.auth.username);
   const {
@@ -48,9 +49,6 @@ const OrganizationMenu = () => {
           width={40}
           sx={{ mr: 1 }}
         />
-        <MHidden width="lgDown">
-          <Skeleton variant="text" animation={ANIMATION_SKELETON} width={180} />
-        </MHidden>
       </>
     );
   } else if (isUserSuccess && user) {
@@ -67,33 +65,30 @@ const OrganizationMenu = () => {
     content = (
       <>
         <Box
-          ref={anchorRef}
+          title={orgName}
+          sx={{
+            cursor: "pointer",
+            width: 48,
+            height: 48,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           onClick={handleOpen}
-          component={"div"}
-          sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          ref={anchorRef}
         >
-          <Card
-            title={orgName}
+          <Avatar
+            variant="circular"
             sx={{
-              cursor: "pointer",
-              width: 48,
-              height: 48,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              backgroundColor: (theme) => theme.palette.background.paper,
+              border: (theme) => `1px solid ${theme.palette.divider}`,
+              ":hover": {
+                backgroundColor: (theme) => theme.palette.action.hover,
+              },
             }}
-            onClick={handleOpen}
-            ref={anchorRef}
           >
-            <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
-              <Business />
-            </Avatar>
-          </Card>
-          <MHidden width="lgDown">
-            <Typography variant="subtitle1" color="secondary">
-              {orgName}
-            </Typography>
-          </MHidden>
+            <Business color="secondary" />
+          </Avatar>
         </Box>
         <MenuPopover
           open={open}
@@ -104,17 +99,19 @@ const OrganizationMenu = () => {
           <Stack>
             <MenuItem
               onClick={() => {
-                // TODO : do something
+                navigate(ROUTE_ORGANIZATION_SETTINGS.replace(":orgId", orgId) + "?tab=admin");
+                handleClose();
               }}
             >
               <ListItemIcon>
                 <SettingsOutlined fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Settings</ListItemText>
+              <ListItemText>Admin Settings</ListItemText>
             </MenuItem>
             <MenuItem
               onClick={() => {
-                // TODO : do something
+                navigate(ROUTE_ORGANIZATION_SETTINGS.replace(":orgId", orgId) + "?tab=members");
+                handleClose();
               }}
             >
               <ListItemIcon>
@@ -124,7 +121,10 @@ const OrganizationMenu = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                // TODO : do something
+                navigate(
+                  ROUTE_ORGANIZATION_SETTINGS.replace(":orgId", orgId) + "?tab=plan-and-billing"
+                );
+                handleClose();
               }}
             >
               <ListItemIcon>
@@ -134,7 +134,10 @@ const OrganizationMenu = () => {
             </MenuItem>
             <Divider />
             <Stack direction={"row"} spacing={2} p={2}>
-              <Avatar sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
+              <Avatar
+                variant="circular"
+                sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}
+              >
                 <Business />
               </Avatar>
               <Stack>

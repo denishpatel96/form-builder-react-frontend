@@ -63,7 +63,7 @@ export const LoginPage = () => {
 
   React.useEffect(() => {
     if (username) {
-      navigate(ROUTE_WORKSPACES.replace(":username", username));
+      navigate(ROUTE_WORKSPACES.replace(":orgId", username));
     }
   }, [username]);
 

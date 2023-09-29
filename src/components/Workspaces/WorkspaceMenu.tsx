@@ -1,48 +1,44 @@
 import { IconButton, ListItemIcon, ListItemText, MenuItem, Typography } from "@mui/material";
 import React from "react";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  LogoutOutlined,
-  MoreVert,
-  PersonAddOutlined,
-} from "@mui/icons-material";
+import { Delete, Logout, MoreVert, Update } from "@mui/icons-material";
 import MenuPopover from "../Reusable/MenuPopover";
 import DeleteWorkspaceDialog from "./DeleteWorkspaceDialog";
 import { Workspace } from "../../store/features/api";
-import RenameWorkspaceDialog from "./RenameWorkspaceDialog";
+import { useNavigate, useParams } from "react-router-dom";
+import { ROUTE_WORKSPACES } from "../../constants";
+import UpdateWorkspaceDialog from "./UpdateWorkspaceDialog";
 
 export interface WorkspcaeMenuProps {
-  open: boolean;
-  onChange: (open: boolean) => void;
   workspace: Workspace;
 }
 
-const WorkspaceMenu = ({ open, onChange, workspace }: WorkspcaeMenuProps) => {
+const WorkspaceMenu = ({ workspace }: WorkspcaeMenuProps) => {
   const wsMenuAnchorRef = React.useRef(null);
+  const navigate = useNavigate();
+  const { orgId } = useParams() as { orgId: string };
+  const [open, setOpen] = React.useState<boolean>(false);
   return (
     <>
-      <IconButton ref={wsMenuAnchorRef} onClick={() => onChange(true)}>
+      <IconButton ref={wsMenuAnchorRef} onClick={() => setOpen(true)}>
         <MoreVert />
       </IconButton>
       <MenuPopover
         open={open}
-        onClose={() => onChange(false)}
+        onClose={() => setOpen(false)}
         anchorEl={wsMenuAnchorRef.current}
         sx={{ width: 150 }}
       >
-        <RenameWorkspaceDialog
+        <UpdateWorkspaceDialog
           workspaceName={workspace.name}
-          onClose={() => onChange(false)}
-          workspaceId={workspace.id}
-          disabled={workspace.isDefault}
+          onClose={() => setOpen(false)}
+          workspaceId={workspace.workspaceId}
           button={
             <MenuItem>
               <ListItemIcon>
-                <EditOutlined fontSize="small" />
+                <Update />
               </ListItemIcon>
               <ListItemText>
-                <Typography>Rename</Typography>
+                <Typography>Update</Typography>
               </ListItemText>
             </MenuItem>
           }
@@ -54,31 +50,22 @@ const WorkspaceMenu = ({ open, onChange, workspace }: WorkspcaeMenuProps) => {
           }}
         >
           <ListItemIcon>
-            <PersonAddOutlined fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Share</ListItemText>
-        </MenuItem>
-        <MenuItem
-          disabled={workspace.isDefault}
-          onClick={() => {
-            // TODO : do something
-          }}
-        >
-          <ListItemIcon>
-            <LogoutOutlined fontSize="small" />
+            <Logout />
           </ListItemIcon>
           <ListItemText>Leave</ListItemText>
         </MenuItem>
 
         <DeleteWorkspaceDialog
           workspaceName={workspace.name}
-          onSuccess={() => onChange(false)}
-          workspaceId={workspace.id}
-          disabled={workspace.isDefault}
+          onSuccess={() => {
+            setOpen(false);
+            navigate(ROUTE_WORKSPACES.replace(":orgId", orgId));
+          }}
+          workspaceId={workspace.workspaceId}
           button={
-            <MenuItem disabled={workspace.isDefault}>
+            <MenuItem>
               <ListItemIcon>
-                <DeleteOutlined color="error" fontSize="small" />
+                <Delete color="error" />
               </ListItemIcon>
               <ListItemText>
                 <Typography color="error">Delete</Typography>

@@ -1,14 +1,9 @@
-import { BrushOutlined, CableOutlined, NavigateNext } from "@mui/icons-material";
 import {
   Alert,
-  Box,
   Button,
-  Divider,
+  Card,
+  CardContent,
   LinearProgress,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  MenuList,
   Skeleton,
   Typography,
 } from "@mui/material";
@@ -17,7 +12,7 @@ import { ANIMATION_SKELETON } from "../../constants";
 import { useGetUserQuery } from "../../store/features/api";
 import { useAppSelector } from "../../store/hooks";
 
-const NavigationLinks = () => {
+const ResponseCount = () => {
   const username = useAppSelector((state) => state.auth.username);
   const {
     //isLoading: isUserLoading,
@@ -35,42 +30,14 @@ const NavigationLinks = () => {
       <Skeleton variant="rectangular" animation={ANIMATION_SKELETON} height="100%" width={"100%"} />
     );
   } else if (isUserSuccess && user) {
-    const userName = `${user.firstName} ${user.lastName}`;
     // calculate response in last billing cycle(month)
     const responsesCollected = user.responseCount;
     // Monthly response limit
     const responseLimit = 100;
 
-    const links = (
-      <MenuList disablePadding>
-        <ListItemButton>
-          <ListItemIcon>
-            <CableOutlined fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>
-            <Typography variant="subtitle1">Integrations</Typography>
-          </ListItemText>
-          <NavigateNext />
-        </ListItemButton>
-        <Divider />
-        <ListItemButton>
-          <ListItemIcon>
-            <BrushOutlined fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>
-            <Typography variant="subtitle1">Branding</Typography>
-          </ListItemText>
-          <NavigateNext />
-        </ListItemButton>
-      </MenuList>
-    );
-
     content = (
-      <>
-        <Box sx={{ p: { xs: 1, sm: 2 } }}>
-          <Typography variant="subtitle1" py={{ xs: 1, sm: 3 }}>
-            <strong>{userName}'s</strong> account
-          </Typography>
+      <Card>
+        <CardContent>
           <Typography pb={{ xs: 1, sm: 2 }}>Responses Collected</Typography>
           <LinearProgress
             variant="determinate"
@@ -80,11 +47,8 @@ const NavigationLinks = () => {
             <strong>{responsesCollected}</strong> / {responseLimit}
           </Typography>
           <Button>Increase response limit</Button>
-        </Box>
-
-        <Divider />
-        {links}
-      </>
+        </CardContent>
+      </Card>
     );
   } else if (isUserError) {
     console.log("Error fetching user :", userError);
@@ -94,4 +58,4 @@ const NavigationLinks = () => {
   return <>{content}</>;
 };
 
-export default NavigationLinks;
+export default ResponseCount;

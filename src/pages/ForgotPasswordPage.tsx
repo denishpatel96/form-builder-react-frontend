@@ -10,6 +10,7 @@ import Waves from "../components/Reusable/Waves";
 import { validateEmail } from "../helpers/validators";
 import { useForgotPasswordMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
+import { alpha } from "@mui/material/styles";
 
 export const ForgotPasswordPage = () => {
   const dispatch = useAppDispatch();
@@ -125,7 +126,7 @@ export const ForgotPasswordPage = () => {
       <Box
         sx={{
           zIndex: 2,
-          backgroundColor: "rgba(255,255,255,0.95)",
+          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.95),
           borderRadius: 2,
           mt: 2,
           p: 5,

@@ -96,11 +96,11 @@ export const HomePage = () => {
           backgroundColor: (theme) => alpha(theme.palette.background.default, 0.72),
         }}
       >
-        <Toolbar>
-          <MHidden width="lgUp">{collapsedMenu}</MHidden>
+        <Toolbar disableGutters sx={{ pl: 1 }}>
+          <MHidden width="smUp">{collapsedMenu}</MHidden>
           <Logo />
           <Box sx={{ flexGrow: 1 }} />
-          <MHidden width="lgDown">
+          <MHidden width="smDown">
             <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
               <Button
                 sx={{ ml: 1 }}
@@ -142,11 +142,14 @@ export const HomePage = () => {
             pt={5}
             textAlign="center"
             variant="h1"
-            sx={{ color: (theme) => theme.palette.text.disabled }}
+            sx={{
+              color: (theme) => theme.palette.text.disabled,
+              fontWeight: 700,
+            }}
           >
             Create forms that Convert.
           </Typography>
-          <Typography textAlign="center" variant="h3">
+          <Typography textAlign="center" variant="h5">
             Free Online Drag and Drop Form Builder
           </Typography>
           <Button
@@ -173,7 +176,7 @@ export const HomePage = () => {
           alignItems: "center",
         }}
       >
-        <Typography>©2023 vTwinForms</Typography>
+        <Typography>©2023 vTwinsForm</Typography>
       </Box>
     </Box>
   );

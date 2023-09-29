@@ -7,7 +7,8 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  DialogContentText,
+  Stack,
+  Typography,
 } from "@mui/material";
 import * as React from "react";
 import { HIDE_TOAST_DURATION, ROUTE_LOGIN } from "../../constants";
@@ -63,6 +64,7 @@ const ChangeEmailDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   };
 
   const handleSendCode = async () => {
+    if (sending || newEmail === user?.email) return;
     const toastId = new Date().valueOf();
     try {
       await updateEmail({ password, email: newEmail }).unwrap();
@@ -101,6 +103,7 @@ const ChangeEmailDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   };
 
   const handleVerifyEmail = async () => {
+    if (verifying || isUpdateUserLoading || newEmail === user?.email) return;
     const toastId = new Date().valueOf();
 
     try {
@@ -138,36 +141,37 @@ const ChangeEmailDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
     >
       <DialogTitle>Change Your Email</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Please provide your current password to verify your identity and new email address.
-        </DialogContentText>
-        <TextField
-          sx={{ mt: 4 }}
-          required
-          autoFocus
-          fullWidth
-          autoComplete="new-password"
-          type={"password"}
-          margin="dense"
-          id="password"
-          label="Current Password"
-          variant="outlined"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={isUserFetching}
-        />
-        <TextField
-          fullWidth
-          required
-          autoComplete="off"
-          margin="dense"
-          id="new-email"
-          label="New Email"
-          variant="outlined"
-          value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
-          disabled={isUserFetching}
-        />
+        <Stack spacing={2} py={2}>
+          <Typography>
+            Please provide your current password to verify your identity and new email address.
+          </Typography>
+          <TextField
+            required
+            autoFocus
+            fullWidth
+            autoComplete="new-password"
+            type={"password"}
+            margin="dense"
+            id="password"
+            label="Current Password"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isUserFetching}
+          />
+          <TextField
+            fullWidth
+            required
+            autoComplete="off"
+            margin="dense"
+            id="new-email"
+            label="New Email"
+            variant="outlined"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            disabled={isUserFetching}
+          />
+        </Stack>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={() => setOpen(false)}>
@@ -196,22 +200,23 @@ const ChangeEmailDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
     >
       <DialogTitle>Verify Your Email</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          You should have received verification code in your new email inbox. Please check your
-          inbox for verification code and paste it here.
-        </DialogContentText>
-        <TextField
-          sx={{ mt: 4 }}
-          required
-          fullWidth
-          autoComplete="one-time-password"
-          margin="dense"
-          id="verification-code"
-          label="Verification code"
-          variant="outlined"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
+        <Stack spacing={2} py={2}>
+          <Typography>
+            You should have received verification code in your new email inbox. Please check your
+            inbox for verification code and paste it here.
+          </Typography>
+          <TextField
+            required
+            fullWidth
+            autoComplete="one-time-password"
+            margin="dense"
+            id="verification-code"
+            label="Verification code"
+            variant="outlined"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </Stack>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={() => setOpen(false)}>
@@ -239,7 +244,7 @@ const ChangeEmailDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
       <Button variant="contained" onClick={handleClickOpen}>
         Change Email
       </Button>
-      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         {codeSent ? verifyEmailForm : sendCodeForm}
       </Dialog>
     </>

@@ -7,20 +7,22 @@ import {
   ForgotPasswordPage,
   HomePage,
   LoginPage,
+  OrganizationSettingsPage,
   SignupPage,
   UserSettingsPage,
   WorkspacesPage,
 } from "./pages";
 import {
-  ROUTE_ACCOUNT_SETTINGS,
-  ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS,
+  ROUTE_USER_SETTINGS,
   ROUTE_CONFIRM_FORGOT_PASSWORD,
   ROUTE_CONFIRM_SIGNUP,
   ROUTE_FORGOT_PASSWORD,
   ROUTE_HOME,
   ROUTE_LOGIN,
   ROUTE_SIGNUP,
+  ROUTE_WORKSPACE,
   ROUTE_WORKSPACES,
+  ROUTE_ORGANIZATION_SETTINGS,
 } from "./constants";
 
 const Routes = () => (
@@ -32,8 +34,10 @@ const Routes = () => (
     <Route path={ROUTE_FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
     <Route path={ROUTE_CONFIRM_FORGOT_PASSWORD} element={<ConfirmForgotPasswordPage />} />
     <Route path={ROUTE_WORKSPACES} element={<WorkspacesPage />} />
-    <Route path={ROUTE_ACCOUNT_SETTINGS} element={<UserSettingsPage />} />
-    <Route path={ROUTE_ACCOUNT_SETTINGS_COMMUNICATIONS} element={<UserSettingsPage />} />
+    <Route path={ROUTE_WORKSPACE} element={<WorkspacesPage />} />
+    <Route path={ROUTE_USER_SETTINGS} element={<UserSettingsPage />} />
+    <Route path={ROUTE_ORGANIZATION_SETTINGS} element={<OrganizationSettingsPage />} />
+    <Route path={"*"} element={<LoginPage />} />
   </Switch>
 );
 

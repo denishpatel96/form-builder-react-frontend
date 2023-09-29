@@ -33,6 +33,7 @@ import {
 } from "../helpers/validators";
 import { useConfirmForgotPasswordMutation } from "../store/features/api";
 import { hideToast, showToast } from "../store/features/signalSlice";
+import { alpha } from "@mui/material/styles";
 
 export const ConfirmForgotPasswordPage = () => {
   const dispatch = useAppDispatch();
@@ -294,7 +295,7 @@ export const ConfirmForgotPasswordPage = () => {
       <Box
         sx={{
           zIndex: 2,
-          backgroundColor: "rgba(255,255,255,0.95)",
+          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.95),
           borderRadius: 2,
           mt: 2,
           p: 5,

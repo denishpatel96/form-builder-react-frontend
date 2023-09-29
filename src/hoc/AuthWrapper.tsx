@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import React, { ReactNode } from "react";
-import { STANDARD_HEIGHT, FOOTER_HEIGHT, ROUTE_LOGIN } from "../constants";
+import { ROUTE_LOGIN } from "../constants";
 import { CookieStorage } from "../helpers/cookieStorage";
 import { getIdTokenPayload } from "../helpers/jwtHandler";
 import { useAppDispatch } from "../store/hooks";
@@ -26,32 +26,17 @@ const AuthWrapper = ({ children }: { children: ReactNode }) => {
   }, [navigate]);
 
   return (
-    <Box component="div" sx={{ height: "100%", overflow: "hidden" }}>
+    <Container disableGutters>
       <Box
         sx={{
-          flexGrow: 1,
-          overflow: "auto",
-          height: `calc(100vh - ${FOOTER_HEIGHT}px)`,
-          paddingTop: `${STANDARD_HEIGHT}px`,
-          display: "flex",
+          width: "100%",
+          height: "100vh",
+          border: (theme) => `1px solid ${theme.palette.divider}`,
         }}
       >
         {children}
       </Box>
-      <Box
-        component="footer"
-        sx={{
-          display: "flex",
-          height: FOOTER_HEIGHT,
-          justifyContent: "center",
-          alignItems: "center",
-          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-          backgroundColor: (theme) => theme.palette.background.paper,
-        }}
-      >
-        <Typography>©2023 vTwinForms</Typography>
-      </Box>
-    </Box>
+    </Container>
   );
 };
 

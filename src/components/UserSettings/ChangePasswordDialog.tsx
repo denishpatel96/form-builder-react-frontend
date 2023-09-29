@@ -57,6 +57,7 @@ const ChangePasswordDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   };
 
   const handleSubmit = async () => {
+    if (isChangingPassword || previousPassword === proposedPassword) return;
     const toastId = new Date().valueOf();
     try {
       await changePassword({ accessToken, previousPassword, proposedPassword }).unwrap();
@@ -121,7 +122,7 @@ const ChangePasswordDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
       <Button variant="contained" onClick={handleClickOpen}>
         Change Password
       </Button>
-      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
           onSubmit={(e) => {
             e.preventDefault();

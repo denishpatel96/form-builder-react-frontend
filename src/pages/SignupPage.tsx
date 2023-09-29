@@ -33,6 +33,7 @@ import {
   validatePassword,
 } from "../helpers/validators";
 import { useSignupMutation } from "../store/features/api";
+import { alpha } from "@mui/material/styles";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -143,7 +144,7 @@ export const SignupPage = () => {
       <Box
         sx={{
           zIndex: 2,
-          backgroundColor: "rgba(255,255,255,0.95)",
+          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.95),
           borderRadius: 2,
           mt: 2,
           p: 5,

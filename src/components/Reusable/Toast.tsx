@@ -18,7 +18,7 @@ const Toast = () => {
           e.stopPropagation();
         },
       }}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       TransitionComponent={(props) => (
         <Slide {...props} direction="down" mountOnEnter unmountOnExit />
       )}
