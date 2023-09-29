@@ -7,7 +7,7 @@ import {
   ForgotPasswordPage,
   HomePage,
   LoginPage,
-  OrganizationSettingsPage,
+  // OrganizationSettingsPage,
   SignupPage,
   UserSettingsPage,
   WorkspacesPage,
@@ -22,7 +22,7 @@ import {
   ROUTE_SIGNUP,
   ROUTE_WORKSPACE,
   ROUTE_WORKSPACES,
-  ROUTE_ORGANIZATION_SETTINGS,
+  // ROUTE_ORGANIZATION_SETTINGS,
 } from "./constants";
 
 const Routes = () => (
@@ -36,7 +36,7 @@ const Routes = () => (
     <Route path={ROUTE_WORKSPACES} element={<WorkspacesPage />} />
     <Route path={ROUTE_WORKSPACE} element={<WorkspacesPage />} />
     <Route path={ROUTE_USER_SETTINGS} element={<UserSettingsPage />} />
-    <Route path={ROUTE_ORGANIZATION_SETTINGS} element={<OrganizationSettingsPage />} />
+    {/* <Route path={ROUTE_ORGANIZATION_SETTINGS} element={<OrganizationSettingsPage />} /> */}
     <Route path={"*"} element={<LoginPage />} />
   </Switch>
 );

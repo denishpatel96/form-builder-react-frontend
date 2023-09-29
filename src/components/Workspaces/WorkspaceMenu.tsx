@@ -1,6 +1,6 @@
 import { IconButton, ListItemIcon, ListItemText, MenuItem, Typography } from "@mui/material";
 import React from "react";
-import { Delete, Logout, MoreVert, Update } from "@mui/icons-material";
+import { Delete, MoreVert, Update } from "@mui/icons-material";
 import MenuPopover from "../Reusable/MenuPopover";
 import DeleteWorkspaceDialog from "./DeleteWorkspaceDialog";
 import { Workspace } from "../../store/features/api";
@@ -44,7 +44,7 @@ const WorkspaceMenu = ({ workspace }: WorkspcaeMenuProps) => {
           }
         />
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             // TODO : do something
           }}
@@ -53,7 +53,7 @@ const WorkspaceMenu = ({ workspace }: WorkspcaeMenuProps) => {
             <Logout />
           </ListItemIcon>
           <ListItemText>Leave</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
 
         <DeleteWorkspaceDialog
           workspaceName={workspace.name}

@@ -24,7 +24,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import ChangeOrgNameDialog from "./ChangeOrgNameDialog";
 import OrganizationMembers from "./OrganizationMembers";
 import LeftSidebar from "../Reusable/LeftSidebar";
-import OrganizationMenu from "../Reusable/OrganizationMenu";
+// import OrganizationMenu from "../Reusable/OrganizationMenu";
 import UserMenu from "../Reusable/UserMenu";
 import MHidden from "../Reusable/MHidden";
 
@@ -141,7 +141,7 @@ const OrganizationSettings = () => {
               <Menu />
             </IconButton>
           </MHidden>
-          <OrganizationMenu />
+          {/* <OrganizationMenu /> */}
           <Box sx={{ flexGrow: 1 }} />
           <UserMenu />
         </Appbar>

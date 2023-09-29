@@ -22,7 +22,7 @@ import ChangeEmailDialog from "./ChangeEmailDialog";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import OrganizationMenu from "../Reusable/OrganizationMenu";
+// import OrganizationMenu from "../Reusable/OrganizationMenu";
 import UserMenu from "../Reusable/UserMenu";
 
 const UserSettings = () => {
@@ -108,7 +108,7 @@ const UserSettings = () => {
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Appbar>
         <Box sx={{ flexGrow: 1 }} />
-        <OrganizationMenu />
+        {/* <OrganizationMenu /> */}
         <UserMenu />
       </Appbar>
       <Box sx={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>

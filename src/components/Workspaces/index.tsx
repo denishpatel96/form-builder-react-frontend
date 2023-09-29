@@ -32,7 +32,6 @@ import {
   FilterList,
   Menu,
   PeopleOutlined,
-  PersonAdd,
   PersonOutlined,
   Search,
 } from "@mui/icons-material";
@@ -40,10 +39,10 @@ import WorkspaceMenu from "./WorkspaceMenu";
 import { cloneDeep } from "lodash";
 import BookmarkWorkspaceButton from "./BookmarkWorkspaceButton";
 import LeftSidebar from "../Reusable/LeftSidebar";
-import OrganizationMenu from "../Reusable/OrganizationMenu";
+// import OrganizationMenu from "../Reusable/OrganizationMenu";
 import UserMenu from "../Reusable/UserMenu";
 import MHidden from "../Reusable/MHidden";
-import PendingActionsDialog from "./PendingActionsDialog";
+// import PendingActionsDialog from "./PendingActionsDialog";
 
 const Workspaces = () => {
   const navigate = useNavigate();
@@ -391,9 +390,6 @@ const Workspaces = () => {
             >
               <BookmarkWorkspaceButton workspace={activeWorkspace} />
               <WorkspaceMenu workspace={activeWorkspace} />
-              <Button variant="contained" startIcon={<PersonAdd />}>
-                Share
-              </Button>
             </Box>
           </Box>
         );
@@ -434,9 +430,9 @@ const Workspaces = () => {
               <Menu />
             </IconButton>
           </MHidden>
-          <OrganizationMenu />
+          {/* <OrganizationMenu /> */}
           <Box sx={{ flexGrow: 1 }} />
-          <PendingActionsDialog />
+          {/* <PendingActionsDialog /> */}
           <UserMenu />
         </Appbar>
 

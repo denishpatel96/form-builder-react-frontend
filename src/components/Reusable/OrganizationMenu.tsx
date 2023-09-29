@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ANIMATION_SKELETON, ROUTE_ORGANIZATION_SETTINGS } from "../../constants";
-import { useGetUserQuery } from "../../store/features/api";
+import { ANIMATION_SKELETON, ROUTE_ORGANIZATION_SETTINGS, ROUTE_WORKSPACES } from "../../constants";
+import { useGetOrgsByUserQuery, useGetUserQuery } from "../../store/features/api";
 import { useAppSelector } from "../../store/hooks";
 import MenuPopover from "./MenuPopover";
 
@@ -29,13 +29,18 @@ const OrganizationMenu = () => {
   const [open, setOpen] = React.useState<boolean>(false);
   const username = useAppSelector((state) => state.auth.username);
   const {
-    //isLoading: isUserLoading,
     isFetching: isUserFetching,
     isSuccess: isUserSuccess,
     isError: isUserError,
     data: user,
     error: userError,
   } = useGetUserQuery(username, { skip: !username });
+
+  const { data: orgs, error: orgsError } = useGetOrgsByUserQuery(username, { skip: !username });
+
+  if (orgsError) {
+    console.log("Error fetching orgs by user :", orgsError);
+  }
 
   let content;
 
@@ -133,18 +138,45 @@ const OrganizationMenu = () => {
               <ListItemText>Plan and Billing</ListItemText>
             </MenuItem>
             <Divider />
-            <Stack direction={"row"} spacing={2} p={2}>
-              <Avatar
-                variant="circular"
-                sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}
-              >
-                <Business />
-              </Avatar>
-              <Stack>
-                <Typography variant="subtitle1">{orgName}</Typography>
-                <Typography variant="caption">Gold plan</Typography>
-              </Stack>
-            </Stack>
+            <Typography px={2} py={1} variant="overline">
+              Organizations
+            </Typography>
+            <MenuItem
+              onClick={() => {
+                navigate(ROUTE_WORKSPACES.replace(":orgId", orgId));
+                handleClose();
+              }}
+              selected={orgId === username}
+            >
+              <ListItemIcon>
+                <Business fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                {orgName}
+                <Typography variant="caption"> ( Owner )</Typography>
+              </ListItemText>
+            </MenuItem>
+
+            {orgs?.map((org) => {
+              return (
+                <MenuItem
+                  selected={orgId === org.orgId}
+                  key={org.orgId}
+                  onClick={() => {
+                    navigate(ROUTE_WORKSPACES.replace(":orgId", org.orgId));
+                    handleClose();
+                  }}
+                >
+                  <ListItemIcon>
+                    <Business fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {org.orgName}
+                    <Typography variant="caption"> ( {org.role} )</Typography>
+                  </ListItemText>
+                </MenuItem>
+              );
+            })}
           </Stack>
         </MenuPopover>
       </>

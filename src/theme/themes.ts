@@ -76,7 +76,7 @@ const typography: ThemeOptions["typography"] = {
   overline: {
     fontWeight: 500,
     lineHeight: 1.5,
-    fontSize: "0.875rem",
+    fontSize: "0.8rem",
     letterSpacing: 1.1,
     textTransform: "uppercase",
   },

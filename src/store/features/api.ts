@@ -108,7 +108,7 @@ export interface User {
 const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Workspace", "User", "OrgInvitation", "OrgMember"],
+  tagTypes: ["Workspace", "User", "UserOrgs", "OrgInvitation", "OrgMember"],
   endpoints: (builder) => {
     return {
       signup: builder.mutation({
@@ -227,6 +227,13 @@ const api = createApi({
             ],
           },
         }),
+      }),
+      getOrgsByUser: builder.query<OrgMember[], string>({
+        query: (username) => ({
+          url: `/users/orgs/${username}`,
+          method: "get",
+        }),
+        providesTags: ["UserOrgs"],
       }),
       getUser: builder.query<User, string>({
         query: (username) => ({
@@ -368,6 +375,7 @@ const api = createApi({
 
 export const {
   useGetUserQuery,
+  useGetOrgsByUserQuery,
   useUpdateUserMutation,
   useGetWorkspacesQuery,
   useCreateWorkspaceMutation,
