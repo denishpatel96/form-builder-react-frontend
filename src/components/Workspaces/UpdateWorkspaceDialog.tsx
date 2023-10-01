@@ -80,7 +80,7 @@ const UpdateWorkspaceDialog = ({
       <Box onClick={handleClickOpen}>
         {button || (
           <Button fullWidth startIcon={<EditOutlined />} onClick={handleClickOpen}>
-            Update
+            Rename
           </Button>
         )}
       </Box>
@@ -91,7 +91,7 @@ const UpdateWorkspaceDialog = ({
             handleSubmit();
           }}
         >
-          <DialogTitle>Update Workspace</DialogTitle>
+          <DialogTitle>Rename Workspace</DialogTitle>
           <DialogContent>
             <Stack spacing={2} py={2}>
               <TextField

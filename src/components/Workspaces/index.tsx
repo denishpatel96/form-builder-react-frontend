@@ -31,8 +31,8 @@ import {
   Close,
   FilterList,
   Menu,
-  PeopleOutlined,
-  PersonOutlined,
+  // PeopleOutlined,
+  // PersonOutlined,
   Search,
 } from "@mui/icons-material";
 import WorkspaceMenu from "./WorkspaceMenu";
@@ -308,22 +308,22 @@ const Workspaces = () => {
             >
               <Box sx={{ pr: 1 }}>
                 <Stack>
-                  {w.memberCount === 1 ? (
+                  {/* {w.memberCount === 1 ? (
                     <PersonOutlined fontSize={"small"} />
                   ) : (
                     <PeopleOutlined fontSize={"small"} />
-                  )}
+                  )} */}
                   {w.bookmarked && <BookmarkBorderOutlined fontSize={"small"} />}
                 </Stack>
               </Box>
               <ListItemText
-                sx={{ pl: 2, borderLeft: (theme) => `1px solid ${theme.palette.divider}` }}
+                // sx={{ pl: 2, borderLeft: (theme) => `1px solid ${theme.palette.divider}` }}
                 primary={<Typography variant="subtitle1">{w.name}</Typography>}
-                secondary={
-                  <Typography variant="caption">
-                    {w.memberCount} {w.memberCount === 1 ? "member" : "members"}
-                  </Typography>
-                }
+                // secondary={
+                //   <Typography variant="caption">
+                //     {w.memberCount} {w.memberCount === 1 ? "member" : "members"}
+                //   </Typography>
+                // }
               />
             </ListItem>
           );

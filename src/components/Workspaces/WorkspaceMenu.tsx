@@ -1,6 +1,6 @@
 import { IconButton, ListItemIcon, ListItemText, MenuItem, Typography } from "@mui/material";
 import React from "react";
-import { Delete, MoreVert, Update } from "@mui/icons-material";
+import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import MenuPopover from "../Reusable/MenuPopover";
 import DeleteWorkspaceDialog from "./DeleteWorkspaceDialog";
 import { Workspace } from "../../store/features/api";
@@ -35,10 +35,10 @@ const WorkspaceMenu = ({ workspace }: WorkspcaeMenuProps) => {
           button={
             <MenuItem>
               <ListItemIcon>
-                <Update />
+                <Edit />
               </ListItemIcon>
               <ListItemText>
-                <Typography>Update</Typography>
+                <Typography>Rename</Typography>
               </ListItemText>
             </MenuItem>
           }
