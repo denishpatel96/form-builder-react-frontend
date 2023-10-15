@@ -49,6 +49,7 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
           overflow: "hidden",
         },
       }}
+      variant={isOpen ? "persistent" : "temporary"}
       sx={{
         ".MuiBackdrop-root": {
           backgroundColor: "transparent",

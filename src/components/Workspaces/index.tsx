@@ -42,6 +42,7 @@ import LeftSidebar from "../Reusable/LeftSidebar";
 // import OrganizationMenu from "../Reusable/OrganizationMenu";
 import UserMenu from "../Reusable/UserMenu";
 import MHidden from "../Reusable/MHidden";
+import WorkspaceForms from "../WorkspaceForms";
 // import PendingActionsDialog from "./PendingActionsDialog";
 
 const Workspaces = () => {
@@ -367,8 +368,8 @@ const Workspaces = () => {
       const activeWorkspace = workspaces.find((w) => w.workspaceId === workspaceId);
       if (activeWorkspace) {
         workspaceDetails = (
-          <Box>
-            <Box sx={{ pl: 4, height: 100 }}>
+          <>
+            <Box sx={{ pl: 4, height: 65 }}>
               <Typography variant="h4" py={2}>
                 {activeWorkspace.name}
               </Typography>
@@ -391,7 +392,8 @@ const Workspaces = () => {
               <BookmarkWorkspaceButton workspace={activeWorkspace} />
               <WorkspaceMenu workspace={activeWorkspace} />
             </Box>
-          </Box>
+            <WorkspaceForms />
+          </>
         );
       }
     }

@@ -1,4 +1,4 @@
-import { ArrowForwardOutlined } from "@mui/icons-material";
+import { Add, ArrowForwardOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -102,7 +102,11 @@ const CreateInvitationDialog = ({
   return (
     <Box>
       <Box component="span" sx={{ width: "auto" }} onClick={handleClickOpen}>
-        {button || <Button variant="contained">Invite Member</Button>}
+        {button || (
+          <Button variant="contained" startIcon={<Add />}>
+            Invite Member
+          </Button>
+        )}
       </Box>
       <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form

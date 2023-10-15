@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import * as React from "react";
-import { HIDE_TOAST_DURATION, WS_NAME_CHARACTER_LIMIT } from "../../constants";
+import { HIDE_TOAST_DURATION, NAME_CHARACTER_LIMIT } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
 import { useUpdateWorkspaceMutation } from "../../store/features/api";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -104,8 +104,8 @@ const UpdateWorkspaceDialog = ({
                 variant="filled"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                inputProps={{ maxlength: WS_NAME_CHARACTER_LIMIT }}
-                helperText={`${name.length}/${WS_NAME_CHARACTER_LIMIT}`}
+                inputProps={{ maxlength: NAME_CHARACTER_LIMIT }}
+                helperText={`${name.length}/${NAME_CHARACTER_LIMIT}`}
               />
             </Stack>
           </DialogContent>

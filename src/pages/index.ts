@@ -7,3 +7,4 @@ export * from "./ForgotPasswordPage";
 export * from "./WorkspacesPage";
 export * from "./UserSettingsPage";
 export * from "./OrganizationSettingsPage";
+export * from "./FormBuilderPage";

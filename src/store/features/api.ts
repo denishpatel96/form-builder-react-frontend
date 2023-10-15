@@ -51,6 +51,17 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   return result;
 };
 
+export interface Form {
+  orgId: string;
+  workspaceId: string;
+  formId: string;
+  name: string;
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  responseCount: number;
+}
+
 export interface Workspace {
   orgId: string;
   workspaceId: string;
@@ -108,9 +119,11 @@ export interface User {
 const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Workspace", "User", "UserOrgs", "OrgInvitation", "OrgMember"],
+  tagTypes: ["Workspace", "User", "UserOrgs", "OrgInvitation", "OrgMember", "Form"],
   endpoints: (builder) => {
     return {
+      //----------------- AUTH ---------------------------------------------
+
       signup: builder.mutation({
         query: (body: {
           firstName: string;
@@ -228,6 +241,9 @@ const api = createApi({
           },
         }),
       }),
+
+      //----------------- USER ---------------------------------------------
+
       getOrgsByUser: builder.query<OrgMember[], string>({
         query: (username) => ({
           url: `/users/orgs/${username}`,
@@ -259,6 +275,9 @@ const api = createApi({
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["User"]),
       }),
+
+      //----------------- WORKSPACE ---------------------------------------------
+
       getWorkspaces: builder.query<Workspace[], string>({
         query: (orgId) => ({
           url: `/workspaces/${orgId}`,
@@ -297,6 +316,9 @@ const api = createApi({
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
       }),
+
+      //----------------- ORG MEMBER INVITATION ---------------------------------------------
+
       createOrgMemberInvitation: builder.mutation<
         Workspace,
         { orgId: string; email: string; role: string }
@@ -340,6 +362,9 @@ const api = createApi({
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
       }),
+
+      //----------------- ORG MEMBER ---------------------------------------------------------
+
       getOrgMembers: builder.query<OrgMember[], string>({
         query: (orgId) => ({
           url: `/members/${orgId}`,
@@ -368,6 +393,47 @@ const api = createApi({
           body,
         }),
         invalidatesTags: (_result, error) => (error ? [] : ["OrgMember"]),
+      }),
+
+      //----------------- FORM ---------------------------------------------
+
+      createForm: builder.mutation<Form, { orgId: string; workspaceId: string; formName: string }>({
+        query: (body) => ({
+          url: "/forms",
+          method: "post",
+          body,
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["Form"]),
+      }),
+      deleteForm: builder.mutation<Form, { orgId: string; workspaceId: string; formId: string }>({
+        query: (params) => ({
+          url: `/forms/${params.orgId}/${params.workspaceId}/${params.formId}`,
+          method: "delete",
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["Form"]),
+      }),
+      getFormsByWorkspace: builder.query<Form[], { orgId: string; workspaceId: string }>({
+        query: (params) => ({
+          url: `/forms/${params.orgId}/${params.workspaceId}`,
+          method: "get",
+        }),
+        providesTags: ["Form"],
+      }),
+      updateForm: builder.mutation<
+        Form,
+        {
+          orgId: string;
+          workspaceId: string;
+          formId: string;
+          name?: string;
+        }
+      >({
+        query: (body) => ({
+          url: "/forms",
+          method: "put",
+          body,
+        }),
+        invalidatesTags: (_result, error) => (error ? [] : ["Form"]),
       }),
     };
   },
@@ -400,5 +466,9 @@ export const {
   useRespondToOrgMemberInvitationMutation,
   useDeleteOrgMemberInvitationMutation,
   useCreateOrgMemberInvitationMutation,
+  useGetFormsByWorkspaceQuery,
+  useCreateFormMutation,
+  useDeleteFormMutation,
+  useUpdateFormMutation,
 } = api;
 export default api;

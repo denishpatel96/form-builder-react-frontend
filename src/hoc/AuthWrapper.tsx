@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import React, { ReactNode } from "react";
 import { ROUTE_LOGIN } from "../constants";
@@ -26,17 +26,17 @@ const AuthWrapper = ({ children }: { children: ReactNode }) => {
   }, [navigate]);
 
   return (
-    <Container disableGutters>
-      <Box
-        sx={{
-          width: "100%",
-          height: "100vh",
-          border: (theme) => `1px solid ${theme.palette.divider}`,
-        }}
-      >
-        {children}
-      </Box>
-    </Container>
+    // <Container>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100vh",
+        border: (theme) => `1px solid ${theme.palette.divider}`,
+      }}
+    >
+      {children}
+    </Box>
+    // </Container>
   );
 };
 

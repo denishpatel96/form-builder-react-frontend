@@ -1,4 +1,4 @@
-import { ArrowForwardOutlined } from "@mui/icons-material";
+import { Add, ArrowForwardOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -13,10 +13,11 @@ import {
 import React, { ReactNode } from "react";
 import { HIDE_TOAST_DURATION, NAME_CHARACTER_LIMIT } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
-import { useCreateWorkspaceMutation } from "../../store/features/api";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useCreateFormMutation } from "../../store/features/api";
+import { useAppDispatch } from "../../store/hooks";
+import { useParams } from "react-router-dom";
 
-const CreateWorkspaceDialog = ({
+const CreateFormDialog = ({
   onSuccess,
   button,
 }: {
@@ -24,9 +25,9 @@ const CreateWorkspaceDialog = ({
   button?: ReactNode;
 }) => {
   const dispatch = useAppDispatch();
-  const username = useAppSelector((state) => state.auth.username);
+  const { orgId, workspaceId } = useParams() as { orgId: string; workspaceId: string };
   const [open, setOpen] = React.useState(false);
-  const [createWorkspace, { isLoading, reset }] = useCreateWorkspaceMutation();
+  const [createForm, { isLoading, reset }] = useCreateFormMutation();
   const [name, setName] = React.useState<string>("");
   const handleClickOpen = () => {
     setOpen(true);
@@ -42,25 +43,26 @@ const CreateWorkspaceDialog = ({
     if (isLoading) return;
     const toastId = new Date().valueOf();
     try {
-      await createWorkspace({
-        orgId: username,
-        workspaceName: name.trim(),
+      await createForm({
+        orgId: orgId,
+        workspaceId: workspaceId,
+        formName: name.trim(),
       }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
           id: toastId,
-          message: "Workspace created successfully",
+          message: "Form created successfully",
           severity: "success",
         })
       );
       handleClose();
     } catch (error) {
-      console.log("Error creating workspace : ", error);
+      console.log("Error creating form : ", error);
       dispatch(
         showToast({
           id: toastId,
-          message: "Error creating workspace",
+          message: "Error creating form",
           severity: "error",
         })
       );
@@ -71,7 +73,11 @@ const CreateWorkspaceDialog = ({
   return (
     <Box>
       <Box component="span" sx={{ width: "auto" }} onClick={handleClickOpen}>
-        {button || <Button variant="contained">Create Workspace</Button>}
+        {button || (
+          <Button startIcon={<Add />} variant="contained">
+            Create Form
+          </Button>
+        )}
       </Box>
       <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
@@ -80,7 +86,7 @@ const CreateWorkspaceDialog = ({
             handleSubmit();
           }}
         >
-          <DialogTitle>Create a workspace</DialogTitle>
+          <DialogTitle>Create a form</DialogTitle>
           <DialogContent>
             <Stack spacing={2} py={2}>
               <TextField
@@ -88,7 +94,7 @@ const CreateWorkspaceDialog = ({
                 required
                 margin="dense"
                 id="name"
-                label="Workspace Name"
+                label="Form Name"
                 fullWidth
                 variant="filled"
                 value={name}
@@ -119,4 +125,4 @@ const CreateWorkspaceDialog = ({
   );
 };
 
-export default CreateWorkspaceDialog;
+export default CreateFormDialog;

@@ -1,6 +1,7 @@
-import { ArrowForwardOutlined } from "@mui/icons-material";
+import { ArrowForwardOutlined, DeleteOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -9,26 +10,31 @@ import {
   DialogTitle,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { ReactNode } from "react";
-import { HIDE_TOAST_DURATION, NAME_CHARACTER_LIMIT } from "../../constants";
+import { HIDE_TOAST_DURATION } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
-import { useCreateWorkspaceMutation } from "../../store/features/api";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { Form, useDeleteFormMutation } from "../../store/features/api";
+import { useAppDispatch } from "../../store/hooks";
 
-const CreateWorkspaceDialog = ({
+const DeleteFormDialog = ({
+  form,
   onSuccess,
   button,
+  disabled = false,
 }: {
+  form: Form;
   onSuccess?: () => void;
   button?: ReactNode;
+  disabled?: boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const username = useAppSelector((state) => state.auth.username);
   const [open, setOpen] = React.useState(false);
-  const [createWorkspace, { isLoading, reset }] = useCreateWorkspaceMutation();
+  const [deleteForm, { isLoading, reset }] = useDeleteFormMutation();
   const [name, setName] = React.useState<string>("");
   const handleClickOpen = () => {
+    if (disabled) return;
     setOpen(true);
     setName("");
     reset();
@@ -39,28 +45,29 @@ const CreateWorkspaceDialog = ({
   };
 
   const handleSubmit = async () => {
-    if (isLoading) return;
+    if (isLoading || name !== form.name) return;
     const toastId = new Date().valueOf();
     try {
-      await createWorkspace({
-        orgId: username,
-        workspaceName: name.trim(),
+      await deleteForm({
+        orgId: form.orgId,
+        workspaceId: form.workspaceId,
+        formId: form.formId,
       }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
           id: toastId,
-          message: "Workspace created successfully",
+          message: "Form deleted successfully",
           severity: "success",
         })
       );
       handleClose();
     } catch (error) {
-      console.log("Error creating workspace : ", error);
+      console.log("Error deleting form : ", error);
       dispatch(
         showToast({
           id: toastId,
-          message: "Error creating workspace",
+          message: "Error deleting form",
           severity: "error",
         })
       );
@@ -69,9 +76,13 @@ const CreateWorkspaceDialog = ({
   };
 
   return (
-    <Box>
-      <Box component="span" sx={{ width: "auto" }} onClick={handleClickOpen}>
-        {button || <Button variant="contained">Create Workspace</Button>}
+    <div>
+      <Box onClick={handleClickOpen}>
+        {button || (
+          <Button fullWidth startIcon={<DeleteOutlined />} onClick={handleClickOpen}>
+            Delete
+          </Button>
+        )}
       </Box>
       <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
@@ -80,43 +91,54 @@ const CreateWorkspaceDialog = ({
             handleSubmit();
           }}
         >
-          <DialogTitle>Create a workspace</DialogTitle>
+          <DialogTitle>Delete Form</DialogTitle>
+
           <DialogContent>
             <Stack spacing={2} py={2}>
+              <Alert severity="error" variant="standard">
+                Please note that deleting this form will delete all of its responses permanently. It
+                will be impossible to recover them later.
+              </Alert>
+
+              <Typography py={2}>
+                Type form name{" "}
+                <em>
+                  <strong>{form.name}</strong>
+                </em>{" "}
+                to confirm delete action.
+              </Typography>
               <TextField
                 autoFocus
                 required
                 margin="dense"
                 id="name"
-                label="Workspace Name"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                inputProps={{ maxlength: NAME_CHARACTER_LIMIT }}
-                helperText={`${name.length}/${NAME_CHARACTER_LIMIT}`}
               />
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button size="large" variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
             <LoadingButton
-              size="large"
               loading={isLoading}
               variant="contained"
               loadingPosition={"end"}
               endIcon={<ArrowForwardOutlined />}
               type="submit"
+              color="error"
+              disabled={name !== form.name}
             >
-              Submit
+              Delete
             </LoadingButton>
           </DialogActions>
         </form>
       </Dialog>
-    </Box>
+    </div>
   );
 };
 
-export default CreateWorkspaceDialog;
+export default DeleteFormDialog;

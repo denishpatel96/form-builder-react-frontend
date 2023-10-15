@@ -1,4 +1,4 @@
-import { Close, FilterList, Search } from "@mui/icons-material";
+import { Add, Close, FilterList, Search } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -166,7 +166,6 @@ const OrganizationMembers = () => {
               <Typography mb={2} variant="body2" textAlign={"center"}>
                 Member invitations will appear here.
               </Typography>
-              <CreateInvitationDialog button={<Button>Invite Member</Button>} />
             </Stack>
           ) : (
             <>
@@ -393,7 +392,7 @@ const OrganizationMembers = () => {
         <Typography mt={1}>Add members, edit member roles or remove members.</Typography>
         <CreateInvitationDialog
           button={
-            <Button sx={{ mt: 3 }} variant="contained">
+            <Button sx={{ mt: 3 }} startIcon={<Add />} variant="contained">
               Invite Member
             </Button>
           }

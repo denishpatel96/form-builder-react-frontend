@@ -1,4 +1,4 @@
-import { ArrowForwardOutlined } from "@mui/icons-material";
+import { ArrowForwardOutlined, EditOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -10,57 +10,66 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { ReactNode } from "react";
+import * as React from "react";
 import { HIDE_TOAST_DURATION, NAME_CHARACTER_LIMIT } from "../../constants";
 import { hideToast, showToast } from "../../store/features/signalSlice";
-import { useCreateWorkspaceMutation } from "../../store/features/api";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { Form, useUpdateFormMutation } from "../../store/features/api";
+import { useAppDispatch } from "../../store/hooks";
 
-const CreateWorkspaceDialog = ({
+const UpdateFormDialog = ({
+  form,
   onSuccess,
+  onClose,
   button,
 }: {
+  form: Form;
   onSuccess?: () => void;
-  button?: ReactNode;
+  onClose?: () => void;
+  button: React.ReactNode;
+  disabled?: boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const username = useAppSelector((state) => state.auth.username);
   const [open, setOpen] = React.useState(false);
-  const [createWorkspace, { isLoading, reset }] = useCreateWorkspaceMutation();
-  const [name, setName] = React.useState<string>("");
+  const [updateForm, { isLoading, reset }] = useUpdateFormMutation();
+  const [name, setName] = React.useState<string>(form.name);
   const handleClickOpen = () => {
     setOpen(true);
-    setName("");
+    setName(form.name);
     reset();
   };
 
   const handleClose = () => {
-    if (!isLoading) setOpen(false);
+    if (!isLoading) {
+      if (onClose) onClose();
+      setOpen(false);
+    }
   };
 
   const handleSubmit = async () => {
-    if (isLoading) return;
+    if (isLoading || form.name === name) return;
     const toastId = new Date().valueOf();
     try {
-      await createWorkspace({
-        orgId: username,
-        workspaceName: name.trim(),
+      await updateForm({
+        orgId: form.orgId,
+        workspaceId: form.workspaceId,
+        formId: form.formId,
+        name,
       }).unwrap();
       if (onSuccess) onSuccess();
       dispatch(
         showToast({
           id: toastId,
-          message: "Workspace created successfully",
+          message: "Form renamed successfully",
           severity: "success",
         })
       );
       handleClose();
     } catch (error) {
-      console.log("Error creating workspace : ", error);
+      console.log("Error renaming form : ", error);
       dispatch(
         showToast({
           id: toastId,
-          message: "Error creating workspace",
+          message: "Error renaming form",
           severity: "error",
         })
       );
@@ -69,9 +78,13 @@ const CreateWorkspaceDialog = ({
   };
 
   return (
-    <Box>
-      <Box component="span" sx={{ width: "auto" }} onClick={handleClickOpen}>
-        {button || <Button variant="contained">Create Workspace</Button>}
+    <div>
+      <Box onClick={handleClickOpen}>
+        {button || (
+          <Button fullWidth startIcon={<EditOutlined />} onClick={handleClickOpen}>
+            Rename
+          </Button>
+        )}
       </Box>
       <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose} disableRestoreFocus>
         <form
@@ -80,7 +93,7 @@ const CreateWorkspaceDialog = ({
             handleSubmit();
           }}
         >
-          <DialogTitle>Create a workspace</DialogTitle>
+          <DialogTitle>Rename Form</DialogTitle>
           <DialogContent>
             <Stack spacing={2} py={2}>
               <TextField
@@ -88,7 +101,7 @@ const CreateWorkspaceDialog = ({
                 required
                 margin="dense"
                 id="name"
-                label="Workspace Name"
+                label="Form Name"
                 fullWidth
                 variant="filled"
                 value={name}
@@ -99,14 +112,14 @@ const CreateWorkspaceDialog = ({
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button size="large" variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
             <LoadingButton
-              size="large"
               loading={isLoading}
               variant="contained"
               loadingPosition={"end"}
+              disabled={form.name === name}
               endIcon={<ArrowForwardOutlined />}
               type="submit"
             >
@@ -115,8 +128,8 @@ const CreateWorkspaceDialog = ({
           </DialogActions>
         </form>
       </Dialog>
-    </Box>
+    </div>
   );
 };
 
-export default CreateWorkspaceDialog;
+export default UpdateFormDialog;
