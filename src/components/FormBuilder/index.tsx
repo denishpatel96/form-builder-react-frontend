@@ -18,22 +18,41 @@ import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import { getFormDesignProps } from "./Utility";
+import { getField, getFormDesignProps } from "./Utility";
 import { set } from "lodash";
 import { IFormDesignProps } from "./Types";
 import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { addField, deselectFields, fetchFields, moveField } from "../../store/features/formSlice";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, REQUEST_STATUS } from "../../constants";
+import { deselectFields, selectFields } from "../../store/features/formSlice";
+import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../constants";
 import Spinner from "../Reusable/Spinner";
+import { useParams } from "react-router-dom";
+import api, { useGetFormSchemaQuery, useUpdateFormSchemaMutation } from "../../store/features/api";
+import { sortArray } from "../../helpers/functions";
 
 const FormBuilder = () => {
   const dispatch = useAppDispatch();
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
+  const { orgId, formId, workspaceId } = useParams() as {
+    orgId: string;
+    workspaceId: string;
+    formId: string;
+  };
 
-  const { fields: formFields, selected, reqStatus } = useAppSelector((state) => state.form);
+  const {
+    isLoading,
+    isFetching,
+    data: formSchema,
+  } = useGetFormSchemaQuery(
+    { orgId, workspaceId, formId },
+    { skip: !(orgId && workspaceId && formId) }
+  );
+
+  const [updateFormSchema] = useUpdateFormSchemaMutation();
+
+  const { selected } = useAppSelector((state) => state.form);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isFormFieldsOpen, setIsFormFieldsOpen] = React.useState<boolean>(true);
   const [isFormDesignOpen, setIsFormDesignOpen] = React.useState<boolean>(false);
@@ -41,49 +60,6 @@ const FormBuilder = () => {
   const [formProperties, setFormProperties] = React.useState<IFormDesignProps>(
     getFormDesignProps()
   );
-
-  const handleFormDesignPropsChange = (path: string, value: any) => {
-    setFormProperties((prev) => {
-      const updated = { ...prev };
-      set(updated, path, value);
-      return updated;
-    });
-  };
-
-  const handleDragStart = (event: DragStartEvent) => {
-    //console.log("drag started");
-    const { active } = event;
-    setActive(active);
-  };
-
-  const handleDragCancel = (_event: DragCancelEvent) => {
-    //console.log("drag cancelled");
-    setActive(null);
-    setOver(null);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    //console.log("drag ended", event)
-    const { active, over } = event;
-    if (over && active.id !== over.id && active.id.toString().includes("ctrl_")) {
-      console.log("event", active, over);
-      dispatch(addField({ elementType: active.id.toString(), addAfter: over.id.toString() }));
-    }
-    setActive(null);
-    setOver(null);
-  };
-
-  const handleDragOver = (event: DragOverEvent) => {
-    // console.log("drag over", event);
-    const { active, over } = event;
-    if (over && active.id !== over.id && !active.id.toString().includes("ctrl_")) {
-      console.log("moving");
-      // If element is dragged within sortable list
-      // element should just move to index of over element.
-      dispatch(moveField({ activeId: active.id.toString(), overId: over.id.toString() }));
-    }
-    setOver(event?.over);
-  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -96,150 +72,240 @@ const FormBuilder = () => {
     })
   );
 
-  const renderFormDesignButton = () => {
-    return (
-      <Box
-        onClick={() => {
-          setIsFormDesignOpen((prev) => !prev);
-          setIsFormFieldsOpen(false);
-        }}
-        sx={{
-          position: "absolute",
-          height: 40,
-          width: 100,
-          zIndex: 12,
-          cursor: "pointer",
-          borderRadius: "0 20px 20px 0",
-          left: isFormFieldsOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
-          top: 60,
-          boxShadow: (theme) => theme.shadows[1],
-          background: `linear-gradient(to right, #fc5c7d, #6a82fb)`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transform: "translateX(-60px)",
-          transition: "200ms ease",
-          ":hover": {
-            boxShadow: (theme) => theme.shadows[5],
-            transform: "translateX(0px)",
-            transition: "200ms ease",
-          },
-        }}
-      >
-        <Typography variant="caption" fontWeight={500} textAlign={"center"} color="white">
-          Form Designer
-        </Typography>
-        <IconButton>
-          <PaletteOutlined sx={{ color: "white" }} />
-        </IconButton>
-      </Box>
-    );
-  };
+  let buildArea = <Spinner />;
+  if (formSchema && !(isFetching || isLoading)) {
+    const { fields, lastFieldId } = formSchema;
+    const handleFormDesignPropsChange = (path: string, value: any) => {
+      setFormProperties((prev) => {
+        const updated = { ...prev };
+        set(updated, path, value);
+        return updated;
+      });
+    };
 
-  const renderFormFieldsButton = () => {
-    return (
-      <Box
-        onClick={() => {
-          setIsFormFieldsOpen((prev) => !prev);
-          setIsFormDesignOpen(false);
-        }}
-        sx={{
-          position: "absolute",
-          height: 40,
-          width: 100,
-          zIndex: 12,
-          cursor: "pointer",
-          borderRadius: "0 20px 20px 0",
-          left: isFormDesignOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
-          top: 110,
-          boxShadow: (theme) => theme.shadows[1],
-          background: (theme) => theme.palette.background.paper,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transform: "translateX(-60px)",
-          transition: "200ms ease",
-          ":hover": {
-            boxShadow: (theme) => theme.shadows[5],
-            transform: "translateX(0px)",
-            transition: "200ms ease",
-          },
-        }}
-      >
-        <Typography variant="caption" fontWeight={500} textAlign={"center"}>
-          Add Elements
-        </Typography>
-        <IconButton color="primary">
-          <AddOutlined />
-        </IconButton>
-      </Box>
-    );
-  };
+    const handleDragStart = (event: DragStartEvent) => {
+      //console.log("drag started");
+      const { active } = event;
+      setActive(active);
+      dispatch(selectFields([active.id.toString()]));
+    };
 
-  React.useEffect(() => {
-    if (reqStatus === REQUEST_STATUS.IDLE) {
-      dispatch(fetchFields());
-    }
-  }, [dispatch, fetchFields]);
+    const handleDragCancel = (_event: DragCancelEvent) => {
+      //console.log("drag cancelled");
+      setActive(null);
+      setOver(null);
+    };
 
-  return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver}
-      onDragCancel={handleDragCancel}
-      autoScroll={!!over}
-      collisionDetection={pointerWithin}
-    >
-      <Box
-        tabIndex={0}
-        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
-          if ((e?.key === "s" || e?.code === "KeyS") && e.ctrlKey) {
-            e.preventDefault();
-            alert("Save Document");
+    const handleDragEnd = async (event: DragEndEvent) => {
+      //console.log("drag ended", event)
+      const { active, over } = event;
+      // move field
+      // TODO: Inefficient code, it must only run when there is actual change in index.
+      if (!active.id.toString().includes("ctrl_")) {
+        await updateFormSchema({
+          orgId,
+          workspaceId,
+          formId,
+          action: "MOVE_FIELDS",
+          order: fields.map((f) => f.id),
+        });
+      }
+
+      // add field
+      if (over && active.id !== over.id && active.id.toString().includes("ctrl_")) {
+        console.log("event", active, over);
+        const fieldToAdd = getField(active.id.toString(), lastFieldId + 1);
+
+        if (fieldToAdd) {
+          const fieldId = fieldToAdd.id;
+          const addAfter = over.id.toString();
+          let updatedOrder = [...fields.map((f) => f.id)];
+          if (addAfter) {
+            updatedOrder.splice(
+              updatedOrder.findIndex((id: string) => id === addAfter) + 1,
+              0,
+              fieldId
+            );
+          } else {
+            updatedOrder.push(fieldId);
           }
-        }}
-        style={{
-          minHeight: 500,
-          height: "100vh",
-          width: "100%",
-          display: "flex",
-          position: "relative",
-        }}
+
+          await updateFormSchema({
+            orgId,
+            workspaceId,
+            formId,
+            action: "ADD_FIELDS",
+            lastFieldId: lastFieldId + 1,
+            order: updatedOrder,
+            fields: [fieldToAdd],
+          });
+        }
+      }
+      setActive(null);
+      setOver(null);
+    };
+
+    const handleDragOver = async (event: DragOverEvent) => {
+      const { active, over } = event;
+      // move field updating local cache only
+      if (over && active.id !== over.id && !active.id.toString().includes("ctrl_")) {
+        let updatedOrder = fields.map((f) => f.id);
+        const oldIndex = updatedOrder.findIndex((id) => id === active.id.toString());
+        const newIndex = updatedOrder.findIndex((id) => id === over.id.toString());
+        const id = updatedOrder.splice(oldIndex, 1);
+        updatedOrder.splice(newIndex, 0, ...id);
+
+        dispatch(
+          api.util.updateQueryData(
+            "getFormSchema",
+            { orgId, workspaceId, formId },
+            (draftedFormSchema) => {
+              draftedFormSchema.fields = sortArray(draftedFormSchema.fields, updatedOrder);
+            }
+          )
+        );
+      }
+
+      setOver(event?.over);
+    };
+
+    const renderFormDesignButton = () => {
+      return (
+        <Box
+          onClick={() => {
+            setIsFormDesignOpen((prev) => !prev);
+            setIsFormFieldsOpen(false);
+          }}
+          sx={{
+            position: "absolute",
+            height: 40,
+            width: 100,
+            zIndex: 12,
+            cursor: "pointer",
+            borderRadius: "0 20px 20px 0",
+            left: isFormFieldsOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
+            top: 60,
+            boxShadow: (theme) => theme.shadows[1],
+            background: `linear-gradient(to right, #fc5c7d, #6a82fb)`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: "translateX(-60px)",
+            transition: "200ms ease",
+            ":hover": {
+              boxShadow: (theme) => theme.shadows[5],
+              transform: "translateX(0px)",
+              transition: "200ms ease",
+            },
+          }}
+        >
+          <Typography variant="caption" fontWeight={500} textAlign={"center"} color="white">
+            Form Designer
+          </Typography>
+          <IconButton>
+            <PaletteOutlined sx={{ color: "white" }} />
+          </IconButton>
+        </Box>
+      );
+    };
+
+    const renderFormFieldsButton = () => {
+      return (
+        <Box
+          onClick={() => {
+            setIsFormFieldsOpen((prev) => !prev);
+            setIsFormDesignOpen(false);
+          }}
+          sx={{
+            position: "absolute",
+            height: 40,
+            width: 100,
+            zIndex: 12,
+            cursor: "pointer",
+            borderRadius: "0 20px 20px 0",
+            left: isFormDesignOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
+            top: 110,
+            boxShadow: (theme) => theme.shadows[1],
+            background: (theme) => theme.palette.background.paper,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: "translateX(-60px)",
+            transition: "200ms ease",
+            ":hover": {
+              boxShadow: (theme) => theme.shadows[5],
+              transform: "translateX(0px)",
+              transition: "200ms ease",
+            },
+          }}
+        >
+          <Typography variant="caption" fontWeight={500} textAlign={"center"}>
+            Add Elements
+          </Typography>
+          <IconButton color="primary">
+            <AddOutlined />
+          </IconButton>
+        </Box>
+      );
+    };
+
+    buildArea = (
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDragCancel={handleDragCancel}
+        autoScroll={!!over}
+        collisionDetection={pointerWithin}
       >
-        {renderFormFieldsButton()}
-        <FormFieldsSidebar
-          activeId={active?.id?.toString() || ""}
-          onDrawerClick={() => dispatch(deselectFields())}
-          isOpen={isFormFieldsOpen}
-          setIsOpen={setIsFormFieldsOpen}
-        />
-        {renderFormDesignButton()}
-        <FormDesignSidebar
-          setIsOpen={setIsFormDesignOpen}
-          formProperties={formProperties}
-          onPropsChange={handleFormDesignPropsChange}
-          isOpen={isFormDesignOpen}
-        />
-        {reqStatus === REQUEST_STATUS.LOADING ? (
-          <Spinner />
-        ) : (
-          <BuildArea
-            formFields={formFields}
-            formProperties={formProperties}
-            onTogglePropertiesDrawer={() => setIsPropertiesOpen((prev) => !prev)}
+        <Box
+          tabIndex={0}
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+            if ((e?.key === "s" || e?.code === "KeyS") && e.ctrlKey) {
+              e.preventDefault();
+              alert("Save Document");
+            }
+          }}
+          style={{
+            minHeight: 500,
+            height: "100vh",
+            width: "100%",
+            display: "flex",
+            position: "relative",
+          }}
+        >
+          {renderFormFieldsButton()}
+          <FormFieldsSidebar
+            activeId={active?.id?.toString() || ""}
+            onDrawerClick={() => dispatch(deselectFields())}
+            isOpen={isFormFieldsOpen}
+            setIsOpen={setIsFormFieldsOpen}
           />
-        )}
-        <FormFieldPropertiesSidebar
-          field={selected.length === 1 ? formFields.find((f) => f.id === selected[0]) : null}
-          onTogglePin={() => setIsPropertiesOpen(true)}
-          isOpen={isPropertiesOpen}
-          setIsOpen={setIsPropertiesOpen}
-        />
-      </Box>
-    </DndContext>
-  );
+          {renderFormDesignButton()}
+          <FormDesignSidebar
+            setIsOpen={setIsFormDesignOpen}
+            formProperties={formProperties}
+            onPropsChange={handleFormDesignPropsChange}
+            isOpen={isFormDesignOpen}
+          />
+          <BuildArea
+            formFields={fields}
+            lastFieldId={lastFieldId}
+            formProperties={formProperties}
+            onTogglePropertiesDrawer={() => setIsPropertiesOpen(true)}
+          />
+          <FormFieldPropertiesSidebar
+            field={selected.length === 1 ? fields.find((f) => f.id === selected[0]) : null}
+            isOpen={isPropertiesOpen}
+            setIsOpen={setIsPropertiesOpen}
+          />
+        </Box>
+      </DndContext>
+    );
+  }
+
+  return buildArea;
 };
 
 export default FormBuilder;

@@ -13,7 +13,7 @@ import {
   Tab,
 } from "@mui/material";
 import React from "react";
-import { IFieldPropertiesChangeFunc, IFormDesignProps } from "../Types";
+import { IFormDesignProps } from "../Types";
 import { NumberValueProperty } from "./Properties/NumberValue.Property";
 import { ColorValueProperty } from "./Properties/ColorValue.Property";
 import { ModeProperty } from "./Properties/Mode.Property";
@@ -23,7 +23,7 @@ import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
 
 type FormDesignSidebarProps = {
   formProperties: IFormDesignProps;
-  onPropsChange: IFieldPropertiesChangeFunc;
+  onPropsChange: (path: string, value: any) => void;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };

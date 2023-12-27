@@ -1,27 +1,22 @@
 import { FORM_ELEMENTS } from "../../../constants";
-import { FieldProps } from "../Types";
-import { getCheckboxProps } from "./Checkbox.Utility";
-import { getCheckboxGroupProps } from "./CheckboxGroup.Utility";
-import { getComboboxProps } from "./Combobox.Utility";
-import { getDropdownProps } from "./Dropdown.Utility";
-import { getLongTextProps } from "./LongText.Utility";
-import { getRadioProps } from "./Radio.Utility";
-import { getShortTextProps } from "./ShortText.Utility";
-import { getSliderProps } from "./Slider.Utility";
+import { IFieldProps } from "../Types";
+import { getCheckboxProps } from "./getCheckboxProps";
+import { getCheckboxGroupProps } from "./getCheckboxGroupProps";
+import { getComboboxProps } from "./getComboboxProps";
+import { getDropdownProps } from "./getDropdownProps";
+import { getLongTextProps } from "./getLongTextProps";
+import { getRadioProps } from "./getRadioProps";
+import { getShortTextProps } from "./getShortTextProps";
+import { getSliderProps } from "./getSliderProps";
+import { getHeadingProps } from "./getHeadingProps";
+export * from "./getFormDesignProps";
 
-export * from "./Checkbox.Utility";
-export * from "./CheckboxGroup.Utility";
-export * from "./Radio.Utility";
-export * from "./ShortText.Utility";
-export * from "./LongText.Utility";
-export * from "./Dropdown.Utility";
-export * from "./Combobox.Utility";
-export * from "./Slider.Utility";
-export * from "./FormDesign.Utility";
-
-export const getField = (elementType: string, elementCount: number): FieldProps | null => {
-  let fieldToAdd: FieldProps | null = null;
+export const getField = (elementType: string, elementCount: number): IFieldProps | null => {
+  let fieldToAdd: IFieldProps | null = null;
   switch (elementType) {
+    case FORM_ELEMENTS.HEADING:
+      fieldToAdd = getHeadingProps(elementCount);
+      break;
     case FORM_ELEMENTS.SHORT_TEXT:
       fieldToAdd = getShortTextProps(elementCount);
       break;

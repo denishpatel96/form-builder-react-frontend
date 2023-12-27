@@ -4,7 +4,7 @@ export const validateEmail = (email: string) => {
 };
 
 export const validatePassword = (password: string) => {
-  // More password validations @ https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+  // More password validations @ https://stackoverflow.com/fields/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
   var re =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?\[\]|<>~{}.,])[A-Za-z\d#$@!%&*?\[\]|<>~{}.,]{8,30}$/;
   return re.test(password);

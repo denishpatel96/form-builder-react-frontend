@@ -1,60 +1,82 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { set, cloneDeep } from "lodash";
-import { FieldProps } from "../../components/FormBuilder/Types";
-import {
-  getCheckboxGroupProps,
-  getCheckboxProps,
-  getComboboxProps,
-  getDropdownProps,
-  getField,
-  getLongTextProps,
-  getRadioProps,
-  getShortTextProps,
-  getSliderProps,
-} from "../../components/FormBuilder/Utility";
-import { REQUEST_STATUS } from "../../constants";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { set } from "lodash";
+import { IFieldProps } from "../../components/FormBuilder/Types";
+import { API_URL, REQUEST_STATUS } from "../../constants";
+import { CookieStorage } from "../../helpers/cookieStorage";
 
 interface FormState {
-  count: number;
+  lastFieldId: number;
   selected: string[];
-  fields: FieldProps[];
+  fields: IFieldProps[];
   reqStatus: REQUEST_STATUS;
-  reqError?: string;
 }
 
 const initialState: FormState = {
-  count: 8,
+  lastFieldId: 0,
   selected: [],
   fields: [],
   reqStatus: REQUEST_STATUS.IDLE,
 };
 
-export const fetchFields = createAsyncThunk("form/fetchFields", async () => {
-  // const response = await client.get('/fakeApi/posts')
-  return [
-    getShortTextProps(1),
-    getLongTextProps(2),
-    getRadioProps(3),
-    getCheckboxProps(4),
-    getCheckboxGroupProps(5),
-    getDropdownProps(6),
-    getComboboxProps(7),
-    getSliderProps(8),
-  ];
-});
+export interface FormSchema {
+  workspaceId: string;
+  formId: string;
+  fields: any[];
+  lastFieldId: number;
+}
+
+export const updateFormSchema = async ({
+  orgId,
+  workspaceId,
+  formId,
+  action,
+  order,
+  fields,
+  lastFieldId,
+}: {
+  orgId: string;
+  workspaceId: string;
+  formId: string;
+  action: "ADD_FIELDS" | "DELETE_FIELDS" | "MOVE_FIELDS" | "UPDATE_FIELDS";
+  order?: string[];
+  fields?: any[];
+  lastFieldId?: number;
+}) => {
+  const token = CookieStorage.getItem("idT");
+  let body: string;
+  const commonParams = { orgId, workspaceId, formId, action };
+  if (token) {
+    switch (action) {
+      case "ADD_FIELDS":
+        body = JSON.stringify({ ...commonParams, order, fields, lastFieldId });
+        break;
+      case "DELETE_FIELDS":
+        body = JSON.stringify({ ...commonParams, fields });
+        break;
+      case "MOVE_FIELDS":
+        body = JSON.stringify({ ...commonParams, order });
+        break;
+      case "UPDATE_FIELDS":
+        body = JSON.stringify({ ...commonParams, fields });
+        break;
+    }
+
+    fetch(`${API_URL}/formSchemas`, {
+      method: "PUT",
+      headers: { authorization: token },
+      body,
+    }).catch((error) => console.log("Error updating form schema : ", error));
+  }
+  return [];
+};
 
 const formSlice = createSlice({
   name: "form",
   initialState,
   reducers: {
-    // added element count (including deleted ones)
-    incrementCount: (state) => {
-      state.count++;
-    },
-
     // select field
-    selectField: (state, action: PayloadAction<{ fieldId: string }>) => {
-      state.selected = [action.payload.fieldId];
+    selectFields: (state, action: PayloadAction<string[]>) => {
+      state.selected = action.payload;
     },
 
     // select all fields
@@ -64,20 +86,23 @@ const formSlice = createSlice({
 
     // multi de/select field
     // this handles the case of selection with ctrl and selection with shift keys
-    toggleSelection: (state, action: PayloadAction<{ fieldId: string; contigous?: boolean }>) => {
+    toggleSelection: (
+      state,
+      action: PayloadAction<{ fieldId: string; contigous?: boolean; order: string[] }>
+    ) => {
       if (action.payload.contigous) {
         // shift key is pressed
         // shift key let user select all the fields between last selction and current selection
         state.selected.push(action.payload.fieldId);
-        const selectedIndices = state.selected.map((id) =>
-          state.fields.findIndex((f) => f.id === id)
+        const selectedIndices = state.selected.map((sId) =>
+          action.payload.order.findIndex((id) => id === sId)
         );
         const startIndex = Math.min(...selectedIndices);
         const endIndex = Math.max(...selectedIndices);
         state.selected = [];
-        state.fields.forEach((f, index) => {
+        action.payload.order.forEach((id, index) => {
           if (index >= startIndex && index <= endIndex) {
-            state.selected.push(f.id);
+            state.selected.push(id);
           }
         });
       } else {
@@ -96,81 +121,6 @@ const formSlice = createSlice({
       state.selected = [];
     },
 
-    // duplicate field/s
-    duplicateFields: (
-      state,
-      action: PayloadAction<
-        | {
-            fieldIds?: string[];
-            placement?: "top" | "bottom" | "after";
-            afterElementId?: string;
-          }
-        | undefined
-      >
-    ) => {
-      const { fieldIds, placement, afterElementId } = action?.payload || {};
-
-      const fieldIdsToClone: string[] = fieldIds || state.selected;
-
-      const cloneFields: FieldProps[] = [];
-      const placementIndex: number =
-        placement === "top"
-          ? 0
-          : placement === "bottom"
-          ? state.fields.length
-          : state.fields.findIndex((f) => f.id === (afterElementId || fieldIdsToClone[0])) + 1;
-      fieldIdsToClone.forEach((id) => {
-        const indexOfFieldToCopy = state.fields.findIndex((f) => f.id === id);
-        if (indexOfFieldToCopy !== -1) {
-          const cloneField = cloneDeep(state.fields[indexOfFieldToCopy]);
-          cloneField.id = cloneField.name = `q${state.count + 1}`;
-          cloneFields.push(cloneField);
-          state.count++;
-        }
-      });
-
-      state.selected = cloneFields.map((f) => f.id);
-      state.fields.splice(placementIndex, 0, ...cloneFields);
-    },
-
-    // add field
-    addField: (state, action: PayloadAction<{ elementType: string; addAfter?: string }>) => {
-      const fieldToAdd = getField(action.payload.elementType, state.count + 1);
-
-      if (fieldToAdd) {
-        const fieldId = fieldToAdd.id;
-
-        if (action.payload.addAfter) {
-          state.fields.splice(
-            state.fields.findIndex((i) => i.id === action.payload.addAfter) + 1,
-            0,
-            fieldToAdd
-          );
-        } else {
-          state.fields.push(fieldToAdd as FieldProps);
-        }
-
-        state.count++;
-        state.selected = [fieldId];
-      }
-    },
-
-    // remove field
-    removeField: (state, action: PayloadAction<{ fieldId: string }>) => {
-      state.fields = state.fields.filter((f) => f.id !== action.payload.fieldId);
-    },
-
-    // when field is dragged over another field and dropped
-    // then move dragged field before that (over) field
-    moveField: (state, action: PayloadAction<{ activeId: string; overId: string }>) => {
-      const oldIndex = state.fields.findIndex((el) => el.id === action.payload.activeId);
-      const newIndex = state.fields.findIndex((el) => el.id === action.payload.overId);
-      const element = state.fields.splice(oldIndex, 1);
-      state.fields.splice(newIndex, 0, element[0]);
-
-      state.selected = [action.payload.activeId];
-    },
-
     // edit properties of selected field
     changeFieldProp: (state, action: PayloadAction<{ path: string; value: any }>) => {
       if (state.selected.length === 1) {
@@ -182,33 +132,13 @@ const formSlice = createSlice({
     // reset
     resetFormState: () => initialState,
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchFields.pending, (state) => {
-        state.reqStatus = REQUEST_STATUS.LOADING;
-      })
-      .addCase(fetchFields.fulfilled, (state, action) => {
-        state.reqStatus = REQUEST_STATUS.SUCCEEDED;
-        // Add any fetched posts to the array
-        state.fields = action.payload;
-      })
-      .addCase(fetchFields.rejected, (state, action) => {
-        state.reqStatus = REQUEST_STATUS.FAILED;
-        state.reqError = action.error.message;
-      });
-  },
 });
 
 export const {
-  incrementCount,
-  selectField,
+  selectFields,
   selectAll,
   toggleSelection,
   deselectFields,
-  duplicateFields,
-  addField,
-  removeField,
-  moveField,
   resetFormState,
   changeFieldProp,
 } = formSlice.actions;

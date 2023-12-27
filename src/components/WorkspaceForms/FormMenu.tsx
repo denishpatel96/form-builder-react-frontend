@@ -5,6 +5,9 @@ import MenuPopover from "../Reusable/MenuPopover";
 import { Form } from "../../store/features/api";
 import UpdateFormDialog from "./UpdateFormDialog";
 import DeleteFormDialog from "./DeleteFormDialog";
+import { useParams } from "react-router-dom";
+import { ROUTE_FORM_BUILDER } from "../../constants";
+import { openInNewTab } from "../../helpers/functions";
 
 export interface WorkspcaeMenuProps {
   form: Form;
@@ -12,10 +15,17 @@ export interface WorkspcaeMenuProps {
 
 const FormMenu = ({ form }: WorkspcaeMenuProps) => {
   const wsMenuAnchorRef = React.useRef(null);
+  const { orgId, workspaceId } = useParams() as { orgId: string; workspaceId: string };
   const [open, setOpen] = React.useState<boolean>(false);
   return (
     <>
-      <IconButton ref={wsMenuAnchorRef} onClick={() => setOpen(true)}>
+      <IconButton
+        ref={wsMenuAnchorRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
         <MoreVert />
       </IconButton>
       <MenuPopover
@@ -24,7 +34,15 @@ const FormMenu = ({ form }: WorkspcaeMenuProps) => {
         anchorEl={wsMenuAnchorRef.current}
         sx={{ width: 150 }}
       >
-        <MenuItem>
+        <MenuItem
+          onClick={() =>
+            openInNewTab(
+              ROUTE_FORM_BUILDER.replace(":orgId", orgId)
+                .replace(":workspaceId", workspaceId)
+                .replace(":formId", form.formId)
+            )
+          }
+        >
           <ListItemIcon>
             <AppRegistration />
           </ListItemIcon>

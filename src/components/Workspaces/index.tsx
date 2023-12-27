@@ -404,13 +404,13 @@ const Workspaces = () => {
 
   React.useEffect(() => {
     if (
-      isWsSuccess &&
+      workspaces &&
       workspaces.length > 0 &&
       (!workspaceId || workspaces?.findIndex((w) => w.workspaceId === workspaceId) === -1)
     ) {
       gotoWorkspace(workspaces[0].workspaceId);
     }
-  }, [isWsSuccess, workspaces]);
+  }, [workspaces, workspaceId]);
 
   return (
     <Box sx={{ display: "flex", height: "100%" }}>

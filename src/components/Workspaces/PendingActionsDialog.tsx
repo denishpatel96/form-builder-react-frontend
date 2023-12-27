@@ -54,13 +54,14 @@ const PendingActionsDialog = ({
   const [respondToOrgMemberInvitation, { isLoading, reset }] =
     useRespondToOrgMemberInvitationMutation();
 
-  const handleResponse = async (orgId: string, accepted: boolean) => {
+  const handleResponse = async (orgId: string, email: string, accepted: boolean) => {
     if (isLoading) return;
     const toastId = new Date().valueOf();
     try {
       await respondToOrgMemberInvitation({
         orgId,
         accepted,
+        email,
       }).unwrap();
       dispatch(
         showToast({
@@ -166,8 +167,10 @@ const PendingActionsDialog = ({
               </Box>
             ) : (
               <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-                <DeclineInvitationDialog onSuccess={() => handleResponse(m.orgId, false)} />
-                <Button onClick={() => handleResponse(m.orgId, true)}>Accept</Button>
+                <DeclineInvitationDialog
+                  onSuccess={() => handleResponse(m.orgId, m.email, false)}
+                />
+                <Button onClick={() => handleResponse(m.orgId, m.email, true)}>Accept</Button>
               </Box>
             )}
           </Stack>

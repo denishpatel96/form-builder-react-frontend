@@ -3,7 +3,7 @@ import { Box, Button, Grid } from "@mui/material";
 import { FORM_ELEMENTS } from "../../../../../constants";
 import {
   IShortTextProps,
-  FieldProps,
+  IFieldProps,
   IRadioProps,
   ICheckboxProps,
   IDropdownProps,
@@ -28,12 +28,12 @@ import { CheckboxGroupElement } from "../Elements/CheckboxGroup.Element";
 import { ArrowCircleRight, Refresh } from "@mui/icons-material";
 
 type FormPreviewProps = {
-  formFields: FieldProps[];
+  formFields: IFieldProps[];
   device: string;
   formProperties: IFormDesignProps;
 };
 
-const renderField = (field: FieldProps, control: Control<FieldValues, any>) => {
+const renderField = (field: IFieldProps, control: Control<FieldValues, any>) => {
   switch (field.fieldType) {
     case FORM_ELEMENTS.SHORT_TEXT:
       return <ShortTextElement field={field as IShortTextProps} control={control} />;

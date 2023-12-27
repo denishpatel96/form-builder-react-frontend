@@ -8,3 +8,4 @@ export * from "./Dropdown";
 export * from "./Combobox";
 export * from "./Slider";
 export * from "./FormDesign";
+export * from "./Heading";

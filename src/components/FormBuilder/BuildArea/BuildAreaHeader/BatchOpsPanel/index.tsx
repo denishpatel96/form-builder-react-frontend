@@ -1,15 +1,28 @@
 import { DeleteOutlined, DeselectOutlined, SelectAllOutlined } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import { deselectFields, selectAll } from "../../../../../store/features/formSlice";
+import { deselectFields, selectFields } from "../../../../../store/features/formSlice";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
+import { IFieldProps } from "../../../Types";
 import DuplicateMenu from "./DuplicateMenu";
 
-const BatchOpsPanel = () => {
+interface IBatchOpsPanel {
+  formFields: IFieldProps[];
+  onShowDeleteFieldDialog: () => void;
+  onDuplicate: ({
+    placement,
+    afterElementId,
+  }: {
+    placement: "bottom" | "top" | "after";
+    afterElementId?: string;
+  }) => void;
+}
+
+const BatchOpsPanel = ({ onDuplicate, onShowDeleteFieldDialog, formFields }: IBatchOpsPanel) => {
   const dispatch = useAppDispatch();
-  const { fields, selected } = useAppSelector((state) => state.form);
+  const { selected } = useAppSelector((state) => state.form);
   const selectedCount = selected.length;
-  const fieldsCount = fields.length;
+  const fieldsCount = formFields.length;
   if (selectedCount <= 1) {
     return <></>;
   }
@@ -44,7 +57,7 @@ const BatchOpsPanel = () => {
             startIcon={<SelectAllOutlined />}
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(selectAll());
+              dispatch(selectFields(formFields.map((f) => f.id)));
             }}
           >
             Select All
@@ -52,8 +65,14 @@ const BatchOpsPanel = () => {
         )}
       </Box>
       <Box sx={{ display: "flex", columnGap: 1, alignItems: "center" }}>
-        <DuplicateMenu />
-        <Button size="small" variant="outlined" color="error" startIcon={<DeleteOutlined />}>
+        <DuplicateMenu onDuplicate={onDuplicate} />
+        <Button
+          size="small"
+          variant="outlined"
+          color="error"
+          startIcon={<DeleteOutlined />}
+          onClick={() => onShowDeleteFieldDialog()}
+        >
           Delete
         </Button>
       </Box>

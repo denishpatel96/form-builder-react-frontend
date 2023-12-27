@@ -29,3 +29,20 @@ export const getGravatarURL = (email: string) => {
 
   return `https://www.gravatar.com/avatar/${hash}?d=404&r=g&s=40`;
 };
+
+export const openInNewTab = (
+  url: string,
+  windowName: string = "_blank",
+  windowFeatures: string = "noopener,noreferrer"
+) => {
+  const newWindow = window.open(url, windowName, windowFeatures);
+  if (newWindow) window.opener = null;
+};
+
+// Here’s a step-by-step breakdown of how the function works:
+// The raw array is transformed into an array of key-value pairs using the map method. Each key-value pair consists of an element’s id property as the key and the entire element as the value.
+// The key-value pairs are used to create a new Map object.
+// The sorted array is transformed into a new array using the map method. For each element in sorted, the get method of the Map object is called with the id property of the element as the argument. This returns the corresponding element from the raw array.
+// The resulting array is returned.
+export const sortArray = (unsortedArray: any[], order: string[]) =>
+  ((m) => order.map((id) => m.get(id)))(new Map(unsortedArray.map((r) => [r.id, r])));

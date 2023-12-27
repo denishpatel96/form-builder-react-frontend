@@ -25,27 +25,27 @@ const typography: ThemeOptions["typography"] = {
   fontWeightMedium: 400,
   fontWeightBold: 500,
   h1: {
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: "2.5rem",
   },
   h2: {
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: "2.25rem",
   },
   h3: {
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: "2rem",
   },
   h4: {
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: "1.75rem",
   },
   h5: {
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: "1.5rem",
   },
   h6: {
-    fontWeight: 400,
+    fontWeight: 600,
     fontSize: "1.375rem",
   },
   subtitle1: {

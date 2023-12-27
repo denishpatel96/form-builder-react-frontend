@@ -21,8 +21,9 @@ import {
 } from "@mui/material";
 import { cloneDeep } from "lodash";
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ANIMATION_SKELETON, ROUTE_FORM_BUILDER } from "../../constants";
+import { openInNewTab } from "../../helpers/functions";
 import { useGetFormsByWorkspaceQuery } from "../../store/features/api";
 import CreateFormDialog from "./CreateFormDialog";
 import FormMenu from "./FormMenu";
@@ -30,7 +31,6 @@ import FormMenu from "./FormMenu";
 type WorkspaceFormsProps = {};
 
 const WorkspaceForms = (_props: WorkspaceFormsProps) => {
-  const navigate = useNavigate();
   const { orgId, workspaceId } = useParams() as { orgId: string; workspaceId: string };
   const [showSearch, setShowSearch] = React.useState<boolean>(false);
   const [showFilters, setShowFilters] = React.useState<boolean>(false);
@@ -246,7 +246,7 @@ const WorkspaceForms = (_props: WorkspaceFormsProps) => {
               key={index}
               onClick={() => {
                 if (!isFormsFetching) {
-                  navigate(
+                  openInNewTab(
                     ROUTE_FORM_BUILDER.replace(":orgId", orgId)
                       .replace(":workspaceId", workspaceId)
                       .replace(":formId", f.formId)

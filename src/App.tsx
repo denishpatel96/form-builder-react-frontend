@@ -6,6 +6,7 @@ import GlobalStyles from "./theme/globalStyles";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import Toast from "./components/Reusable/Toast";
+import OfflineToast from "./components/Reusable/OfflineToast";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <ThemeConfig>
         <GlobalStyles />
         <BrowserRouter>
+          <OfflineToast />
           <Toast />
           <Routes />
         </BrowserRouter>

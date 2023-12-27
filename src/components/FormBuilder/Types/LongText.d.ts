@@ -1,15 +1,10 @@
 import { TextFieldProps } from "@mui/material";
+import { IFieldProps } from "./Common";
 
-export interface ILongTextProps {
-  fieldType: string | number;
-  hidden: boolean;
-  colSpan: 3 | 4 | 6 | 8 | 9 | 12;
-  id: string;
-  name: string;
+export interface ILongTextProps extends IFieldProps {
   defaultValue: string;
   value?: string;
   title?: string;
-  label: string;
   helperText?: string;
   placeholder?: string;
   minRows: TextFieldProps["minRows"];

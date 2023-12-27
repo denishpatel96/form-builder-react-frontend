@@ -16,27 +16,52 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { duplicateFields } from "../../../../../store/features/formSlice";
-import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
+import { useParams } from "react-router-dom";
+import { sortArray } from "../../../../../helpers/functions";
+import { useGetFormSchemaQuery } from "../../../../../store/features/api";
+import { useAppSelector } from "../../../../../store/hooks";
 import MenuPopover from "../../../../Reusable/MenuPopover";
 
-const DuplicateMenu = () => {
+interface IDuplicateMenu {
+  onDuplicate: ({
+    placement,
+    afterElementId,
+  }: {
+    placement: "bottom" | "top" | "after";
+    afterElementId?: string;
+  }) => void;
+}
+
+const DuplicateMenu = ({ onDuplicate }: IDuplicateMenu) => {
+  const { orgId, formId, workspaceId } = useParams() as {
+    orgId: string;
+    workspaceId: string;
+    formId: string;
+  };
   const anchorRef = React.useRef(null);
-  const dispatch = useAppDispatch();
-  const { fields } = useAppSelector((state) => state.form);
+  const { data: formSchema } = useGetFormSchemaQuery(
+    { orgId, workspaceId, formId },
+    { skip: !(orgId && workspaceId && formId) }
+  );
+  const selected = useAppSelector((state) => state.form.selected);
+
   const [open, setOpen] = React.useState<boolean>(false);
   const [afterFieldId, setAfterFieldId] = React.useState<string>("");
   const [showAfterFieldScreen, setShowAfterFieldScreen] = React.useState<boolean>(false);
 
+  React.useEffect(() => {
+    setAfterFieldId(selected[selected.length - 1]);
+  }, [selected]);
+
   const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setAfterFieldId("");
     setShowAfterFieldScreen(false);
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <>
       <MenuPopover
@@ -45,7 +70,7 @@ const DuplicateMenu = () => {
         anchorEl={anchorRef.current}
         sx={{ width: 250, p: 1 }}
       >
-        {showAfterFieldScreen ? (
+        {showAfterFieldScreen && formSchema ? (
           <Stack spacing={1}>
             <Typography variant="caption">Select field after which duplicate fields go.</Typography>
             <Divider />
@@ -55,7 +80,7 @@ const DuplicateMenu = () => {
               value={afterFieldId}
               onChange={(e) => setAfterFieldId(e.target.value)}
             >
-              {fields.map((f, i) => {
+              {sortArray(formSchema.fields, formSchema.order).map((f, i) => {
                 return (
                   <MenuItem key={f.id} value={f.id}>
                     {i + 1}. {f.label}
@@ -77,7 +102,8 @@ const DuplicateMenu = () => {
                 size="small"
                 variant="contained"
                 onClick={() => {
-                  dispatch(duplicateFields({ placement: "after", afterElementId: afterFieldId }));
+                  onDuplicate({ placement: "after", afterElementId: afterFieldId });
+
                   handleClose();
                 }}
               >
@@ -89,7 +115,7 @@ const DuplicateMenu = () => {
           <>
             <MenuItem
               onClick={() => {
-                dispatch(duplicateFields({ placement: "top" }));
+                onDuplicate({ placement: "top" });
                 handleClose();
               }}
             >
@@ -100,7 +126,7 @@ const DuplicateMenu = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                dispatch(duplicateFields({ placement: "bottom" }));
+                onDuplicate({ placement: "bottom" });
                 handleClose();
               }}
             >

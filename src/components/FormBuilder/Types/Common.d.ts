@@ -1,16 +1,12 @@
-import { ICheckboxProps } from "./Checkbox";
-import { IDropdownProps } from "./Dropdown";
-import { IRadioProps } from "./Radio";
-import { IShortTextProps } from "./ShortText";
-import { IComboboxProps } from "./Combobox";
-import { ISliderProps } from "./Slider";
-import { ILongTextProps } from "./LongText";
-import { ICheckboxGroupProps } from "./CheckboxGroup";
-
-//string | number | number[] | boolean | null
-export interface IFieldPropertiesChangeFunc {
-  (path: string, value: any): void;
-}
+// import { ICheckboxProps } from "./Checkbox";
+// import { IDropdownProps } from "./Dropdown";
+// import { IRadioProps } from "./Radio";
+// import { IShortTextProps } from "./ShortText";
+// import { IComboboxProps } from "./Combobox";
+// import { ISliderProps } from "./Slider";
+// import { ILongTextProps } from "./LongText";
+// import { ICheckboxGroupProps } from "./CheckboxGroup";
+// import { IHeadingProps } from "./Heading";
 
 export interface ISelectableOptionProps {
   defaultChecked: boolean;
@@ -18,12 +14,22 @@ export interface ISelectableOptionProps {
   label: string;
 }
 
-export type FieldProps =
-  | IShortTextProps
-  | ILongTextProps
-  | IRadioProps
-  | ICheckboxProps
-  | ICheckboxGroupProps
-  | IDropdownProps
-  | IComboboxProps
-  | ISliderProps;
+export interface IFieldProps {
+  fieldType: string | number;
+  id: string;
+  name: string;
+  hidden: boolean;
+  colSpan: 3 | 4 | 6 | 8 | 9 | 12;
+  label: string;
+}
+
+// export type IFieldProps =
+//   | IHeadingProps
+//   | IShortTextProps
+//   | ILongTextProps
+//   | IRadioProps
+//   | ICheckboxProps
+//   | ICheckboxGroupProps
+//   | IDropdownProps
+//   | IComboboxProps
+//   | ISliderProps;

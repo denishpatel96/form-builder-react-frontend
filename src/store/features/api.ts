@@ -3,6 +3,9 @@ import { API_URL } from "../../constants";
 import { CookieStorage } from "../../helpers/cookieStorage";
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { resetAuthState, setTokens } from "./authSlice";
+import { IFieldProps } from "../../components/FormBuilder/Types";
+import { deselectFields, selectFields } from "./formSlice";
+import { sortArray } from "../../helpers/functions";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}`,
@@ -62,6 +65,15 @@ export interface Form {
   responseCount: number;
 }
 
+export interface FormSchema {
+  workspaceId: string;
+  formId: string;
+  order: string[];
+  fields: IFieldProps[];
+  lastFieldId: number;
+  selected: string[];
+}
+
 export interface Workspace {
   orgId: string;
   workspaceId: string;
@@ -116,10 +128,11 @@ export interface User {
   responseCount: number;
 }
 
+const transformResponse = (response: { content?: any; message: string }) => response.content;
+
 const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Workspace", "User", "UserOrgs", "OrgInvitation", "OrgMember", "Form"],
   endpoints: (builder) => {
     return {
       //----------------- AUTH ---------------------------------------------
@@ -135,6 +148,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       confirmSignup: builder.mutation({
         query: (body: { username: string; code: string }) => ({
@@ -142,6 +156,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       resendCode: builder.mutation({
         query: (body: { email: string }) => ({
@@ -149,6 +164,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       login: builder.mutation({
         query: (body: { email: string; password: string }) => ({
@@ -156,6 +172,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       refreshLogin: builder.mutation({
         query: (body: { refreshToken: string }) => ({
@@ -163,6 +180,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       changePassword: builder.mutation({
         query: (body: {
@@ -174,6 +192,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       forgotPassword: builder.mutation({
         query: (body: { email: string }) => ({
@@ -181,6 +200,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       confirmForgotPassword: builder.mutation({
         query: (body: { email: string; code: string; password: string }) => ({
@@ -188,6 +208,7 @@ const api = createApi({
           method: "post",
           body,
         }),
+        transformResponse,
       }),
       logout: builder.mutation({
         query: (params: { token: string }) => ({
@@ -195,6 +216,7 @@ const api = createApi({
           method: "post",
           body: { token: params.token },
         }),
+        transformResponse,
       }),
       updateCognitoUserEmail: builder.mutation({
         query: (params: { password: string; email: string }) => ({
@@ -210,6 +232,7 @@ const api = createApi({
             ],
           },
         }),
+        transformResponse,
       }),
       verifyCognitoUserEmail: builder.mutation({
         query: (params: { accessToken: string; code: string }) => ({
@@ -221,6 +244,7 @@ const api = createApi({
             code: params.code,
           },
         }),
+        transformResponse,
       }),
       updateCognitoUserName: builder.mutation({
         query: (params: { accessToken: string; firstName: string; lastName: string }) => ({
@@ -240,6 +264,7 @@ const api = createApi({
             ],
           },
         }),
+        transformResponse,
       }),
 
       //----------------- USER ---------------------------------------------
@@ -249,17 +274,17 @@ const api = createApi({
           url: `/users/orgs/${username}`,
           method: "get",
         }),
-        providesTags: ["UserOrgs"],
+        transformResponse,
       }),
       getUser: builder.query<User, string>({
         query: (username) => ({
           url: `/users/${username}`,
           method: "get",
         }),
-        providesTags: ["User"],
+        transformResponse,
       }),
       updateUser: builder.mutation<
-        User,
+        void,
         {
           username: string;
           firstName?: string;
@@ -273,7 +298,17 @@ const api = createApi({
           method: "put",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["User"]),
+        transformResponse,
+        async onQueryStarted({ username, ...patch }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData("getUser", username, (draft) => {
+                Object.assign(draft, patch);
+              })
+            );
+          } catch {}
+        },
       }),
 
       //----------------- WORKSPACE ---------------------------------------------
@@ -283,7 +318,7 @@ const api = createApi({
           url: `/workspaces/${orgId}`,
           method: "get",
         }),
-        providesTags: ["Workspace"],
+        transformResponse,
       }),
       createWorkspace: builder.mutation<Workspace, { orgId: string; workspaceName: string }>({
         query: (body) => ({
@@ -291,7 +326,18 @@ const api = createApi({
           method: "post",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
+        transformResponse,
+        async onQueryStarted({ orgId }, { dispatch, queryFulfilled }) {
+          try {
+            const { data: createdWorkspace } = await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData("getWorkspaces", orgId, (draftedWorkspaces) => {
+                draftedWorkspaces.push(createdWorkspace);
+                return draftedWorkspaces;
+              })
+            );
+          } catch {}
+        },
       }),
       updateWorkspace: builder.mutation<
         Workspace,
@@ -307,20 +353,42 @@ const api = createApi({
           method: "put",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
+        transformResponse,
+        async onQueryStarted({ orgId, workspaceId, ...patch }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData("getWorkspaces", orgId, (draftedWorkspaces) => {
+                return draftedWorkspaces.map((w) =>
+                  w.workspaceId === workspaceId ? Object.assign(w, patch) : w
+                );
+              })
+            );
+          } catch {}
+        },
       }),
-      deleteWorkspace: builder.mutation<Workspace, { orgId: string; workspaceId: string }>({
+      deleteWorkspace: builder.mutation<void, { orgId: string; workspaceId: string }>({
         query: (params) => ({
           url: `/workspaces/${params.orgId}/${params.workspaceId}`,
           method: "delete",
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["Workspace"]),
+        transformResponse,
+        async onQueryStarted({ orgId, workspaceId }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData("getWorkspaces", orgId, (draftedWorkspaces) => {
+                return draftedWorkspaces.filter((w) => w.workspaceId !== workspaceId);
+              })
+            );
+          } catch {}
+        },
       }),
 
       //----------------- ORG MEMBER INVITATION ---------------------------------------------
 
       createOrgMemberInvitation: builder.mutation<
-        Workspace,
+        OrgMemberInvite,
         { orgId: string; email: string; role: string }
       >({
         query: (body) => ({
@@ -328,7 +396,22 @@ const api = createApi({
           method: "post",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
+        transformResponse,
+        async onQueryStarted({ orgId }, { dispatch, queryFulfilled }) {
+          try {
+            const { data: createdInvitation } = await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getOrgMemberInvitations",
+                { orgId },
+                (draftedInvitations) => {
+                  draftedInvitations.push(createdInvitation);
+                  return draftedInvitations;
+                }
+              )
+            );
+          } catch {}
+        },
       }),
       getOrgMemberInvitations: builder.query<OrgMemberInvite[], { orgId?: string; email?: string }>(
         {
@@ -338,19 +421,35 @@ const api = createApi({
             }`,
             method: "get",
           }),
-          providesTags: ["OrgInvitation"],
+          transformResponse,
         }
       ),
       respondToOrgMemberInvitation: builder.mutation<
-        Workspace,
-        { orgId: string; accepted: boolean }
+        OrgMemberInvite,
+        { orgId: string; email: string; accepted: boolean }
       >({
         query: (body) => ({
           url: "/memberInvitations/respond",
           method: "post",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
+        transformResponse,
+        async onQueryStarted({ orgId, email, ...patch }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getOrgMemberInvitations",
+                { orgId },
+                (draftedInvitations) => {
+                  return draftedInvitations.map((i) =>
+                    i.email === email ? Object.assign(i, patch) : i
+                  );
+                }
+              )
+            );
+          } catch {}
+        },
       }),
       deleteOrgMemberInvitation: builder.mutation<
         OrgMemberInvite,
@@ -360,7 +459,21 @@ const api = createApi({
           url: `/memberInvitations/${params.orgId}/${params.email}`,
           method: "delete",
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["OrgInvitation"]),
+        transformResponse,
+        async onQueryStarted({ orgId, email }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getOrgMemberInvitations",
+                { orgId },
+                (draftedInvitations) => {
+                  return draftedInvitations.filter((i) => i.email !== email);
+                }
+              )
+            );
+          } catch {}
+        },
       }),
 
       //----------------- ORG MEMBER ---------------------------------------------------------
@@ -370,14 +483,24 @@ const api = createApi({
           url: `/members/${orgId}`,
           method: "get",
         }),
-        providesTags: ["OrgMember"],
+        transformResponse,
       }),
       deleteOrgMember: builder.mutation<OrgMember, { orgId: string; userId: string }>({
         query: (params) => ({
           url: `/members/${params.orgId}/${params.userId}`,
           method: "delete",
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["OrgMember"]),
+        transformResponse,
+        async onQueryStarted({ orgId, userId }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData("getOrgMembers", orgId, (draftedMembers) => {
+                return draftedMembers.filter((m) => m.userId !== userId);
+              })
+            );
+          } catch {}
+        },
       }),
       updateOrgMember: builder.mutation<
         OrgMember,
@@ -392,7 +515,19 @@ const api = createApi({
           method: "put",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["OrgMember"]),
+        transformResponse,
+        async onQueryStarted({ orgId, userId, ...patch }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData("getOrgMembers", orgId, (draftedMembers) => {
+                return draftedMembers.map((m) =>
+                  m.userId === userId ? Object.assign(m, patch) : m
+                );
+              })
+            );
+          } catch {}
+        },
       }),
 
       //----------------- FORM ---------------------------------------------
@@ -403,21 +538,50 @@ const api = createApi({
           method: "post",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["Form"]),
+        transformResponse,
+        async onQueryStarted({ orgId, workspaceId }, { dispatch, queryFulfilled }) {
+          try {
+            const { data: createdForm } = await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getFormsByWorkspace",
+                { orgId, workspaceId },
+                (draftedForms) => {
+                  draftedForms.push(createdForm);
+                  return draftedForms;
+                }
+              )
+            );
+          } catch {}
+        },
       }),
       deleteForm: builder.mutation<Form, { orgId: string; workspaceId: string; formId: string }>({
         query: (params) => ({
           url: `/forms/${params.orgId}/${params.workspaceId}/${params.formId}`,
           method: "delete",
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["Form"]),
+        transformResponse,
+        async onQueryStarted({ orgId, workspaceId, formId }, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getFormsByWorkspace",
+                { orgId, workspaceId },
+                (draftedForms) => {
+                  return draftedForms.filter((f) => f.formId !== formId);
+                }
+              )
+            );
+          } catch {}
+        },
       }),
       getFormsByWorkspace: builder.query<Form[], { orgId: string; workspaceId: string }>({
         query: (params) => ({
           url: `/forms/${params.orgId}/${params.workspaceId}`,
           method: "get",
         }),
-        providesTags: ["Form"],
+        transformResponse,
       }),
       updateForm: builder.mutation<
         Form,
@@ -433,7 +597,115 @@ const api = createApi({
           method: "put",
           body,
         }),
-        invalidatesTags: (_result, error) => (error ? [] : ["Form"]),
+        transformResponse,
+        async onQueryStarted(
+          { orgId, workspaceId, formId, ...patch },
+          { dispatch, queryFulfilled }
+        ) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getFormsByWorkspace",
+                { orgId, workspaceId },
+                (draftedForms) => {
+                  return draftedForms.map((f) =>
+                    f.formId === formId ? Object.assign(f, patch) : f
+                  );
+                }
+              )
+            );
+          } catch {}
+        },
+      }),
+      getFormSchema: builder.query<
+        FormSchema,
+        { orgId: string; workspaceId: string; formId: string }
+      >({
+        query: (params) => ({
+          url: `/formSchemas/${params.orgId}/${params.workspaceId}/${params.formId}`,
+          method: "get",
+        }),
+        transformResponse: (response: { content?: any; message: string }) => {
+          const data = response.content;
+          data.selected = [];
+          return data;
+        },
+      }),
+      updateFormSchema: builder.mutation<
+        void,
+        {
+          orgId: string;
+          workspaceId: string;
+          formId: string;
+          action: "ADD_FIELDS" | "DELETE_FIELDS" | "MOVE_FIELDS" | "UPDATE_FIELDS";
+          order?: string[];
+          fields?: IFieldProps[];
+          lastFieldId?: number;
+          fieldIds?: string[];
+        }
+      >({
+        query: (body) => ({ url: "/formSchemas", method: "put", body }),
+        transformResponse,
+        async onQueryStarted(
+          { orgId, workspaceId, formId, fields, lastFieldId, order, action, fieldIds },
+          { dispatch, queryFulfilled }
+        ) {
+          const patchResult = dispatch(
+            api.util.updateQueryData(
+              "getFormSchema",
+              { orgId, workspaceId, formId },
+              (draftedFormSchema) => {
+                switch (action) {
+                  case "ADD_FIELDS":
+                    if (fields && order && lastFieldId) {
+                      draftedFormSchema.fields = sortArray(
+                        [...draftedFormSchema.fields, ...fields],
+                        order
+                      );
+                      draftedFormSchema.lastFieldId = lastFieldId;
+                    }
+                    break;
+                  case "DELETE_FIELDS":
+                    if (fieldIds && order) {
+                      draftedFormSchema.fields = draftedFormSchema.fields.filter(
+                        (f) => !fieldIds.includes(f.id)
+                      );
+                    }
+                    break;
+                  case "MOVE_FIELDS":
+                    if (order) {
+                      draftedFormSchema.fields = sortArray(draftedFormSchema.fields, order);
+                    }
+                    break;
+                  case "UPDATE_FIELDS":
+                    if (fields) {
+                      fields.forEach((field) => {
+                        const index = draftedFormSchema.fields.findIndex((f) => f.id === field.id);
+                        if (index !== -1) {
+                          draftedFormSchema.fields[index] = field;
+                        }
+                      });
+                    }
+                    break;
+                }
+                return draftedFormSchema;
+              }
+            )
+          );
+          if (action === "ADD_FIELDS" && fields) dispatch(selectFields(fields.map((f) => f.id)));
+          else if (action === "DELETE_FIELDS") dispatch(deselectFields());
+          try {
+            await queryFulfilled;
+          } catch {
+            patchResult.undo();
+            /**
+             * Alternatively, on failure you can invalidate the corresponding cache tags
+             * to trigger a re-fetch:
+             * dispatch(api.util.invalidateTags(['Post']))
+             */
+          }
+        },
       }),
     };
   },
@@ -470,5 +742,7 @@ export const {
   useCreateFormMutation,
   useDeleteFormMutation,
   useUpdateFormMutation,
+  useGetFormSchemaQuery,
+  useUpdateFormSchemaMutation,
 } = api;
 export default api;

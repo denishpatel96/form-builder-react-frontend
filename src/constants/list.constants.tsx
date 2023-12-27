@@ -6,12 +6,11 @@ import {
   RadioButtonCheckedOutlined,
   ReceiptLongOutlined,
   SettingsOutlined,
-  TextFieldsOutlined,
   TitleOutlined,
 } from "@mui/icons-material";
 import { SxProps } from "@mui/material";
 import React from "react";
-import { CheckGroupIcon } from "../components/CustomIcons";
+import { CheckGroupIcon, LongTextIcon, ShortTextIcon } from "../components/CustomIcons";
 
 export enum REQUEST_STATUS {
   IDLE = "idle",
@@ -21,6 +20,7 @@ export enum REQUEST_STATUS {
 }
 
 export enum FORM_ELEMENTS {
+  HEADING = "ctrl_heading",
   SHORT_TEXT = "ctrl_short_text",
   LONG_TEXT = "ctrl_long_text",
   RADIO = "ctrl_radio",
@@ -35,6 +35,7 @@ export enum FORM_ELEMENTS {
 }
 
 export enum ELEMENT_CATEGORIES {
+  STATIC = "static",
   TEXT = "text",
   CHOICE = "choice",
   RATING = "rating",
@@ -48,8 +49,10 @@ export type OrgMemberRole = (typeof ORG_MEMBER_ROLES)[number]["label"];
 
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   switch (category) {
+    case ELEMENT_CATEGORIES.STATIC:
+      return "#aaaaaa";
     case ELEMENT_CATEGORIES.TEXT:
-      return "#3F497F";
+      return "#c3c6da";
     case ELEMENT_CATEGORIES.CHOICE:
       return "#7AA874";
     default:
@@ -83,11 +86,22 @@ export const FORM_ELEMENTS_LIST: {
   category: ELEMENT_CATEGORIES;
 }[] = [
   {
+    id: FORM_ELEMENTS.HEADING,
+    label: "Heading",
+    description: "Heading for the section",
+    icon: (sx?: SxProps) => (
+      <TitleOutlined
+        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.STATIC), ...sx }}
+      />
+    ),
+    category: ELEMENT_CATEGORIES.TEXT,
+  },
+  {
     id: FORM_ELEMENTS.SHORT_TEXT,
     label: "Short Text",
     description: "Single line text input",
     icon: (sx?: SxProps) => (
-      <TitleOutlined
+      <ShortTextIcon
         sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
@@ -98,7 +112,7 @@ export const FORM_ELEMENTS_LIST: {
     label: "Long Text",
     description: "Multiple line text area input",
     icon: (sx?: SxProps) => (
-      <TextFieldsOutlined
+      <LongTextIcon
         sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),

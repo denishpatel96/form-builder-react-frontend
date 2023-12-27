@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { FieldProps, IFormDesignProps } from "../../../Types";
+import { IFieldProps, IFormDesignProps } from "../../../Types";
 import FormPreview from "./FormPreview";
 import { getCustomTheme } from "../../../../../theme";
 import { cloneDeep } from "lodash";
@@ -36,7 +36,7 @@ const modalStyle: SxProps = {
 };
 
 type FormPreviewModalProps = {
-  formFields: FieldProps[];
+  formFields: IFieldProps[];
   formProperties: IFormDesignProps;
 };
 
