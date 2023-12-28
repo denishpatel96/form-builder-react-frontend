@@ -1,7 +1,7 @@
 import { DarkModeOutlined, LightModeOutlined } from "@mui/icons-material";
 import { Grid, PaletteMode, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import React from "react";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type ModePropertyProps = {
   value: PaletteMode | undefined;

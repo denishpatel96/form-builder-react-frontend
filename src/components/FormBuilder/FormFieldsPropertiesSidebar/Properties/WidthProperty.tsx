@@ -1,7 +1,7 @@
 import { Grid, Slider } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type WidthPropertyProps = {
   value: 3 | 4 | 6 | 8 | 9 | 12;

@@ -3,7 +3,7 @@ import { Grid, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/mate
 import React from "react";
 import { IRadioOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type RadioDefaultValuePropertyProps = {
   value: string | undefined;

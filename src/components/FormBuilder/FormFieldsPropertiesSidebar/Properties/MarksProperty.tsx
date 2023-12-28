@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 import { Mark } from "../../Types";
 import { Add, Remove } from "@mui/icons-material";
 import { NumericFormat } from "react-number-format";

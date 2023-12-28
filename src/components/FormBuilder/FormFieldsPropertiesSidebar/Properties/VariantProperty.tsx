@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type VariantPropertyProps = {
   value: TextFieldProps["variant"];

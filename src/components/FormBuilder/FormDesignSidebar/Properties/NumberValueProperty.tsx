@@ -1,6 +1,6 @@
 import { Grid, TextField, TextFieldProps, Typography } from "@mui/material";
 import React from "react";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 import { NumericFormat } from "react-number-format";
 
 type NumberValuePropertyProps = {

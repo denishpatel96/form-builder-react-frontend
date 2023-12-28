@@ -12,7 +12,7 @@ import {
 import React from "react";
 import { ISelectableOptionProps, IRadioOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type OptionsPropertyProps = {
   value: {

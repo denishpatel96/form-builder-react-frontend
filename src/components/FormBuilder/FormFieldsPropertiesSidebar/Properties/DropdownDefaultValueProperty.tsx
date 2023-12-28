@@ -14,7 +14,7 @@ import {
 import React from "react";
 import { ISelectableOptionProps } from "../../Types";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type DropdownDefaultValuePropertyProps = {
   value: {

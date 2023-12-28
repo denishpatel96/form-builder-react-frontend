@@ -2,7 +2,7 @@ import { FormHelperText, Grid, TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 import { NumericFormat } from "react-number-format";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 type RowsCountPropertyProps = {
   value: {
     maxRows: TextFieldProps["maxRows"];

@@ -2,7 +2,7 @@ import { Clear } from "@mui/icons-material";
 import { Grid, IconButton, TextField } from "@mui/material";
 import React from "react";
 import PropTitle from "./PropTitle";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 
 type LabelPropertyProps = {
   value: string | undefined;

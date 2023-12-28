@@ -1,6 +1,6 @@
 import { FormHelperText, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
-import { StyledListItem } from "../Styles";
+import { StyledListItem } from "../../Styles";
 import PropTitle from "./PropTitle";
 
 type CompactnessPropertyProps = {

@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import React from "react";
 import { IFormDesignProps } from "../Types";
-import { NumberValueProperty } from "./Properties/NumberValue.Property";
-import { ColorValueProperty } from "./Properties/ColorValue.Property";
-import { ModeProperty } from "./Properties/Mode.Property";
+import { NumberValueProperty } from "./Properties/NumberValueProperty";
+import { ColorValueProperty } from "./Properties/ColorValueProperty";
+import { ModeProperty } from "./Properties/ModeProperty";
 import { getCustomTheme } from "../../../theme";
-import { ImageURLProperty } from "./Properties/ImageURL.Property";
+import { ImageURLProperty } from "./Properties/ImageURLProperty";
 import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
 
 type FormDesignSidebarProps = {
