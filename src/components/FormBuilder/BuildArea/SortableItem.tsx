@@ -67,7 +67,7 @@ const SortableItem = ({
           left: 0,
           zIndex: 10,
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           backgroundColor: "transparent",
         }}
       >
@@ -79,70 +79,76 @@ const SortableItem = ({
             animationDuration: "500ms",
             animationIterationCount: 1,
             animationTimingFunction: "ease-out",
+            transform: "translateX(-25px)",
             "@keyframes slide-left": {
-              "0%": { transform: "translateX(20px)", opacity: 0 },
-              "100%": { transform: "translateX(0px)", opacity: 1 },
+              "0%": { transform: "translateX(0px)", opacity: 0 },
+              "100%": { transform: "translateX(-25px)", opacity: 1 },
+            },
+          }}
+        ></Box>
+
+        <Box
+          sx={{
+            mr: 2,
+            borderRadius: "0 0 15px 15px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: (theme) => theme.palette.background.paper,
+            height: 30,
+            animationName: "slide-out",
+            animationDuration: "500ms",
+            animationIterationCount: 1,
+            animationTimingFunction: "ease-out",
+            "@keyframes slide-out": {
+              "0%": { transform: "translateY(-10px)", opacity: 0 },
+              "100%": { transform: "translateY(0px)", opacity: 1 },
             },
           }}
         >
-          {hoveredFieldId === id && <DragIndicator color="disabled" />}
-        </Box>
+          <DragIndicator fontSize="small" color="disabled" />
 
-        {selected.length === 1 && selected[0] === id && (
-          <Box
-            sx={{
-              mr: 2,
-              borderRadius: "15px 15px 0 0",
-              display: "flex",
-              justifyContent: "center",
-              borderColor: "action.hover",
-              borderWidth: "2px 2px 0 2px",
-              borderStyle: "solid",
-              height: 25,
-              animationName: "slide-out",
-              animationDuration: "500ms",
-              animationIterationCount: 1,
-              animationTimingFunction: "ease-out",
-              "@keyframes slide-out": {
-                "0%": { transform: "translateY(20px)", opacity: 0 },
-                "100%": { transform: "translateY(0px)", opacity: 1 },
-              },
-            }}
-          >
-            <IconButton
-              title="Properties"
-              sx={{ width: 30, height: 30 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(selectFields([id]));
-                onTogglePropertiesDrawer();
-              }}
-            >
-              <SettingsOutlined sx={{ width: 20, height: 20 }} />
-            </IconButton>
-            <IconButton
-              title="Duplicate"
-              sx={{ width: 30, height: 30 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onDuplicateField();
-              }}
-            >
-              <ContentCopyOutlined sx={{ width: 18, height: 18 }} />
-            </IconButton>
-            <IconButton
-              title="Remove"
-              color="error"
-              sx={{ width: 30, height: 30 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onShowDeleteFieldDialog();
-              }}
-            >
-              <DeleteOutlined sx={{ width: 20, height: 20 }} />
-            </IconButton>
-          </Box>
-        )}
+          {selected.length === 1 && selected[0] === id ? (
+            <>
+              <IconButton
+                title="Properties"
+                sx={{ width: 30, height: 30 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(selectFields([id]));
+                  onTogglePropertiesDrawer();
+                }}
+              >
+                <SettingsOutlined sx={{ width: 20, height: 20 }} />
+              </IconButton>
+              <IconButton
+                title="Duplicate"
+                sx={{ width: 30, height: 30 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDuplicateField();
+                }}
+              >
+                <ContentCopyOutlined sx={{ width: 18, height: 18 }} />
+              </IconButton>
+              <IconButton
+                title="Remove"
+                color="error"
+                sx={{ width: 30, height: 30 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onShowDeleteFieldDialog();
+                }}
+              >
+                <DeleteOutlined sx={{ width: 20, height: 20 }} />
+              </IconButton>
+            </>
+          ) : (
+            <Typography pr={1} variant="caption">
+              Drag to move this field
+            </Typography>
+          )}
+        </Box>
       </Box>
     );
   };
@@ -229,6 +235,7 @@ const SortableItem = ({
               sx={{
                 flexGrow: 1,
                 p: 1,
+                position: "relative",
                 ...(field.hidden && !selected.includes(id) && { opacity: 0.5 }),
               }}
               onClick={(e) => {

@@ -20,7 +20,7 @@ export const HeadingBuilder = ({ field }: IHeadingBuilderProps) => {
           <span style={{ color: "disabled" }}>Subheader goes here</span>
         </Typography>
       )}
-      <Divider sx={{ pt: 2, mx: -50 }} />
+      <Divider sx={{ pt: 2 }} />
     </Box>
   );
 };

@@ -50,13 +50,13 @@ export type OrgMemberRole = (typeof ORG_MEMBER_ROLES)[number]["label"];
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   switch (category) {
     case ELEMENT_CATEGORIES.STATIC:
-      return "#aaaaaa";
+      return "#c3c6da";
     case ELEMENT_CATEGORIES.TEXT:
       return "#c3c6da";
     case ELEMENT_CATEGORIES.CHOICE:
-      return "#7AA874";
+      return "#c3c6da";
     default:
-      return "#BFCCB5";
+      return "#c3c6da";
   }
 };
 
@@ -91,7 +91,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Heading for the section",
     icon: (sx?: SxProps) => (
       <TitleOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.STATIC), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.STATIC), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.TEXT,
@@ -102,7 +102,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Single line text input",
     icon: (sx?: SxProps) => (
       <ShortTextIcon
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.TEXT,
@@ -113,7 +113,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Multiple line text area input",
     icon: (sx?: SxProps) => (
       <LongTextIcon
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.TEXT,
@@ -124,7 +124,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Toggle state of a single item",
     icon: (sx?: SxProps) => (
       <CheckBoxOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -135,7 +135,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one or more items from a set",
     icon: (sx?: SxProps) => (
       <CheckGroupIcon
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -146,7 +146,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one or more option from a dropdown list",
     icon: (sx?: SxProps) => (
       <ArrowDropDownCircleOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -157,7 +157,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one or more option from a searchable dropdown list",
     icon: (sx?: SxProps) => (
       <ArrowDropDownCircleOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -168,7 +168,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one option from a set",
     icon: (sx?: SxProps) => (
       <RadioButtonCheckedOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -179,7 +179,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Make selections from a range of values on slider",
     icon: (sx?: SxProps) => (
       <CommitOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,

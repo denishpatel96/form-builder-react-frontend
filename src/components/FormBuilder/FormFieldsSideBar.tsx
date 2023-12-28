@@ -114,7 +114,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IForm
         </IconButton>
       </Box>
       <Divider />
-      <Grid container spacing={2} justifyContent="center" p={1}>
+      <Grid container justifyContent="center" p={1}>
         {FORM_ELEMENTS_LIST.map((element) => {
           const { isDragging, attributes, listeners, setNodeRef } = useDraggable({
             id: element.id,
@@ -126,7 +126,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IForm
               {...attributes}
               {...listeners}
               key={element.id}
-              sx={{ height: 100, width: 100 }}
+              sx={{ height: 80, width: 80 }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddField(element.id);
@@ -137,7 +137,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IForm
               ) : (
                 <StyledFormFieldItem key={element.id}>
                   {element.icon()}
-                  <Typography pt={1} variant="caption" fontWeight={500} textAlign={"center"}>
+                  <Typography pt={1} variant="caption" textAlign={"center"}>
                     {element.label}
                   </Typography>
                 </StyledFormFieldItem>
