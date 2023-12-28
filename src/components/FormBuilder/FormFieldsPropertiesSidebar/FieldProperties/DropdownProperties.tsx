@@ -17,12 +17,13 @@ import {
   WidthProperty,
 } from "../Properties";
 
-export interface IDropdownPropertiesProps {
+export const DropdownProperties = ({
+  field,
+  onUpdate,
+}: {
   field: IDropdownProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const DropdownProperties = ({ field, onUpdate }: IDropdownPropertiesProps) => {
+}) => {
   const {
     colSpan,
     hidden,

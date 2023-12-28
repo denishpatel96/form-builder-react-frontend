@@ -19,12 +19,13 @@ import {
 } from "../Properties";
 import { WidthProperty } from "../Properties/WidthProperty";
 
-export interface ISliderPropertiesProps {
+export const SliderProperties = ({
+  field,
+  onUpdate,
+}: {
   field: ISliderProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const SliderProperties = ({ field, onUpdate }: ISliderPropertiesProps) => {
+}) => {
   const {
     colSpan,
     hidden,

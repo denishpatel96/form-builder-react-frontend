@@ -269,7 +269,7 @@ const BuildArea = ({
             overflowY: "auto",
             overflowX: "hidden",
             bgcolor: (theme) => theme.palette.background.default,
-            backgroundImage: `url(${formProperties.pageImage})`,
+            backgroundImage: `url(${formProperties.formImage})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "50% 50%",
@@ -295,7 +295,7 @@ const BuildArea = ({
               ".MuiTypography-root": {
                 color: (theme) => theme.palette.text.secondary,
               },
-              backgroundImage: `url(${formProperties.formImage})`,
+              backgroundImage: `url(${formProperties.pageImage})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
             }}

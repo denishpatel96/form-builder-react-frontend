@@ -1,16 +1,21 @@
 import { Control, Controller, ControllerProps, FieldError, FieldValues } from "react-hook-form";
 import { Autocomplete, TextField } from "@mui/material";
 import { useFormError } from "./FormErrorProvider";
-import { IComboboxProps } from "../../../Types";
+import { IComboboxProps } from "../../Types";
 import React from "react";
 
-export type ComboboxElementProps = {
+export const ComboboxField = ({
+  field,
+  control,
+  parseError,
+}: {
   field: IComboboxProps;
   control?: Control<FieldValues, any>;
   parseError?: (error: FieldError) => string;
-};
-
-export const ComboboxElement = ({ field, control, parseError }: ComboboxElementProps) => {
+}) => {
+  if (!field || field.hidden) {
+    return <></>;
+  }
   const errorMsgFn = useFormError();
   const customErrorFn = parseError || errorMsgFn;
 

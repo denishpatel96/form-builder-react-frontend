@@ -9,9 +9,9 @@ import {
 import React from "react";
 import { Controller } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
-import { IRadioProps } from "../../../Types";
+import { IRadioProps } from "../../Types";
 
-export const RadioElement = ({
+export const RadioField = ({
   field,
   control,
 }: {

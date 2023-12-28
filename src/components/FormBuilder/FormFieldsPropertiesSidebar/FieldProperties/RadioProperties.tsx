@@ -14,12 +14,13 @@ import {
   WidthProperty,
 } from "../Properties";
 
-export interface IRadioPropertiesProps {
+export const RadioProperties = ({
+  field,
+  onUpdate,
+}: {
   field: IRadioProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const RadioProperties = ({ field, onUpdate }: IRadioPropertiesProps) => {
+}) => {
   const {
     colSpan,
     hidden,

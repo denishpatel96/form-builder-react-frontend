@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { IFieldProps, IFormDesignProps } from "../../Types";
+import { IFieldProps, IFormDesignProps } from "../Types";
 import FormPreviewModal from "./FormPreview/FormPreviewModal";
 import BatchOpsPanel from "./BatchOpsPanel";
 

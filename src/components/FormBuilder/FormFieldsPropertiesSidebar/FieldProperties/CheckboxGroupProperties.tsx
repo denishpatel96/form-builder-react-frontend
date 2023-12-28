@@ -14,12 +14,13 @@ import {
   WidthProperty,
 } from "../Properties";
 
-export interface ICheckboxGroupPropertiesProps {
+export const CheckboxGroupProperties = ({
+  field,
+  onUpdate,
+}: {
   field: ICheckboxGroupProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const CheckboxGroupProperties = ({ field, onUpdate }: ICheckboxGroupPropertiesProps) => {
+}) => {
   const { colSpan, hidden, label, helperText, required, options, row, size, title, useCalcValues } =
     field;
 

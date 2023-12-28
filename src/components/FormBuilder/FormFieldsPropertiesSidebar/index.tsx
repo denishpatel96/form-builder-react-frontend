@@ -16,6 +16,7 @@ import {
   SliderProperties,
   ShortTextProperties,
   LongTextProperties,
+  HeadingProperties,
 } from "./FieldProperties";
 import {
   IFieldProps,
@@ -27,6 +28,7 @@ import {
   ISliderProps,
   ICheckboxGroupProps,
   ILongTextProps,
+  IHeadingProps,
 } from "../Types";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import api, { useUpdateFormSchemaMutation } from "../../../store/features/api";
@@ -146,6 +148,9 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
             Please select element from left to inspect properties.
           </Typography>
         </Box>
+      )}
+      {field && field.fieldType === FORM_ELEMENTS.HEADING && (
+        <HeadingProperties field={field as IHeadingProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.SHORT_TEXT && (
         <ShortTextProperties field={field as IShortTextProps} {...commonProps} />

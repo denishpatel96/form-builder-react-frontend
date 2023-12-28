@@ -17,12 +17,13 @@ import {
 } from "../Properties";
 import { WidthProperty } from "../Properties/WidthProperty";
 
-export interface ILongTextPropertiesProps {
+export const LongTextProperties = ({
+  field,
+  onUpdate,
+}: {
   field: ILongTextProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const LongTextProperties = ({ field, onUpdate }: ILongTextPropertiesProps) => {
+}) => {
   const {
     colSpan,
     hidden,

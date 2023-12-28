@@ -15,12 +15,13 @@ import {
   WidthProperty,
 } from "../Properties";
 
-export interface IComboboxPropertiesProps {
+export const ComboboxProperties = ({
+  field,
+  onUpdate,
+}: {
   field: IComboboxProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const ComboboxProperties = ({ field, onUpdate }: IComboboxPropertiesProps) => {
+}) => {
   const {
     colSpan,
     hidden,

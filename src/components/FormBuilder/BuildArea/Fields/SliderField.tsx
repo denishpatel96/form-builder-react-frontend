@@ -2,9 +2,9 @@ import { FormControl, FormHelperText, FormLabel, Slider, Stack } from "@mui/mate
 import React from "react";
 import { Controller } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
-import { ISliderProps } from "../../../Types";
+import { ISliderProps } from "../../Types";
 
-export const SliderElement = ({
+export const SliderField = ({
   field,
   control,
 }: {

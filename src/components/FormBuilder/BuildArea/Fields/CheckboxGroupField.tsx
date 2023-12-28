@@ -9,10 +9,10 @@ import {
 import React from "react";
 import { Controller } from "react-hook-form";
 import { Control, ControllerProps, FieldError, FieldValues } from "react-hook-form/dist/types";
-import { ICheckboxGroupProps } from "../../../Types";
+import { ICheckboxGroupProps } from "../../Types";
 import { useFormError } from "./FormErrorProvider";
 
-export const CheckboxGroupElement = ({
+export const CheckboxGroupField = ({
   field,
   control,
   parseError,

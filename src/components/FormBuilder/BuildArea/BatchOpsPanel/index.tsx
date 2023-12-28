@@ -1,9 +1,9 @@
 import { DeleteOutlined, DeselectOutlined, SelectAllOutlined } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import { deselectFields, selectFields } from "../../../../../store/features/formSlice";
-import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
-import { IFieldProps } from "../../../Types";
+import { deselectFields, selectFields } from "../../../../store/features/formSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { IFieldProps } from "../../Types";
 import DuplicateMenu from "./DuplicateMenu";
 
 interface IBatchOpsPanel {

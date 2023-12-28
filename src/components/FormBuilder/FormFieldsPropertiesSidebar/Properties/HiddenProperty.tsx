@@ -21,7 +21,7 @@ export const HiddenProperty = ({ value, onUpdate }: HiddenPropertyProps) => {
             name={"hidden"}
             checked={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onUpdate("hidden", e.target.value)
+              onUpdate("hidden", e.target.checked)
             }
           />
         </Grid>

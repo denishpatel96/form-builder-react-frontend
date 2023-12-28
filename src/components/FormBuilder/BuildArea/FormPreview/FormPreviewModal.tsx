@@ -17,9 +17,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { IFieldProps, IFormDesignProps } from "../../../Types";
+import { IFieldProps, IFormDesignProps } from "../../Types";
 import FormPreview from "./FormPreview";
-import { getCustomTheme } from "../../../../../theme";
+import { getCustomTheme } from "../../../../theme";
 import { cloneDeep } from "lodash";
 
 const modalStyle: SxProps = {
@@ -94,14 +94,14 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
                 position: "relative",
                 overflow: "scroll",
                 bgcolor: (theme) => theme.palette?.background?.default,
-                backgroundImage: `url(${formProperties.pageImage})`,
+                backgroundImage: `url(${formProperties.formImage})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
               }}
             >
               <Box
                 sx={{
-                  margin: "8px auto",
+                  margin: "32px auto",
                   padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
                   height: "auto",
                   width: "calc(100% - 48px)",
@@ -112,7 +112,7 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
                   ".MuiTypography-root": {
                     color: (theme) => theme.palette.text.secondary,
                   },
-                  backgroundImage: `url(${formProperties.formImage})`,
+                  backgroundImage: `url(${formProperties.pageImage})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   ...(device === "phone" && {

@@ -4,15 +4,18 @@ import { without } from "lodash";
 import React from "react";
 import { Controller } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
-import { IDropdownProps } from "../../../Types";
+import { IDropdownProps } from "../../Types";
 
-export const DropdownElement = ({
+export const DropdownField = ({
   field,
   control,
 }: {
   field: IDropdownProps;
   control: Control<FieldValues, any>;
 }) => {
+  if (!field || field.hidden) {
+    return <></>;
+  }
   const defaultValue = field.multiple
     ? field.options.filter((op) => op.defaultChecked).map((op) => op.label) || []
     : field.options.find((op) => op.defaultChecked)?.label || "";

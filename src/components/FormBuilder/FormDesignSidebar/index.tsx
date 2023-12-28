@@ -113,13 +113,7 @@ const FormDesignSidebar = ({
           <ChevronLeftOutlined />
         </IconButton>
       </Box>
-      <Tabs
-        value={tabValue}
-        onChange={handleTabChange}
-        variant="scrollable"
-        scrollButtons={false}
-        aria-label="scrollable prevent tabs example"
-      >
+      <Tabs value={tabValue} onChange={handleTabChange} variant="scrollable" scrollButtons={false}>
         <Tab label="Styles" {...getTabProps(0)} />
         <Tab label="Colors" {...getTabProps(1)} />
       </Tabs>
@@ -179,33 +173,33 @@ const FormDesignSidebar = ({
             <Typography variant="overline">Background</Typography>
           </ListSubheader>
           <ColorValueProperty
-            name="pageColor"
-            label="Page Color"
+            name="formColor"
+            label="Form Color"
             value={palette?.background?.default}
             defaultValue={defaultTheme.palette?.background?.default}
             onChange={onPropsChange}
             path={"palette.background.default"}
           />
           <ImageURLProperty
-            name="pageImage"
-            label="Page Image URL"
-            value={pageImage}
-            path={"pageImage"}
+            name="formImage"
+            label="Form Image URL"
+            value={formImage}
+            path={"formImage"}
             onChange={onPropsChange}
           />
           <ColorValueProperty
-            name="formColor"
-            label="Form Color"
+            name="pageColor"
+            label="Page Color"
             value={palette?.background?.paper}
             defaultValue={defaultTheme.palette?.background?.paper}
             onChange={onPropsChange}
             path={"palette.background.paper"}
           />
           <ImageURLProperty
-            name="formImage"
-            label="Form Image URL"
-            value={formImage}
-            path={"formImage"}
+            name="pageImage"
+            label="Page Image URL"
+            value={pageImage}
+            path={"pageImage"}
             onChange={onPropsChange}
           />
           <ListSubheader sx={{ backgroundColor: "action.hover" }}>

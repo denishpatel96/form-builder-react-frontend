@@ -6,3 +6,4 @@ export * from "./LongTextProperties";
 export * from "./DropdownProperties";
 export * from "./ComboboxProperties";
 export * from "./SliderProperties";
+export * from "./HeadingProperties";

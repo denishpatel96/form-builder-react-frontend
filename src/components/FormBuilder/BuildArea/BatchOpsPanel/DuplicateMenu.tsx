@@ -17,10 +17,10 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { sortArray } from "../../../../../helpers/functions";
-import { useGetFormSchemaQuery } from "../../../../../store/features/api";
-import { useAppSelector } from "../../../../../store/hooks";
-import MenuPopover from "../../../../Reusable/MenuPopover";
+import { sortArray } from "../../../../helpers/functions";
+import { useGetFormSchemaQuery } from "../../../../store/features/api";
+import { useAppSelector } from "../../../../store/hooks";
+import MenuPopover from "../../../Reusable/MenuPopover";
 
 interface IDuplicateMenu {
   onDuplicate: ({

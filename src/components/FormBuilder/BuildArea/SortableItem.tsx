@@ -106,9 +106,15 @@ const SortableItem = ({
             },
           }}
         >
-          <DragIndicator fontSize="small" color="disabled" />
-
-          {selected.length === 1 && selected[0] === id ? (
+          {hoveredFieldId === id && !(selected.length === 1 && selected[0] === id) && (
+            <>
+              <DragIndicator fontSize="small" color="disabled" />
+              <Typography pr={1} variant="caption">
+                Drag to move this field
+              </Typography>
+            </>
+          )}
+          {selected.length === 1 && selected[0] === id && (
             <>
               <IconButton
                 title="Properties"
@@ -143,10 +149,6 @@ const SortableItem = ({
                 <DeleteOutlined sx={{ width: 20, height: 20 }} />
               </IconButton>
             </>
-          ) : (
-            <Typography pr={1} variant="caption">
-              Drag to move this field
-            </Typography>
           )}
         </Box>
       </Box>

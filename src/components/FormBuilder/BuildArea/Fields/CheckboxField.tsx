@@ -2,10 +2,10 @@ import { Checkbox, FormControl, FormControlLabel, FormHelperText, FormLabel } fr
 import React from "react";
 import { Controller } from "react-hook-form";
 import { Control, ControllerProps, FieldError, FieldValues } from "react-hook-form/dist/types";
-import { ICheckboxProps } from "../../../Types";
+import { ICheckboxProps } from "../../Types";
 import { useFormError } from "./FormErrorProvider";
 
-export const CheckboxElement = ({
+export const CheckboxField = ({
   field,
   control,
   parseError,

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Grid } from "@mui/material";
-import { FORM_ELEMENTS } from "../../../../../constants";
+import { FORM_ELEMENTS } from "../../../../constants";
 import {
   IShortTextProps,
   IFieldProps,
@@ -12,19 +12,21 @@ import {
   ICheckboxGroupProps,
   ILongTextProps,
   IFormDesignProps,
-} from "../../../Types";
+  IHeadingProps,
+} from "../../Types";
 import {
-  ComboboxElement,
-  DropdownElement,
-  CheckboxElement,
-  RadioElement,
-  SliderElement,
-  ShortTextElement,
-  LongTextElement,
-} from "../Elements";
+  ComboboxField,
+  DropdownField,
+  CheckboxField,
+  RadioField,
+  SliderField,
+  ShortTextField,
+  LongTextField,
+  HeadingField,
+} from "../Fields";
 import { useForm } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
-import { CheckboxGroupElement } from "../Elements/CheckboxGroup.Element";
+import { CheckboxGroupField } from "../Fields/CheckboxGroupField";
 import { ArrowCircleRight, Refresh } from "@mui/icons-material";
 
 type FormPreviewProps = {
@@ -35,22 +37,24 @@ type FormPreviewProps = {
 
 const renderField = (field: IFieldProps, control: Control<FieldValues, any>) => {
   switch (field.fieldType) {
+    case FORM_ELEMENTS.HEADING:
+      return <HeadingField field={field as IHeadingProps} />;
     case FORM_ELEMENTS.SHORT_TEXT:
-      return <ShortTextElement field={field as IShortTextProps} control={control} />;
+      return <ShortTextField field={field as IShortTextProps} control={control} />;
     case FORM_ELEMENTS.LONG_TEXT:
-      return <LongTextElement field={field as ILongTextProps} control={control} />;
+      return <LongTextField field={field as ILongTextProps} control={control} />;
     case FORM_ELEMENTS.RADIO:
-      return <RadioElement field={field as IRadioProps} control={control} />;
+      return <RadioField field={field as IRadioProps} control={control} />;
     case FORM_ELEMENTS.CHECKBOX:
-      return <CheckboxElement field={field as ICheckboxProps} control={control} />;
+      return <CheckboxField field={field as ICheckboxProps} control={control} />;
     case FORM_ELEMENTS.CHECKBOX_GROUP:
-      return <CheckboxGroupElement field={field as ICheckboxGroupProps} control={control} />;
+      return <CheckboxGroupField field={field as ICheckboxGroupProps} control={control} />;
     case FORM_ELEMENTS.DROPDOWN:
-      return <DropdownElement field={field as IDropdownProps} control={control} />;
+      return <DropdownField field={field as IDropdownProps} control={control} />;
     case FORM_ELEMENTS.COMBOBOX:
-      return <ComboboxElement field={field as IComboboxProps} control={control} />;
+      return <ComboboxField field={field as IComboboxProps} control={control} />;
     case FORM_ELEMENTS.SLIDER:
-      return <SliderElement field={field as ISliderProps} control={control} />;
+      return <SliderField field={field as ISliderProps} control={control} />;
 
     default:
       break;

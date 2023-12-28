@@ -2,38 +2,37 @@ import React from "react";
 import { TextField } from "@mui/material";
 import { Control, Controller, ControllerProps, FieldError } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types/fields";
-import { IShortTextProps } from "../../../Types";
+import { ILongTextProps } from "../../Types";
 import { useFormError } from "./FormErrorProvider";
-import { isRegExp } from "lodash";
 
-export type ShortTextElementProps = {
-  field: IShortTextProps;
-  control?: Control<FieldValues, any>;
-  parseError?: (error: FieldError) => string;
-};
-
-export const ShortTextElement = ({
+export const LongTextField = ({
   field,
   parseError,
   control,
-}: ShortTextElementProps): JSX.Element => {
+}: {
+  field: ILongTextProps;
+  control?: Control<FieldValues, any>;
+  parseError?: (error: FieldError) => string;
+}): JSX.Element => {
+  if (!field || field.hidden) {
+    return <></>;
+  }
   const errorMsgFn = useFormError();
   const customErrorFn = parseError || errorMsgFn;
   const {
     name,
     required,
     type,
-    pattern,
-    msgPattern,
     maxLength,
     minLength,
     msgLength,
     validateLength,
-    validatePattern,
     defaultValue,
     helperText,
     label,
     margin,
+    maxRows,
+    minRows,
     placeholder,
     title,
     size,
@@ -42,9 +41,6 @@ export const ShortTextElement = ({
 
   const validation: ControllerProps["rules"] = {
     required: required,
-    ...(validatePattern && {
-      pattern: { value: isRegExp(pattern) ? pattern : new RegExp(pattern), message: msgPattern },
-    }),
     ...(validateLength && {
       maxLength: { value: maxLength, message: msgLength },
       minLength: { value: minLength, message: msgLength },
@@ -62,6 +58,9 @@ export const ShortTextElement = ({
           {...fieldProps}
           label={label}
           margin={margin}
+          maxRows={maxRows}
+          minRows={minRows}
+          multiline
           placeholder={placeholder}
           title={title}
           size={size}

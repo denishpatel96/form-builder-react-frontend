@@ -12,12 +12,13 @@ import {
   WidthProperty,
 } from "../Properties";
 
-export interface ICheckboxPropertiesProps {
+export const CheckboxProperties = ({
+  field,
+  onUpdate,
+}: {
   field: ICheckboxProps;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-}
-
-export const CheckboxProperties = ({ field, onUpdate }: ICheckboxPropertiesProps) => {
+}) => {
   const { colSpan, hidden, label, helperText, required, size, title, defaultChecked } = field;
   const commonProps = {
     onUpdate: onUpdate,
