@@ -50,13 +50,13 @@ export type OrgMemberRole = (typeof ORG_MEMBER_ROLES)[number]["label"];
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   switch (category) {
     case ELEMENT_CATEGORIES.STATIC:
-      return "#c3c6da";
+      return "#777";
     case ELEMENT_CATEGORIES.TEXT:
-      return "#c3c6da";
+      return "#777";
     case ELEMENT_CATEGORIES.CHOICE:
-      return "#c3c6da";
+      return "#777";
     default:
-      return "#c3c6da";
+      return "#777";
   }
 };
 

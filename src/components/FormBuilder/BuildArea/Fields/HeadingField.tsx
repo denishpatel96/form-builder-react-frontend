@@ -13,13 +13,7 @@ export const HeadingField = ({ field }: { field: IHeadingProps }): JSX.Element =
       <Typography variant={size === "default" ? "h2" : size === "large" ? "h1" : "h3"}>
         {label}
       </Typography>
-      {subheader ? (
-        <Typography>{subheader}</Typography>
-      ) : (
-        <Typography>
-          <span style={{ color: "disabled" }}>Subheader goes here</span>
-        </Typography>
-      )}
+      {subheader && <Typography>{subheader}</Typography>}
       <Divider sx={{ pt: 2 }} />
     </Box>
   );

@@ -6,7 +6,7 @@ export const getComboboxProps: Function = (elementCount: number): IComboboxProps
     fieldType: FORM_ELEMENTS.COMBOBOX,
     colSpan: 12,
     hidden: false,
-    variant: "outlined",
+    variant: "top",
     id: `q${elementCount}`,
     title: "",
     name: `q${elementCount}`,

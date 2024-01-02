@@ -3,7 +3,7 @@ import { IFieldProps, ISelectableOptionProps } from "./Common";
 
 export interface IDropdownProps extends IFieldProps {
   title: string;
-  variant: SelectProps["variant"];
+  variant: "top" | "standard" | "outlined" | "filled";
   error: FormControlProps["error"];
   helperText: string;
   required: FormControlProps["required"];

@@ -2,19 +2,15 @@ import { Checkbox, FormControl, FormControlLabel, FormHelperText, FormLabel } fr
 import React from "react";
 import { ICheckboxProps } from "../../Types/Checkbox";
 
-export interface ICheckboxBuilderProps {
-  field: ICheckboxProps;
-}
-
-export const CheckboxBuilder = ({ field }: ICheckboxBuilderProps) => {
-  const { helperText, label, defaultChecked, size, required } = field;
+export const CheckboxBuilder = ({ field }: { field: ICheckboxProps }) => {
+  const { id, helperText, label, defaultChecked, size, required } = field;
   return (
     <FormControl component={"fieldset"} fullWidth required={required}>
       <FormControlLabel
         label={<FormLabel>{`${label}${required ? " *" : ""}`}</FormLabel>}
         control={
           <Checkbox
-            id={field.id}
+            id={id}
             checked={defaultChecked}
             value={label}
             size={size}

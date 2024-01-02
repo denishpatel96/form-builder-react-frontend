@@ -1,12 +1,8 @@
-import { TextField } from "@mui/material";
+import { InputLabel, TextField } from "@mui/material";
 import React from "react";
 import { ILongTextProps } from "../../Types";
 
-export interface ILongTextBuilderProps {
-  field: ILongTextProps;
-}
-
-export const LongTextBuilder = ({ field }: ILongTextBuilderProps) => {
+export const LongTextBuilder = ({ field }: { field: ILongTextProps }) => {
   const {
     name,
     id,
@@ -23,25 +19,30 @@ export const LongTextBuilder = ({ field }: ILongTextBuilderProps) => {
     placeholder,
   } = field;
   return (
-    <TextField
-      fullWidth
-      multiline
-      InputLabelProps={{ shrink: true }}
-      id={id}
-      label={label}
-      name={name}
-      margin={margin}
-      minRows={minRows}
-      maxRows={maxRows}
-      required={required}
-      title={title}
-      size={size}
-      variant={variant}
-      value={defaultValue}
-      placeholder={placeholder}
-      InputProps={{ readOnly: true }}
-      helperText={helperText}
-      error={!label}
-    />
+    <>
+      {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      <TextField
+        fullWidth
+        multiline
+        id={id}
+        name={name}
+        margin={margin}
+        required={required}
+        title={title}
+        size={size}
+        value={defaultValue}
+        minRows={minRows}
+        maxRows={maxRows}
+        placeholder={placeholder}
+        InputProps={{ readOnly: true }}
+        helperText={helperText}
+        error={!label}
+        {...(variant !== "top" && {
+          label: label,
+          InputLabelProps: { shrink: true },
+          variant: variant,
+        })}
+      />
+    </>
   );
 };

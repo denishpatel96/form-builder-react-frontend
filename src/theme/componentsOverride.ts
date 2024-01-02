@@ -19,5 +19,15 @@ export const componentsOverride = (_theme: Theme): Components => {
         },
       },
     },
+
+    // Form Label
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          fontWeight: 600,
+          marginBottom: 10,
+        },
+      },
+    },
   };
 };

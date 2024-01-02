@@ -9,11 +9,7 @@ import {
 import React from "react";
 import { IRadioProps } from "../../Types/Radio";
 
-export interface IRadioBuilderProps {
-  field: IRadioProps;
-}
-
-export const RadioBuilder = ({ field }: IRadioBuilderProps) => {
+export const RadioBuilder = ({ field }: { field: IRadioProps }) => {
   return (
     <FormControl component={"fieldset"} fullWidth error={field.error} required={field.required}>
       <FormLabel>{field.label}</FormLabel>

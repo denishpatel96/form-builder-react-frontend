@@ -12,7 +12,7 @@ export interface ILongTextProps extends IFieldProps {
   margin: TextFieldProps["margin"];
   size: TextFieldProps["size"];
   type: TextFieldProps["type"];
-  variant: TextFieldProps["variant"];
+  variant: "top" | "standard" | "outlined" | "filled";
   required: TextFieldProps["required"];
   // Length Validation
   validateLength: boolean;

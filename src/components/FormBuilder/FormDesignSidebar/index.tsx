@@ -1,4 +1,4 @@
-import { ChevronLeftOutlined, PaletteOutlined } from "@mui/icons-material";
+import { ChevronLeftOutlined, ExpandMore, PaletteOutlined } from "@mui/icons-material";
 import {
   Typography,
   Box,
@@ -7,10 +7,12 @@ import {
   Divider,
   TextFieldProps,
   List,
-  ListSubheader,
   SimplePaletteColorOptions,
   Tabs,
   Tab,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import React from "react";
 import { IFormDesignProps } from "../Types";
@@ -20,6 +22,13 @@ import { ModeProperty } from "./Properties/ModeProperty";
 import { getCustomTheme } from "../../../theme";
 import { ImageURLProperty } from "./Properties/ImageURLProperty";
 import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
+import { styled } from "@mui/material/styles";
+
+export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+  padding: 0,
+  margin: 0,
+  background: theme.palette.background.paper,
+}));
 
 type FormDesignSidebarProps = {
   formProperties: IFormDesignProps;
@@ -49,8 +58,10 @@ const FormDesignSidebar = ({
     horizontalSpacing,
     verticalSpacing,
     palette,
-    pageImage,
-    formImage,
+    pageBgImage,
+    pageBgColor,
+    formBgImage,
+    formBgColor,
   } = formProperties;
 
   const defaultTheme = getCustomTheme({ mode: formProperties.palette?.mode || "light" });
@@ -68,6 +79,7 @@ const FormDesignSidebar = ({
     };
   }
 
+  const [expandedId, setExpandedId] = React.useState<string>("bg");
   return (
     <Drawer
       open={isOpen}
@@ -169,108 +181,139 @@ const FormDesignSidebar = ({
             onChange={onPropsChange}
           />
 
-          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
-            <Typography variant="overline">Background</Typography>
-          </ListSubheader>
-          <ColorValueProperty
-            name="formColor"
-            label="Form Color"
-            value={palette?.background?.default}
-            defaultValue={defaultTheme.palette?.background?.default}
-            onChange={onPropsChange}
-            path={"palette.background.default"}
-          />
-          <ImageURLProperty
-            name="formImage"
-            label="Form Image URL"
-            value={formImage}
-            path={"formImage"}
-            onChange={onPropsChange}
-          />
-          <ColorValueProperty
-            name="pageColor"
-            label="Page Color"
-            value={palette?.background?.paper}
-            defaultValue={defaultTheme.palette?.background?.paper}
-            onChange={onPropsChange}
-            path={"palette.background.paper"}
-          />
-          <ImageURLProperty
-            name="pageImage"
-            label="Page Image URL"
-            value={pageImage}
-            path={"pageImage"}
-            onChange={onPropsChange}
-          />
-          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
-            <Typography variant="overline">Text</Typography>
-          </ListSubheader>
-          <ColorValueProperty
-            name="textPrimaryColor"
-            label="Text Primary Color"
-            value={palette?.text?.primary}
-            defaultValue={defaultTheme.palette?.text?.primary}
-            onChange={onPropsChange}
-            path={"palette.text.primary"}
-          />
-          <ColorValueProperty
-            name="textSecondaryColor"
-            label="Text Secondary Color"
-            value={palette?.text?.secondary}
-            defaultValue={defaultTheme.palette?.text?.secondary}
-            onChange={onPropsChange}
-            path={"palette.text.secondary"}
-          />
-          <ColorValueProperty
-            name="textDisabledColor"
-            label="Text Disabled Color"
-            value={palette?.text?.disabled}
-            defaultValue={defaultTheme.palette?.text?.disabled}
-            onChange={onPropsChange}
-            path={"palette.text.disabled"}
-          />
-          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
-            <Typography variant="overline">Primary Color</Typography>
-          </ListSubheader>
-          <ColorValueProperty
-            name="primaryColor"
-            label="Primary Color"
-            value={(palette?.primary as SimplePaletteColorOptions)?.main}
-            defaultValue={(defaultTheme.palette?.primary as SimplePaletteColorOptions)?.main}
-            onChange={onPropsChange}
-            path={"palette.primary.main"}
-          />
-          <ColorValueProperty
-            name="primaryContrastTextColor"
-            label="Primary Contrast Text Color"
-            value={(palette?.primary as SimplePaletteColorOptions)?.contrastText}
-            defaultValue={
-              (defaultTheme.palette?.primary as SimplePaletteColorOptions)?.contrastText
-            }
-            onChange={onPropsChange}
-            path={"palette.primary.contrastText"}
-          />
-          <ListSubheader sx={{ backgroundColor: "action.hover" }}>
-            <Typography variant="overline">Secondary Color</Typography>
-          </ListSubheader>
-          <ColorValueProperty
-            name="secondaryColor"
-            label="Secondary Color"
-            value={(palette?.secondary as SimplePaletteColorOptions)?.main}
-            defaultValue={(defaultTheme.palette?.secondary as SimplePaletteColorOptions)?.main}
-            onChange={onPropsChange}
-            path={"palette.secondary.main"}
-          />
-          <ColorValueProperty
-            name="secondaryContrastTextColor"
-            label="Secondary Contrast Text Color"
-            value={(palette?.secondary as SimplePaletteColorOptions)?.contrastText}
-            defaultValue={
-              (defaultTheme.palette?.secondary as SimplePaletteColorOptions)?.contrastText
-            }
-            onChange={onPropsChange}
-            path={"palette.secondary.contrastText"}
-          />
+          <Accordion expanded={expandedId === "bg"}>
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              onClick={() => setExpandedId((prev) => (prev === "bg" ? "" : "bg"))}
+            >
+              <Typography variant="overline">Background</Typography>
+            </AccordionSummary>
+            <StyledAccordionDetails>
+              <ColorValueProperty
+                name="formBgColor"
+                label="Form Background Color"
+                value={formBgColor}
+                defaultValue={defaultTheme.palette?.background?.default}
+                onChange={onPropsChange}
+                path={"formBgColor"}
+              />
+              <ImageURLProperty
+                name="formBgImage"
+                label="Form Background Image URL"
+                value={formBgImage}
+                path={"formBgImage"}
+                onChange={onPropsChange}
+              />
+              <ColorValueProperty
+                name="pageBgColor"
+                label="Page Background Color"
+                value={pageBgColor}
+                defaultValue={defaultTheme.palette?.background?.paper}
+                onChange={onPropsChange}
+                path={"pageBgColor"}
+              />
+              <ImageURLProperty
+                name="pageBgImage"
+                label="Page Background Image URL"
+                value={pageBgImage}
+                path={"pageBgImage"}
+                onChange={onPropsChange}
+              />
+            </StyledAccordionDetails>
+          </Accordion>
+
+          <Accordion expanded={expandedId === "text"}>
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              onClick={() => setExpandedId((prev) => (prev === "text" ? "" : "text"))}
+            >
+              <Typography variant="overline">Text</Typography>
+            </AccordionSummary>
+            <StyledAccordionDetails>
+              <ColorValueProperty
+                name="textPrimaryColor"
+                label="Input Text Color"
+                value={palette?.text?.primary}
+                defaultValue={defaultTheme.palette?.text?.primary}
+                onChange={onPropsChange}
+                path={"palette.text.primary"}
+              />
+              <ColorValueProperty
+                name="textSecondaryColor"
+                label="Label Text Color"
+                value={palette?.text?.secondary}
+                defaultValue={defaultTheme.palette?.text?.secondary}
+                onChange={onPropsChange}
+                path={"palette.text.secondary"}
+              />
+              <ColorValueProperty
+                name="textDisabledColor"
+                label="Disabled Text Color"
+                value={palette?.text?.disabled}
+                defaultValue={defaultTheme.palette?.text?.disabled}
+                onChange={onPropsChange}
+                path={"palette.text.disabled"}
+              />
+            </StyledAccordionDetails>
+          </Accordion>
+
+          <Accordion expanded={expandedId === "pc"}>
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              onClick={() => setExpandedId((prev) => (prev === "pc" ? "" : "pc"))}
+            >
+              <Typography variant="overline">Primary Color</Typography>
+            </AccordionSummary>
+            <StyledAccordionDetails>
+              <ColorValueProperty
+                name="primaryColor"
+                label="Primary Color"
+                value={(palette?.primary as SimplePaletteColorOptions)?.main}
+                defaultValue={(defaultTheme.palette?.primary as SimplePaletteColorOptions)?.main}
+                onChange={onPropsChange}
+                path={"palette.primary.main"}
+              />
+              <ColorValueProperty
+                name="primaryContrastTextColor"
+                label="Primary Contrast Text Color"
+                value={(palette?.primary as SimplePaletteColorOptions)?.contrastText}
+                defaultValue={
+                  (defaultTheme.palette?.primary as SimplePaletteColorOptions)?.contrastText
+                }
+                onChange={onPropsChange}
+                path={"palette.primary.contrastText"}
+              />
+            </StyledAccordionDetails>
+          </Accordion>
+
+          <Accordion expanded={expandedId === "sc"}>
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              onClick={() => setExpandedId((prev) => (prev === "sc" ? "" : "sc"))}
+            >
+              <Typography variant="overline">Secondary Color</Typography>
+            </AccordionSummary>
+            <StyledAccordionDetails>
+              <ColorValueProperty
+                name="secondaryColor"
+                label="Secondary Color"
+                value={(palette?.secondary as SimplePaletteColorOptions)?.main}
+                defaultValue={(defaultTheme.palette?.secondary as SimplePaletteColorOptions)?.main}
+                onChange={onPropsChange}
+                path={"palette.secondary.main"}
+              />
+              <ColorValueProperty
+                name="secondaryContrastTextColor"
+                label="Secondary Contrast Text Color"
+                value={(palette?.secondary as SimplePaletteColorOptions)?.contrastText}
+                defaultValue={
+                  (defaultTheme.palette?.secondary as SimplePaletteColorOptions)?.contrastText
+                }
+                onChange={onPropsChange}
+                path={"palette.secondary.contrastText"}
+              />
+            </StyledAccordionDetails>
+          </Accordion>
         </List>
       </Box>
     </Drawer>

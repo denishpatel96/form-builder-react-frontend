@@ -8,14 +8,5 @@ export const getFormDesignProps: Function = (): IFormDesignProps => {
     horizontalPadding: 24,
     horizontalSpacing: 24,
     verticalSpacing: 24,
-    // Label Style
-    labelFontWeight: "normal",
-    labelColor: "blue",
-    // Background Images
-    pageImage: "",
-    formImage: "",
-    // Font Options
-    fontFamily: "inherit",
-    fontSize: 16,
   };
 };

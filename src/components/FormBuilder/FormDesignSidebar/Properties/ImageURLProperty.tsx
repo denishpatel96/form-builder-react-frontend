@@ -4,7 +4,7 @@ import React from "react";
 import { StyledListItem } from "../../Styles";
 
 type ImageURLPropertyProps = {
-  value: string;
+  value: string | undefined;
   onChange: (path: string, value: string) => void;
   label: string;
   name: string;
@@ -23,7 +23,7 @@ export const ImageURLProperty = ({ label, name, path, value, onChange }: ImageUR
             name={name}
             variant="standard"
             size="small"
-            value={value}
+            value={value || ""}
             fullWidth
             InputProps={{
               endAdornment: value && (

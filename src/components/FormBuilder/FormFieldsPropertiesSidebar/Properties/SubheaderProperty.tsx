@@ -1,7 +1,7 @@
 import React from "react";
 import { TextTypeProperty } from "../PropertyTypes/TextTypeProperty";
 
-export const PlaceholderProperty = ({
+export const SubheaderProperty = ({
   value,
   onUpdate,
 }: {
@@ -9,11 +9,6 @@ export const PlaceholderProperty = ({
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
 }) => {
   return (
-    <TextTypeProperty
-      value={value}
-      onUpdate={onUpdate}
-      path={"placeholder"}
-      title={"Placeholder"}
-    />
+    <TextTypeProperty value={value} onUpdate={onUpdate} path={"subheader"} title={"Subheader"} />
   );
 };

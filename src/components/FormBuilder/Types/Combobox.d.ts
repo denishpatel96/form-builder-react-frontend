@@ -3,7 +3,7 @@ import { IFieldProps, ISelectableOptionProps } from "./Common";
 
 export interface IComboboxProps extends IFieldProps {
   title: string;
-  variant: TextFieldProps["variant"];
+  variant: "top" | "standard" | "outlined" | "filled";
   error: FormControlProps["error"];
   helperText: string;
   required: FormControlProps["required"];

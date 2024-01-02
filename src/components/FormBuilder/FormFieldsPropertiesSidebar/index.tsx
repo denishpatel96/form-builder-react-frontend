@@ -56,6 +56,15 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
 
   const [updateFormSchema] = useUpdateFormSchemaMutation();
 
+  const updatePaths = (item: any, path: string, value: any) => {
+    set(item, path, value);
+    if (path === "showMarks" && value === false) {
+      set(item, "customMarks", []);
+      set(item, "step", undefined);
+      set(item, "showCustomMarks", false);
+    }
+  };
+
   const handleUpdate = async (path: string, value: any, isLocalUpdate: boolean = false) => {
     if (selected.length === 1) {
       if (isLocalUpdate) {
@@ -65,13 +74,13 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
             { orgId, workspaceId, formId },
             (draftedFormSchema) => {
               const index = draftedFormSchema.fields.findIndex((f) => f.id === selected[0]);
-              set(draftedFormSchema.fields[index], path, value);
+              updatePaths(draftedFormSchema.fields[index], path, value);
             }
           )
         );
       } else if (field) {
         let updatedField = cloneDeep(field);
-        set(updatedField, path, value);
+        updatePaths(updatedField, path, value);
         await updateFormSchema({
           orgId,
           workspaceId,

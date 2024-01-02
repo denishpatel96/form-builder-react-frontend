@@ -6,7 +6,7 @@ export const getDropdownProps: Function = (elementCount: number): IDropdownProps
     fieldType: FORM_ELEMENTS.DROPDOWN,
     colSpan: 12,
     hidden: false,
-    variant: "outlined",
+    variant: "top",
     id: `q${elementCount}`,
     title: "",
     name: `q${elementCount}`,

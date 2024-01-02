@@ -2,11 +2,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import React from "react";
 import { IHeadingProps } from "../../Types";
 
-export interface IHeadingBuilderProps {
-  field: IHeadingProps;
-}
-
-export const HeadingBuilder = ({ field }: IHeadingBuilderProps) => {
+export const HeadingBuilder = ({ field }: { field: IHeadingProps }) => {
   const { id, label, size, subheader } = field;
   return (
     <Box component={"div"} id={id}>
@@ -14,11 +10,9 @@ export const HeadingBuilder = ({ field }: IHeadingBuilderProps) => {
         {label}
       </Typography>
       {subheader ? (
-        <Typography>{subheader}</Typography>
+        <Typography pt={1}>{subheader}</Typography>
       ) : (
-        <Typography>
-          <span style={{ color: "disabled" }}>Subheader goes here</span>
-        </Typography>
+        <Typography sx={{ pt: 1, opacity: 0.5 }}>Subheader here</Typography>
       )}
       <Divider sx={{ pt: 2 }} />
     </Box>

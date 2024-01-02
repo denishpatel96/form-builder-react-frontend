@@ -29,3 +29,6 @@ export * from "./SliderTrackProperty";
 export * from "./SliderStepProperty";
 export * from "./ValueLabelFormatProperty";
 export * from "./DefaultCheckedProperty";
+export * from "./HeadingProperty";
+export * from "./HeadingSizeProperty";
+export * from "./SubHeaderProperty";

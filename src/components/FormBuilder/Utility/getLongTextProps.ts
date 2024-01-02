@@ -18,7 +18,7 @@ export const getLongTextProps: Function = (elementCount: number): ILongTextProps
     margin: "none", //'dense','none','normal',
     size: "medium", // 'medium','small',string
     type: "text", // 'text','url','email','search','password'
-    variant: "outlined", // 'filled','outlined','standard'
+    variant: "top", // 'filled','outlined','standard','top'
     defaultValue: "",
     //Length Validation
     validateLength: false,

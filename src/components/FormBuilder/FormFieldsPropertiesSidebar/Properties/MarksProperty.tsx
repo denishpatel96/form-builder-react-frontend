@@ -16,39 +16,30 @@ import { StyledListItem } from "../../Styles";
 import { Mark } from "../../Types";
 import { Add, Remove } from "@mui/icons-material";
 import { NumericFormat } from "react-number-format";
+import { SwitchTypeProperty } from "../PropertyTypes/SwitchTypeProperty";
 
-type MarksPropertyProps = {
+export const MarksProperty = ({
+  value,
+  onUpdate,
+}: {
   value: boolean | undefined;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-};
-
-export const MarksProperty = ({ value, onUpdate }: MarksPropertyProps) => {
+}) => {
   return (
-    <StyledListItem>
-      <Grid container spacing={1}>
-        <Grid item xs={10}>
-          <PropTitle text="Marks" />
-          <FormHelperText>Show marks on slider track</FormHelperText>
-        </Grid>
-        <Grid item xs={2}>
-          <Switch
-            name={"showMarks"}
-            checked={value}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              if (!e.target.checked) {
-                onUpdate("customMarks", [], true);
-                onUpdate("showCustomMarks", false, true);
-              }
-              onUpdate("showMarks", e.target.checked);
-            }}
-          />
-        </Grid>
-      </Grid>
-    </StyledListItem>
+    <SwitchTypeProperty
+      path="showMarks"
+      value={value}
+      onUpdate={onUpdate}
+      title="Marks"
+      helperText="Show marks on slider track"
+    />
   );
 };
 
-type CustomMarksPropertyProps = {
+export const CustomMarksProperty = ({
+  value: { step, customMarks, showCustomMarks, min, max },
+  onUpdate,
+}: {
   value: {
     customMarks: Mark[];
     showCustomMarks: boolean;
@@ -57,12 +48,7 @@ type CustomMarksPropertyProps = {
     max: number;
   };
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-};
-
-export const CustomMarksProperty = ({
-  value: { step, customMarks, showCustomMarks, min, max },
-  onUpdate,
-}: CustomMarksPropertyProps) => {
+}) => {
   // this state is necessary to track whether value has been updated since last request sent.
   const [updated, setUpdated] = React.useState<boolean>(false);
   return (

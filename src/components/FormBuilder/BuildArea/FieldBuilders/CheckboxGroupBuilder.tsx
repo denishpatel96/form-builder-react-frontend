@@ -9,22 +9,19 @@ import {
 import React from "react";
 import { ICheckboxGroupProps } from "../../Types";
 
-export interface ICheckboxGroupBuilderProps {
-  field: ICheckboxGroupProps;
-}
-
-export const CheckboxGroupBuilder = ({ field }: ICheckboxGroupBuilderProps) => {
+export const CheckboxGroupBuilder = ({ field }: { field: ICheckboxGroupProps }) => {
+  const { error, required, label, row, title, id, size, helperText, options } = field;
   return (
     <FormControl
       fullWidth
       component={"fieldset"}
-      error={field.error}
+      error={error}
       variant="filled"
-      required={field.required}
+      required={required}
     >
-      <FormLabel>{field.label}</FormLabel>
-      <FormGroup row={field.row} title={field.title} id={field.id}>
-        {field.options.map((op, index) => {
+      <FormLabel>{label}</FormLabel>
+      <FormGroup row={row} title={title} id={id}>
+        {options.map((op, index) => {
           return (
             <FormControlLabel
               key={index}
@@ -33,15 +30,15 @@ export const CheckboxGroupBuilder = ({ field }: ICheckboxGroupBuilderProps) => {
                 <Checkbox
                   checked={op.defaultChecked}
                   value={op.label}
-                  size={field.size}
-                  required={field.required}
+                  size={size}
+                  required={required}
                 />
               }
             />
           );
         })}
       </FormGroup>
-      <FormHelperText>{field.helperText}</FormHelperText>
+      <FormHelperText>{helperText}</FormHelperText>
     </FormControl>
   );
 };

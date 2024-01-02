@@ -1,19 +1,12 @@
 import React from "react";
 import { TextTypeProperty } from "../PropertyTypes/TextTypeProperty";
 
-export const PlaceholderProperty = ({
+export const HeadingProperty = ({
   value,
   onUpdate,
 }: {
   value: string | undefined;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
 }) => {
-  return (
-    <TextTypeProperty
-      value={value}
-      onUpdate={onUpdate}
-      path={"placeholder"}
-      title={"Placeholder"}
-    />
-  );
+  return <TextTypeProperty value={value} onUpdate={onUpdate} path={"label"} title={"Heading"} />;
 };

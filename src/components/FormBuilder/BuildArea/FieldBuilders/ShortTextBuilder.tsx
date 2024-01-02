@@ -1,12 +1,8 @@
-import { TextField } from "@mui/material";
+import { InputLabel, TextField } from "@mui/material";
 import React from "react";
 import { IShortTextProps } from "../../Types";
 
-export interface IShortTextBuilderProps {
-  field: IShortTextProps;
-}
-
-export const ShortTextBuilder = ({ field }: IShortTextBuilderProps) => {
+export const ShortTextBuilder = ({ field }: { field: IShortTextProps }) => {
   const {
     name,
     id,
@@ -21,22 +17,27 @@ export const ShortTextBuilder = ({ field }: IShortTextBuilderProps) => {
     placeholder,
   } = field;
   return (
-    <TextField
-      fullWidth
-      InputLabelProps={{ shrink: true }}
-      id={id}
-      label={label}
-      name={name}
-      margin={margin}
-      required={required}
-      title={title}
-      size={size}
-      variant={variant}
-      value={defaultValue}
-      placeholder={placeholder}
-      InputProps={{ readOnly: true }}
-      helperText={helperText}
-      error={!label}
-    />
+    <>
+      {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        margin={margin}
+        required={required}
+        title={title}
+        size={size}
+        value={defaultValue}
+        placeholder={placeholder}
+        InputProps={{ readOnly: true }}
+        helperText={helperText}
+        error={!label}
+        {...(variant !== "top" && {
+          label: label,
+          InputLabelProps: { shrink: true },
+          variant: variant,
+        })}
+      />
+    </>
   );
 };

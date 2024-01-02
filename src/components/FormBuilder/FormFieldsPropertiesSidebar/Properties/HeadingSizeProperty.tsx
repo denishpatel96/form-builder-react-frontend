@@ -1,23 +1,23 @@
 import React from "react";
 import { ToggleTypeProperty } from "../PropertyTypes/ToggleTypeProperty";
 
-export const SliderTrackProperty = ({
+export const HeadingSizeProperty = ({
   value,
   onUpdate,
 }: {
-  value: "normal" | "inverted" | false | undefined;
+  value: "small" | "default" | "large" | undefined;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
 }) => {
   return (
     <ToggleTypeProperty
       value={value}
       onUpdate={onUpdate}
-      path="track"
-      title="Track"
+      path="size"
+      title="Heading Font Size"
       options={[
-        { value: false, label: "Hidden" },
-        { value: "normal", label: "Visible" },
-        { value: "inverted", label: "Inverted" },
+        { value: "small", label: "Small" },
+        { value: "default", label: "Default" },
+        { value: "large", label: "Large" },
       ]}
     />
   );

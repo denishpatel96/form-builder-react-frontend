@@ -1,45 +1,25 @@
-import {
-  FormHelperText,
-  Grid,
-  TextFieldProps,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
 import React from "react";
-import PropTitle from "./PropTitle";
-import { StyledListItem } from "../../Styles";
+import { ToggleTypeProperty } from "../PropertyTypes/ToggleTypeProperty";
 
-type MarginPropertyProps = {
-  value: TextFieldProps["margin"];
+export const MarginProperty = ({
+  value,
+  onUpdate,
+}: {
+  value: string | undefined;
   onUpdate: (path: string, value: any, isLocalUpdate?: boolean) => void;
-};
-
-export const MarginProperty = ({ value, onUpdate }: MarginPropertyProps) => {
+}) => {
   return (
-    <StyledListItem>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <PropTitle text="Margin" />
-        </Grid>
-        <Grid item xs={12}>
-          <ToggleButtonGroup
-            fullWidth
-            size="small"
-            color="primary"
-            value={value}
-            exclusive
-            onChange={(_, value: any) => value !== null && onUpdate("margin", value)}
-            aria-label="Platform"
-          >
-            <ToggleButton value="none">None</ToggleButton>
-            <ToggleButton value="dense">Dense</ToggleButton>
-            <ToggleButton value="normal">Normal</ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText>Change the vertical spacing.</FormHelperText>
-        </Grid>
-      </Grid>
-    </StyledListItem>
+    <ToggleTypeProperty
+      value={value}
+      onUpdate={onUpdate}
+      path="margin"
+      title="Margin"
+      helperText="Change the vertical spacing."
+      options={[
+        { value: "none", label: "None" },
+        { value: "dense", label: "Dense" },
+        { value: "normal", label: "Normal" },
+      ]}
+    />
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { InputLabel, TextField } from "@mui/material";
 import { Control, Controller, ControllerProps, FieldError } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types/fields";
 import { ILongTextProps } from "../../Types";
@@ -20,6 +20,7 @@ export const LongTextField = ({
   const errorMsgFn = useFormError();
   const customErrorFn = parseError || errorMsgFn;
   const {
+    id,
     name,
     required,
     type,
@@ -54,30 +55,35 @@ export const LongTextField = ({
       rules={validation}
       defaultValue={defaultValue}
       render={({ field: fieldProps, fieldState: { error } }) => (
-        <TextField
-          {...fieldProps}
-          label={label}
-          margin={margin}
-          maxRows={maxRows}
-          minRows={minRows}
-          multiline
-          placeholder={placeholder}
-          title={title}
-          size={size}
-          variant={variant}
-          fullWidth
-          name={name}
-          required={required}
-          type={type}
-          error={!!error}
-          helperText={
-            error
-              ? typeof customErrorFn === "function"
-                ? customErrorFn(error)
-                : error.message
-              : helperText
-          }
-        />
+        <>
+          {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+          <TextField
+            {...fieldProps}
+            margin={margin}
+            maxRows={maxRows}
+            minRows={minRows}
+            multiline
+            placeholder={placeholder}
+            title={title}
+            size={size}
+            fullWidth
+            name={name}
+            required={required}
+            type={type}
+            error={!!error}
+            helperText={
+              error
+                ? typeof customErrorFn === "function"
+                  ? customErrorFn(error)
+                  : error.message
+                : helperText
+            }
+            {...(variant !== "top" && {
+              label: label,
+              variant: variant,
+            })}
+          />
+        </>
       )}
     />
   );

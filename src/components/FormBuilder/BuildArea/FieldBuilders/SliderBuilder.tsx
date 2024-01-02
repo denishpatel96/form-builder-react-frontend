@@ -2,11 +2,7 @@ import React from "react";
 import { FormControl, FormHelperText, FormLabel, Slider, Stack } from "@mui/material";
 import { ISliderProps } from "../../Types";
 
-export interface ISliderBuilderProps {
-  field: ISliderProps;
-}
-
-export const SliderBuilder = ({ field }: ISliderBuilderProps) => {
+export const SliderBuilder = ({ field }: { field: ISliderProps }) => {
   const {
     id,
     defaultValue,

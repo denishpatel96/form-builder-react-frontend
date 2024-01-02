@@ -93,26 +93,27 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
                 width: "100%",
                 position: "relative",
                 overflow: "scroll",
-                bgcolor: (theme) => theme.palette?.background?.default,
-                backgroundImage: `url(${formProperties.formImage})`,
+                bgcolor: (theme) =>
+                  formProperties.formBgColor || theme.palette?.background?.default,
+                backgroundImage: `url(${formProperties.formBgImage})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
               }}
             >
               <Box
                 sx={{
-                  margin: "32px auto",
+                  margin: "16px auto",
                   padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
                   height: "auto",
                   width: "calc(100% - 48px)",
                   maxWidth: formProperties.formWidth,
-                  bgcolor: (theme) => theme.palette.background.paper,
+                  bgcolor: (theme) => formProperties.pageBgColor || theme.palette.background.paper,
                   boxShadow: (theme) => theme.shadows[1],
                   borderRadius: 2,
                   ".MuiTypography-root": {
                     color: (theme) => theme.palette.text.secondary,
                   },
-                  backgroundImage: `url(${formProperties.pageImage})`,
+                  backgroundImage: `url(${formProperties.pageBgImage})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   ...(device === "phone" && {
@@ -122,7 +123,7 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
                     maxWidth: 394,
                     maxHeight: 850,
                     borderWidth: "12px",
-                    borderColor: "darkgrey",
+                    borderColor: "black",
                     borderStyle: "solid",
                     borderRadius: 2,
                   }),

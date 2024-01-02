@@ -16,9 +16,9 @@ export const StyledFormFieldItemPlaceholder = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledFormFieldItem = styled(Box)(({ theme }) => ({
-  boxShadow: theme.shadows[2],
   height: "100%",
   width: "100%",
+  border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   padding: "10px",
   cursor: "move",
@@ -32,7 +32,7 @@ export const StyledFormFieldItem = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledFormFieldItemDragOverlay = styled(ListItem)(({ theme }) => ({
-  boxShadow: theme.shadows[10],
+  boxShadow: theme.shadows[1],
   height: "100%",
   width: "100%",
   transform: "rotate(10deg)",

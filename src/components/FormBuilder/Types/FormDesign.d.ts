@@ -9,14 +9,16 @@ export interface IFormDesignProps {
   horizontalSpacing: number;
   verticalSpacing: number;
   // Label Style
-  labelFontWeight: "normal" | "bold" | "bolder";
-  labelColor: CSSProperties["color"];
+  labelFontWeight?: "normal" | "bold" | "bolder";
+  labelColor?: CSSProperties["color"];
   // Color Scheme
   palette?: PaletteOptions;
   // Background Images
-  pageImage: string;
-  formImage: string;
+  pageBgImage?: string;
+  pageBgColor?: CSSProperties["color"];
+  formBgImage?: string;
+  formBgColor?: CSSProperties["color"];
   // Font Options
-  fontFamily: CSSProperties["fontFamily"];
-  fontSize: CSSProperties["fontSize"];
+  fontFamily?: CSSProperties["fontFamily"];
+  fontSize?: CSSProperties["fontSize"];
 }

@@ -28,7 +28,6 @@ const BuildAreaHeader = ({
       sx={{
         px: 3,
         minHeight: 50,
-        backgroundColor: "grey.200",
         display: "flex",
         alignItems: "center",
         width: "100%",

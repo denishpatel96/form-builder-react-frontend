@@ -14,7 +14,7 @@ export const getCustomTheme = (customPalette: PaletteOptions): Theme => {
 };
 
 export default function ThemeConfig({ children }: { children: ReactNode }) {
-  const theme = createTheme(darkTheme);
+  const theme = createTheme(lightTheme);
   theme.components = componentsOverride(theme);
 
   return (
