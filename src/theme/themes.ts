@@ -1,4 +1,4 @@
-import { ThemeOptions } from "@mui/material";
+import { Components, Theme, ThemeOptions } from "@mui/material";
 import { STANDARD_HEIGHT } from "../constants";
 
 const mixins: ThemeOptions["mixins"] = {
@@ -11,6 +11,36 @@ const typography: ThemeOptions["typography"] = {
   fontFamily: "'Noto Sans', sans-serif",
   button: {
     textTransform: "none",
+  },
+};
+
+const components: Components<Omit<Theme, "components">> = {
+  // Slider
+  MuiSlider: {
+    styleOverrides: {
+      mark: { height: 5 },
+      markLabel: {
+        '&[style="left: 0%;"]': {
+          transform: "none",
+        },
+        '&[style="left: 100%;"]': {
+          transform: "translateX(-100%)",
+        },
+      },
+      valueLabel: {
+        whiteSpace: "normal",
+      },
+    },
+  },
+
+  // Form Label
+  MuiFormLabel: {
+    styleOverrides: {
+      root: {
+        fontWeight: 600,
+        marginBottom: 10,
+      },
+    },
   },
 };
 
@@ -31,6 +61,7 @@ export const darkTheme: ThemeOptions = {
     },
   },
   mixins,
+  components,
   typography,
 };
 
@@ -56,5 +87,6 @@ export const lightTheme: ThemeOptions = {
     },
   },
   mixins,
+  components,
   typography,
 };
