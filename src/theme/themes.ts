@@ -1,4 +1,4 @@
-import { Components, Theme, ThemeOptions } from "@mui/material";
+import { ThemeOptions } from "@mui/material";
 import { STANDARD_HEIGHT } from "../constants";
 
 const mixins: ThemeOptions["mixins"] = {
@@ -14,7 +14,7 @@ const typography: ThemeOptions["typography"] = {
   },
 };
 
-const components: Components<Omit<Theme, "components">> = {
+const components: ThemeOptions["components"] = {
   // Slider
   MuiSlider: {
     styleOverrides: {
