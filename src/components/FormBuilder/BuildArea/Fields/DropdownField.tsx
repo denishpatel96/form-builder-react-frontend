@@ -46,7 +46,11 @@ export const DropdownField = ({
       render={({ field: fieldProps }) => {
         return (
           <>
-            {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+            {variant === "top" && (
+              <InputLabel required={required} htmlFor={id}>
+                {label}
+              </InputLabel>
+            )}
             <TextField
               {...fieldProps}
               select

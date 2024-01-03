@@ -18,7 +18,11 @@ export const ShortTextBuilder = ({ field }: { field: IShortTextProps }) => {
   } = field;
   return (
     <>
-      {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      {variant === "top" && (
+        <InputLabel required={required} htmlFor={id}>
+          {label}
+        </InputLabel>
+      )}
       <TextField
         fullWidth
         id={id}

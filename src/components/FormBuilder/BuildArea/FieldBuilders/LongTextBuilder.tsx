@@ -20,7 +20,11 @@ export const LongTextBuilder = ({ field }: { field: ILongTextProps }) => {
   } = field;
   return (
     <>
-      {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      {variant === "top" && (
+        <InputLabel required={required} htmlFor={id}>
+          {label}
+        </InputLabel>
+      )}
       <TextField
         fullWidth
         multiline

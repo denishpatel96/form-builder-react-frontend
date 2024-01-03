@@ -36,7 +36,11 @@ export const ComboboxField = ({
       render={({ field: { onChange }, fieldState: { error } }) => {
         return (
           <>
-            {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+            {variant === "top" && (
+              <InputLabel required={required} htmlFor={id}>
+                {label}
+              </InputLabel>
+            )}
             <Autocomplete
               onChange={(_, value, __) => {
                 onChange(value);

@@ -22,7 +22,11 @@ export const DropdownBuilder = ({ field }: { field: IDropdownProps }) => {
     : options.find((op) => op.defaultChecked)?.label || "";
   return (
     <>
-      {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      {variant === "top" && (
+        <InputLabel required={required} htmlFor={id}>
+          {label}
+        </InputLabel>
+      )}
       <TextField
         select
         fullWidth

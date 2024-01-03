@@ -62,7 +62,11 @@ export const ShortTextField = ({
       defaultValue={defaultValue}
       render={({ field: fieldProps, fieldState: { error } }) => (
         <>
-          {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+          {variant === "top" && (
+            <InputLabel required={required} htmlFor={id}>
+              {label}
+            </InputLabel>
+          )}
           <TextField
             {...fieldProps}
             margin={margin}

@@ -9,7 +9,11 @@ export const ComboboxBuilder = ({ field }: { field: IComboboxProps }) => {
     : options.find((op) => op.defaultChecked) || null;
   return (
     <>
-      {variant === "top" && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      {variant === "top" && (
+        <InputLabel required={required} htmlFor={id}>
+          {label}
+        </InputLabel>
+      )}
       <Autocomplete
         fullWidth
         disablePortal
