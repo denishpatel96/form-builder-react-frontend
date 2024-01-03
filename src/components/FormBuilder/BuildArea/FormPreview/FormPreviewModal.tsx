@@ -74,6 +74,7 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
               alignItems: "center",
               width: "100%",
               height: 50,
+              background: (theme) => theme.palette.background.paper,
             }}
           >
             <Tooltip title="Back">
@@ -84,6 +85,21 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
             <Typography variant="subtitle1" pl={1}>
               Live Preview
             </Typography>
+            <ToggleButtonGroup
+              exclusive
+              value={device}
+              onChange={handleDevice}
+              aria-label="device"
+              size="small"
+              sx={{ ml: "auto", mr: 1, p: 1 }}
+            >
+              <ToggleButton size="small" value="laptop" aria-label="laptop">
+                <LaptopOutlined />
+              </ToggleButton>
+              <ToggleButton size="small" value="phone" aria-label="phone">
+                <PhoneIphoneOutlined />
+              </ToggleButton>
+            </ToggleButtonGroup>
           </Box>
 
           <ThemeProvider theme={getCustomTheme({ ...cloneDeep(formProperties.palette) })}>
@@ -137,24 +153,6 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
               </Box>
             </Box>
           </ThemeProvider>
-
-          <Box sx={{ height: 50, width: "100%", display: "flex", justifyContent: "center" }}>
-            <ToggleButtonGroup
-              exclusive
-              value={device}
-              onChange={handleDevice}
-              aria-label="device"
-              size="small"
-              sx={{ p: 1 }}
-            >
-              <ToggleButton size="small" value="laptop" aria-label="laptop">
-                <LaptopOutlined />
-              </ToggleButton>
-              <ToggleButton size="small" value="phone" aria-label="phone">
-                <PhoneIphoneOutlined />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Box>
         </Box>
       </Modal>
     </>

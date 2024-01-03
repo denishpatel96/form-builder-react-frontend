@@ -35,12 +35,12 @@ export const ColorValueProperty = ({
           />
         </Grid>
         <Grid item xs={3} display="flex" justifyContent="flex-end">
-          {value !== undefined ? (
+          {value !== undefined && value !== defaultValue ? (
             <Typography
               sx={{ cursor: "pointer" }}
               color={"primary"}
               variant="subtitle2"
-              onClick={() => onChange(path, undefined)}
+              onClick={() => onChange(path, defaultValue)}
             >
               Reset
             </Typography>
