@@ -17,7 +17,7 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import BuildArea from "./BuildArea";
 import FormFieldsSidebar from "./FormFieldsSideBar";
 import FormFieldPropertiesSidebar from "./FormFieldsPropertiesSidebar";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
 import { getField, getFormDesignProps } from "./Utility";
 import { set } from "lodash";
 import { IFormDesignProps } from "./Types";
@@ -25,16 +25,19 @@ import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { deselectFields, selectFields } from "../../store/features/formSlice";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../constants";
+import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, ROUTE_WORKSPACES } from "../../constants";
 import Spinner from "../Reusable/Spinner";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api, { useGetFormSchemaQuery, useUpdateFormSchemaMutation } from "../../store/features/api";
 import { sortArray } from "../../helpers/functions";
 
 const FormBuilder = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [over, setOver] = React.useState<Over | null>(null);
   const [active, setActive] = React.useState<Active | null>(null);
+  const { selected } = useAppSelector((state) => state.form);
+  const { username } = useAppSelector((state) => state.auth);
   const { orgId, formId, workspaceId } = useParams() as {
     orgId: string;
     workspaceId: string;
@@ -45,6 +48,8 @@ const FormBuilder = () => {
     isLoading,
     isFetching,
     data: formSchema,
+    isError,
+    error,
   } = useGetFormSchemaQuery(
     { orgId, workspaceId, formId },
     { skip: !(orgId && workspaceId && formId) }
@@ -52,7 +57,6 @@ const FormBuilder = () => {
 
   const [updateFormSchema] = useUpdateFormSchemaMutation();
 
-  const { selected } = useAppSelector((state) => state.form);
   const [isPropertiesOpen, setIsPropertiesOpen] = React.useState<boolean>(false);
   const [isFormFieldsOpen, setIsFormFieldsOpen] = React.useState<boolean>(true);
   const [isFormDesignOpen, setIsFormDesignOpen] = React.useState<boolean>(false);
@@ -302,6 +306,16 @@ const FormBuilder = () => {
           />
         </Box>
       </DndContext>
+    );
+  } else if (isError) {
+    console.log("Error fetching form details :", error);
+    buildArea = (
+      <>
+        <Alert severity="error">Error fetching form details.</Alert>
+        <Button onClick={() => navigate(ROUTE_WORKSPACES.replace(":orgId", username))}>
+          Go to Workspaces
+        </Button>
+      </>
     );
   }
 
