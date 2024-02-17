@@ -27,12 +27,16 @@ import {
 import { useForm } from "react-hook-form";
 import { Control, FieldValues } from "react-hook-form/dist/types";
 import { CheckboxGroupField } from "../Fields/CheckboxGroupField";
-import { ArrowCircleRight, Refresh } from "@mui/icons-material";
+import { ArrowForwardOutlined, Refresh } from "@mui/icons-material";
+import { useCreateFormResponseMutation } from "../../../../store/features/api";
+import { useParams } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 type FormPreviewProps = {
   formFields: IFieldProps[];
   device: string;
   formProperties: IFormDesignProps;
+  onSuccess?: () => void;
 };
 
 const renderField = (field: IFieldProps, control: Control<FieldValues, any>) => {
@@ -61,10 +65,28 @@ const renderField = (field: IFieldProps, control: Control<FieldValues, any>) => 
   }
 };
 
-const FormPreview = ({ formFields, device, formProperties }: FormPreviewProps) => {
-  const { handleSubmit, control, reset } = useForm();
+const FormPreview = ({ formFields, device, formProperties, onSuccess }: FormPreviewProps) => {
+  const { formId } = useParams() as {
+    orgId: string;
+    workspaceId: string;
+    formId: string;
+  };
+  const { handleSubmit, control, reset: resetForm } = useForm();
+  const [createFormResponse, { isLoading }] = useCreateFormResponseMutation();
+
+  const handleCreateFormResponse = async (data: FieldValues) => {
+    console.log("formData : ", data);
+
+    if (isLoading) return;
+    try {
+      await createFormResponse({ formId, responseData: data }).unwrap();
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.log("Error submitting form response: ", error);
+    }
+  };
   return (
-    <form onSubmit={handleSubmit((data) => console.log("formData : ", data))}>
+    <form onSubmit={handleSubmit((data) => handleCreateFormResponse(data))}>
       <Grid
         container
         rowSpacing={`${formProperties.verticalSpacing}px`}
@@ -80,12 +102,18 @@ const FormPreview = ({ formFields, device, formProperties }: FormPreviewProps) =
         })}
         <Grid item xs={12}>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button onClick={reset} startIcon={<Refresh />}>
+            <Button onClick={resetForm} startIcon={<Refresh />} disabled={isLoading}>
               Reset
             </Button>
-            <Button type="submit" variant="contained" endIcon={<ArrowCircleRight />}>
+            <LoadingButton
+              loading={isLoading}
+              variant="contained"
+              loadingPosition={"end"}
+              endIcon={<ArrowForwardOutlined />}
+              type="submit"
+            >
               Submit
-            </Button>
+            </LoadingButton>
           </Box>
         </Grid>
       </Grid>

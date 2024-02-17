@@ -2,7 +2,7 @@ import { DragOverlay, useDraggable } from "@dnd-kit/core";
 import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
 import React from "react";
 import { Drawer, Typography, Divider, Grid, Box, IconButton } from "@mui/material";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, FORM_ELEMENTS_LIST } from "../../constants";
+import { DRAWER_WIDTH_TABLET, FORM_ELEMENTS_LIST } from "../../constants";
 import {
   StyledFormFieldItem,
   StyledFormFieldItemDragOverlay,
@@ -80,7 +80,7 @@ const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IForm
       variant={isOpen ? "persistent" : "temporary"}
       PaperProps={{
         sx: {
-          width: { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP },
+          width: DRAWER_WIDTH_TABLET,
           ...(isOpen && { position: "relative" }),
         },
       }}

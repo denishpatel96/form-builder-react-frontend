@@ -8,3 +8,4 @@ export * from "./WorkspacesPage";
 export * from "./UserSettingsPage";
 export * from "./OrganizationSettingsPage";
 export * from "./FormBuilderPage";
+export * from "./ResponsesPage";

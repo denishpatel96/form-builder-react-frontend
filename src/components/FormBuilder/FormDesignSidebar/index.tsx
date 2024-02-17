@@ -21,7 +21,7 @@ import { ColorValueProperty } from "./Properties/ColorValueProperty";
 import { ModeProperty } from "./Properties/ModeProperty";
 import { getCustomTheme } from "../../../theme";
 import { ImageURLProperty } from "./Properties/ImageURLProperty";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET } from "../../../constants";
+import { DRAWER_WIDTH_TABLET } from "../../../constants";
 import { styled } from "@mui/material/styles";
 
 export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
@@ -88,7 +88,7 @@ const FormDesignSidebar = ({
       variant={isOpen ? "persistent" : "temporary"}
       PaperProps={{
         sx: {
-          width: { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP },
+          width: DRAWER_WIDTH_TABLET,
           ...(isOpen && { position: "relative" }),
         },
       }}

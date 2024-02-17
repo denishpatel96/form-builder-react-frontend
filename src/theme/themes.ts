@@ -32,16 +32,6 @@ const components: ThemeOptions["components"] = {
       },
     },
   },
-
-  // Form Label
-  MuiFormLabel: {
-    styleOverrides: {
-      root: {
-        fontWeight: 600,
-        marginBottom: 10,
-      },
-    },
-  },
 };
 
 export const darkTheme: ThemeOptions = {
@@ -82,8 +72,8 @@ export const lightTheme: ThemeOptions = {
       disabled: "#555555",
     },
     background: {
-      default: "#e4e5f1",
-      paper: "#f5f5f5",
+      default: "#f5f5f5",
+      paper: "#fff",
     },
   },
   mixins,

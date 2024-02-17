@@ -25,7 +25,7 @@ import FormDesignSidebar from "./FormDesignSidebar";
 import { AddOutlined, PaletteOutlined } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { deselectFields, selectFields } from "../../store/features/formSlice";
-import { DRAWER_WIDTH_DESKTOP, DRAWER_WIDTH_TABLET, ROUTE_WORKSPACES } from "../../constants";
+import { DRAWER_WIDTH_TABLET, ROUTE_WORKSPACES } from "../../constants";
 import Spinner from "../Reusable/Spinner";
 import { useNavigate, useParams } from "react-router-dom";
 import api, { useGetFormSchemaQuery, useUpdateFormSchemaMutation } from "../../store/features/api";
@@ -187,7 +187,7 @@ const FormBuilder = () => {
             zIndex: 12,
             cursor: "pointer",
             borderRadius: "0 20px 20px 0",
-            left: isFormFieldsOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
+            left: isFormFieldsOpen ? DRAWER_WIDTH_TABLET : 0,
             top: 60,
             boxShadow: (theme) => theme.shadows[1],
             background: `linear-gradient(to right, #fc5c7d, #6a82fb)`,
@@ -227,7 +227,7 @@ const FormBuilder = () => {
             zIndex: 12,
             cursor: "pointer",
             borderRadius: "0 20px 20px 0",
-            left: isFormDesignOpen ? { xs: DRAWER_WIDTH_TABLET, xl: DRAWER_WIDTH_DESKTOP } : 0,
+            left: isFormDesignOpen ? DRAWER_WIDTH_TABLET : 0,
             top: 110,
             boxShadow: (theme) => theme.shadows[1],
             background: (theme) => theme.palette.background.paper,

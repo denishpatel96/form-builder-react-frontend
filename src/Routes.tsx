@@ -8,6 +8,7 @@ import {
   FormBuilderPage,
   HomePage,
   LoginPage,
+  ResponsesPage,
   // OrganizationSettingsPage,
   SignupPage,
   UserSettingsPage,
@@ -24,6 +25,7 @@ import {
   ROUTE_WORKSPACE,
   ROUTE_WORKSPACES,
   ROUTE_FORM_BUILDER,
+  ROUTE_RESPONSES,
   // ROUTE_ORGANIZATION_SETTINGS,
 } from "./constants";
 
@@ -38,6 +40,7 @@ const Routes = () => (
     <Route path={ROUTE_WORKSPACES} element={<WorkspacesPage />} />
     <Route path={ROUTE_WORKSPACE} element={<WorkspacesPage />} />
     <Route path={ROUTE_FORM_BUILDER} element={<FormBuilderPage />} />
+    <Route path={ROUTE_RESPONSES} element={<ResponsesPage />} />
     <Route path={ROUTE_USER_SETTINGS} element={<UserSettingsPage />} />
     {/* <Route path={ROUTE_ORGANIZATION_SETTINGS} element={<OrganizationSettingsPage />} /> */}
     <Route path={"*"} element={<LoginPage />} />

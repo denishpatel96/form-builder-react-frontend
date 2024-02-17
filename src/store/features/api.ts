@@ -6,6 +6,7 @@ import { resetAuthState, setTokens } from "./authSlice";
 import { IFieldProps } from "../../components/FormBuilder/Types";
 import { deselectFields, selectFields } from "./formSlice";
 import { sortArray } from "../../helpers/functions";
+import { FieldValues } from "react-hook-form";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}`,
@@ -53,6 +54,14 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   }
   return result;
 };
+
+export interface FormResponse {
+  formId: string;
+  responseId: string;
+  data: FieldValues;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface Form {
   orgId: string;
@@ -618,6 +627,62 @@ const api = createApi({
           } catch {}
         },
       }),
+
+      //----------------- FORM RESPONSE ---------------------------------------------
+
+      createFormResponse: builder.mutation<
+        FormResponse,
+        { formId: string; responseData: FieldValues }
+      >({
+        query: (body) => ({
+          url: "/formResponses",
+          method: "post",
+          body,
+        }),
+        transformResponse,
+      }),
+
+      deleteFormResponse: builder.mutation<
+        void,
+        { orgId: string; workspaceId: string; formId: string; responseIds: string[] }
+      >({
+        query: (body) => ({
+          url: "/formResponses/delete",
+          method: "post",
+          body,
+        }),
+        transformResponse,
+        async onQueryStarted(
+          { orgId, workspaceId, formId, responseIds },
+          { dispatch, queryFulfilled }
+        ) {
+          try {
+            await queryFulfilled;
+            dispatch(
+              api.util.updateQueryData(
+                "getFormResponses",
+                { orgId, workspaceId, formId },
+                (draftedFormResponses) => {
+                  return draftedFormResponses.filter((r) => !responseIds.includes(r.responseId));
+                }
+              )
+            );
+          } catch {}
+        },
+      }),
+
+      getFormResponses: builder.query<
+        FormResponse[],
+        { orgId: string; workspaceId: string; formId: string }
+      >({
+        query: (params) => ({
+          url: `/formResponses/${params.orgId}/${params.workspaceId}/${params.formId}`,
+          method: "get",
+        }),
+        transformResponse,
+      }),
+
+      //----------------- FORM SCHEMA ---------------------------------------------
       getFormSchema: builder.query<
         FormSchema,
         { orgId: string; workspaceId: string; formId: string }
@@ -744,5 +809,8 @@ export const {
   useUpdateFormMutation,
   useGetFormSchemaQuery,
   useUpdateFormSchemaMutation,
+  useGetFormResponsesQuery,
+  useCreateFormResponseMutation,
+  useDeleteFormResponseMutation,
 } = api;
 export default api;

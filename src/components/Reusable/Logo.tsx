@@ -12,7 +12,8 @@ const Logo = ({ width = 150, height, invert = false }: LogoProps) => {
   const navigate = useNavigate();
   return (
     <img
-      src="https://drive.google.com/uc?export=view&id=1p_AoLW8_3U0XuqEZkghBiP8SArrTnkBJ"
+      // src="https://drive.google.com/uc?export=view&id=1p_AoLW8_3U0XuqEZkghBiP8SArrTnkBJ" Not working anumore
+      src="https://drive.google.com/thumbnail?id=1p_AoLW8_3U0XuqEZkghBiP8SArrTnkBJ"
       width={width}
       height={height}
       onClick={() => navigate(ROUTE_HOME)}

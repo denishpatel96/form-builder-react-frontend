@@ -5,7 +5,6 @@ import {
   Button,
   Chip,
   FormControlLabel,
-  Grid,
   IconButton,
   InputAdornment,
   LinearProgress,
@@ -173,32 +172,23 @@ const WorkspaceForms = (_props: WorkspaceFormsProps) => {
         )}
 
         {showFilters && (
-          <Grid
-            container
-            p={2}
-            spacing={2}
+          <Stack
             sx={{
+              padding: 2,
               borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
             }}
           >
-            <Grid item xs={12}>
-              <Stack>
-                <Typography variant="caption">Sort by</Typography>
-                <RadioGroup
-                  name="forms-filter-sort-by"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as "updatedAt" | "name")}
-                >
-                  <FormControlLabel
-                    value="updatedAt"
-                    control={<Radio />}
-                    label="Recently Updated"
-                  />
-                  <FormControlLabel value="name" control={<Radio />} label="Name" />
-                </RadioGroup>
-              </Stack>
-            </Grid>
-          </Grid>
+            <Typography variant="caption">Sort by</Typography>
+            <RadioGroup
+              name="forms-filter-sort-by"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "updatedAt" | "name")}
+              row
+            >
+              <FormControlLabel value="updatedAt" control={<Radio />} label="Recently Updated" />
+              <FormControlLabel value="name" control={<Radio />} label="Name" />
+            </RadioGroup>
+          </Stack>
         )}
       </>
     );

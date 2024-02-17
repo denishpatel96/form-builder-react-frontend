@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ArrowBackOutlined,
   ChevronLeftOutlined,
   LaptopOutlined,
   PhoneIphoneOutlined,
@@ -10,6 +11,7 @@ import {
   Button,
   IconButton,
   Modal,
+  Stack,
   SxProps,
   ThemeProvider,
   ToggleButton,
@@ -21,6 +23,7 @@ import { IFieldProps, IFormDesignProps } from "../../Types";
 import FormPreview from "./FormPreview";
 import { getCustomTheme } from "../../../../theme";
 import { cloneDeep } from "lodash";
+import SuccessAnimated from "../../../Reusable/SuccessAnimated";
 
 const modalStyle: SxProps = {
   position: "absolute" as "absolute",
@@ -41,10 +44,12 @@ type FormPreviewModalProps = {
 };
 
 const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [showSuccessPage, setShowSuccessPage] = React.useState<boolean>(false);
   const [device, setDevice] = React.useState("laptop");
   const handleOpen = () => {
     setOpen(true);
+    setShowSuccessPage(false);
   };
   const handleClose = () => {
     setOpen(false);
@@ -54,6 +59,10 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
     if (newDevice) {
       setDevice(newDevice);
     }
+  };
+
+  const handleSubmitSuccess = () => {
+    setShowSuccessPage(true);
   };
 
   return (
@@ -145,11 +154,28 @@ const FormPreviewModal = ({ formFields, formProperties }: FormPreviewModalProps)
                   }),
                 }}
               >
-                <FormPreview
-                  formFields={formFields}
-                  device={device}
-                  formProperties={formProperties}
-                />
+                {showSuccessPage ? (
+                  <Stack spacing={2} alignItems={"center"}>
+                    <SuccessAnimated />
+                    <Typography variant="subtitle1">Thank you for submitting the form!</Typography>
+                    <Button
+                      variant="outlined"
+                      startIcon={<ArrowBackOutlined />}
+                      onClick={() => {
+                        setShowSuccessPage(false)
+                      }}
+                    >
+                      Back to Form
+                    </Button>
+                  </Stack>
+                ) : (
+                  <FormPreview
+                    formFields={formFields}
+                    device={device}
+                    formProperties={formProperties}
+                    onSuccess={handleSubmitSuccess}
+                  />
+                )}
               </Box>
             </Box>
           </ThemeProvider>
