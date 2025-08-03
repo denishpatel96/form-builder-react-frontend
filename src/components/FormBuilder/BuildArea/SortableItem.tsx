@@ -1,45 +1,43 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
-import { Box, Grid, IconButton, Typography } from "@mui/material";
-import { FORM_ELEMENTS_LIST } from "../../../constants";
+import { Box, Grid, IconButton, Typography, Grow } from "@mui/material";
 import { lighten, useTheme } from "@mui/material/styles";
-import { FieldProps } from "../Types";
+import { IFieldProps } from "../Types";
 import {
   ContentCopyOutlined,
   DeleteOutlined,
   DragIndicator,
   SettingsOutlined,
-  TuneOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
-import RemoveFieldDialog from "./RemoveFieldDialog";
-import { StyledFormFieldItemPlaceholder } from "../FormFieldsSideBar/Styles";
+import { StyledFormFieldItemPlaceholder } from "../Styles";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import {
-  duplicateFields,
-  toggleSelection,
-  removeField,
-  selectField,
-} from "../../../store/features/form/formSlice";
-import { styled } from "@mui/material/styles";
+import { toggleSelection, selectFields } from "../../../store/features/formSlice";
 interface ISortableItemProps {
-  field: FieldProps;
-  renderElement: (field?: FieldProps) => JSX.Element;
+  field: IFieldProps;
+  order: string[];
+  deleted: boolean;
+  onRenderField: (field?: IFieldProps) => JSX.Element;
+  onDuplicateField: () => void;
   onTogglePropertiesDrawer: () => void;
+  onShowDeleteFieldDialog: () => void;
 }
 
-const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISortableItemProps) => {
+const SortableItem = ({
+  field,
+  order,
+  deleted,
+  onRenderField,
+  onDuplicateField,
+  onTogglePropertiesDrawer,
+  onShowDeleteFieldDialog,
+}: ISortableItemProps) => {
   const theme = useTheme();
   const [hoveredFieldId, setHoveredFieldId] = React.useState<string>("");
-  const { colSpan, fieldType, label, id, name } = field;
+  const { colSpan, id, name } = field;
 
   const selected = useAppSelector((state) => state.form.selected);
   const dispatch = useAppDispatch();
-  const type = FORM_ELEMENTS_LIST.find((el) => el.id === fieldType)?.label;
-  const fieldName = `${label} (${type})`;
-
-  const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
-    React.useState<boolean>(false);
 
   const { active, isOver, isDragging, attributes, listeners, setNodeRef, transition } = useSortable(
     {
@@ -69,7 +67,7 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
           left: 0,
           zIndex: 10,
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           backgroundColor: "transparent",
         }}
       >
@@ -81,85 +79,79 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
             animationDuration: "500ms",
             animationIterationCount: 1,
             animationTimingFunction: "ease-out",
+            transform: "translateX(-25px)",
             "@keyframes slide-left": {
-              "0%": { transform: "translateX(20px)", opacity: 0 },
-              "100%": { transform: "translateX(0px)", opacity: 1 },
+              "0%": { transform: "translateX(0px)", opacity: 0 },
+              "100%": { transform: "translateX(-25px)", opacity: 1 },
+            },
+          }}
+        ></Box>
+
+        <Box
+          sx={{
+            mr: 2,
+            borderRadius: "0 0 15px 15px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: (theme) => theme.palette.background.paper,
+            height: 30,
+            animationName: "slide-out",
+            animationDuration: "500ms",
+            animationIterationCount: 1,
+            animationTimingFunction: "ease-out",
+            "@keyframes slide-out": {
+              "0%": { transform: "translateY(-10px)", opacity: 0 },
+              "100%": { transform: "translateY(0px)", opacity: 1 },
             },
           }}
         >
-          {hoveredFieldId === id && <DragIndicator color="disabled" />}
+          {hoveredFieldId === id && !(selected.length === 1 && selected[0] === id) && (
+            <>
+              <DragIndicator fontSize="small" color="disabled" />
+              <Typography pr={1} variant="caption">
+                Drag to move this field
+              </Typography>
+            </>
+          )}
+          {selected.length === 1 && selected[0] === id && (
+            <>
+              <IconButton
+                title="Properties"
+                sx={{ width: 30, height: 30 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(selectFields([id]));
+                  onTogglePropertiesDrawer();
+                }}
+              >
+                <SettingsOutlined sx={{ width: 20, height: 20 }} />
+              </IconButton>
+              <IconButton
+                title="Duplicate"
+                sx={{ width: 30, height: 30 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDuplicateField();
+                }}
+              >
+                <ContentCopyOutlined sx={{ width: 18, height: 18 }} />
+              </IconButton>
+              <IconButton
+                title="Remove"
+                color="error"
+                sx={{ width: 30, height: 30 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onShowDeleteFieldDialog();
+                }}
+              >
+                <DeleteOutlined sx={{ width: 20, height: 20 }} />
+              </IconButton>
+            </>
+          )}
         </Box>
-
-        {selected.length === 1 && selected[0] === id && (
-          <Box
-            sx={{
-              mr: 2,
-              borderRadius: "15px 15px 0 0",
-              display: "flex",
-              justifyContent: "center",
-              borderColor: "action.hover",
-              borderWidth: "2px 2px 0 2px",
-              borderStyle: "solid",
-              height: 25,
-              animationName: "slide-out",
-              animationDuration: "500ms",
-              animationIterationCount: 1,
-              animationTimingFunction: "ease-out",
-              "@keyframes slide-out": {
-                "0%": { transform: "translateY(20px)", opacity: 0 },
-                "100%": { transform: "translateY(0px)", opacity: 1 },
-              },
-            }}
-          >
-            <IconButton
-              title="Properties"
-              sx={{ width: 30, height: 30 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(selectField({ fieldId: id }));
-                onTogglePropertiesDrawer();
-              }}
-            >
-              <SettingsOutlined sx={{ width: 20, height: 20 }} />
-            </IconButton>
-            <IconButton
-              title="Duplicate"
-              sx={{ width: 30, height: 30 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(duplicateFields());
-              }}
-            >
-              <ContentCopyOutlined sx={{ width: 18, height: 18 }} />
-            </IconButton>
-            <IconButton
-              title="Remove"
-              color="error"
-              sx={{ width: 30, height: 30 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setConfirmDeleteFieldDialogOpen(true);
-              }}
-            >
-              <DeleteOutlined sx={{ width: 20, height: 20 }} />
-            </IconButton>
-          </Box>
-        )}
       </Box>
-    );
-  };
-
-  const renderRemoveFieldDialog = () => {
-    return (
-      <RemoveFieldDialog
-        isOpen={confirmDeleteFieldDialogOpen}
-        fieldName={fieldName}
-        onClose={() => setConfirmDeleteFieldDialogOpen(false)}
-        onConfirm={() => {
-          setConfirmDeleteFieldDialogOpen(false);
-          dispatch(removeField({ fieldId: id }));
-        }}
-      />
     );
   };
 
@@ -174,95 +166,102 @@ const SortableItem = ({ field, renderElement, onTogglePropertiesDrawer }: ISorta
 
   return (
     <>
-      <Grid
-        ref={setNodeRef}
-        style={containerStyle}
-        {...attributes}
-        item
-        xs={12}
-        md={colSpan}
-        key={id}
-        id={`${name}-container`}
-        onMouseOver={() => {
-          setHoveredFieldId(id);
-        }}
-        onMouseLeave={() => {
-          setHoveredFieldId("");
-        }}
-        sx={{
-          userSelect: "none",
-          width: "100%",
-          height: "auto",
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          ...(active?.id.toString().includes("ctrl_") &&
-            isOver && {
-              backgroundColor: theme.palette.action.hover,
-            }),
-          ...(isDragging && {
-            ":before": {
-              content: '""',
-              position: "absolute",
-              zIndex: 11,
-              height: "95%",
-              width: "100%",
-              borderRadius: 2,
-              backgroundColor: lighten(theme.palette.background.paper, 0.25),
-              border: `2px dashed ${theme.palette.secondary.main}`,
-            },
-          }),
+      <Grow
+        in={!deleted}
+        timeout={{
+          enter: 750,
+          exit: 750,
         }}
       >
-        <Box
-          {...listeners}
+        <Grid
+          ref={setNodeRef}
+          style={containerStyle}
+          {...attributes}
+          item
+          xs={12}
+          md={colSpan}
+          key={id}
+          id={`${name}-container`}
+          onMouseOver={() => {
+            setHoveredFieldId(id);
+          }}
+          onMouseLeave={() => {
+            setHoveredFieldId("");
+          }}
           sx={{
+            userSelect: "none",
             width: "100%",
             height: "auto",
+            position: "relative",
             display: "flex",
             flexDirection: "column",
-            borderRadius: 2,
-            ...(hoveredFieldId === id && {
-              backgroundColor: theme.palette.action.hover,
-            }),
-            ...(selected.includes(id) && {
-              borderLeftColor: theme.palette.secondary.light,
-              borderLeftWidth: 4,
-              borderLeftStyle: "solid",
-              backgroundColor: theme.palette.action.hover,
+            alignItems: "center",
+            ...(active?.id.toString().includes("ctrl_") &&
+              isOver && {
+                backgroundColor: theme.palette.action.hover,
+              }),
+            ...(isDragging && {
+              ":before": {
+                content: '""',
+                position: "absolute",
+                zIndex: 11,
+                height: "95%",
+                width: "100%",
+                borderRadius: 2,
+                backgroundColor: lighten(theme.palette.background.paper, 0.25),
+                border: `2px dashed ${theme.palette.secondary.main}`,
+              },
             }),
           }}
         >
           <Box
+            {...listeners}
             sx={{
-              flexGrow: 1,
-              p: 1,
-              ...(field.hidden && !selected.includes(id) && { opacity: 0.5 }),
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (selected.length === 1 && selected[0] === id) {
-                onTogglePropertiesDrawer();
-              } else if (selected.length >= 1 && (e.ctrlKey || e.shiftKey)) {
-                dispatch(toggleSelection({ fieldId: id, contigous: e.shiftKey }));
-              } else {
-                dispatch(selectField({ fieldId: id }));
-              }
+              width: "100%",
+              height: "auto",
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: 2,
+              ...(hoveredFieldId === id && {
+                backgroundColor: theme.palette.action.hover,
+              }),
+              ...(selected.includes(id) && {
+                borderLeftColor: theme.palette.secondary.light,
+                borderLeftWidth: 4,
+                borderLeftStyle: "solid",
+                backgroundColor: theme.palette.action.hover,
+              }),
             }}
           >
-            {(selected.includes(id) || hoveredFieldId === id) &&
-              !isDragging &&
-              renderButtonsPanel()}
-            {renderElement(field)}
+            <Box
+              sx={{
+                flexGrow: 1,
+                p: 1,
+                position: "relative",
+                ...(field.hidden && !selected.includes(id) && { opacity: 0.5 }),
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (selected.length === 1 && selected[0] === id) {
+                  onTogglePropertiesDrawer();
+                } else if (selected.length >= 1 && (e.ctrlKey || e.shiftKey)) {
+                  dispatch(toggleSelection({ fieldId: id, contigous: e.shiftKey, order }));
+                } else {
+                  dispatch(selectFields([id]));
+                }
+              }}
+            >
+              {(selected.includes(id) || hoveredFieldId === id) &&
+                !isDragging &&
+                renderButtonsPanel()}
+              {onRenderField(field)}
+            </Box>
+
+            {selected.includes(id) && field.hidden && hiddenWarning}
           </Box>
-
-          {renderRemoveFieldDialog()}
-
-          {selected.includes(id) && field.hidden && hiddenWarning}
-        </Box>
-      </Grid>
+        </Grid>
+      </Grow>
       {active?.id.toString().includes("ctrl_") && isOver && (
         <Grid item xs={12} height={80}>
           <StyledFormFieldItemPlaceholder />

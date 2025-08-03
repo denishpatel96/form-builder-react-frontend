@@ -1,38 +1,22 @@
-import React, { ReactNode, useMemo } from "react";
-import { CssBaseline } from "@mui/material";
-import {
-  ThemeProvider,
-  createTheme,
-  StyledEngineProvider,
-  Theme,
-  ThemeOptions,
-} from "@mui/material/styles";
-import shape from "./shape";
-import palette, { paletteDark } from "./palette";
-import typography from "./typography";
-import componentsOverride from "./overrides";
-import mixins from "./mixins";
+import React, { ReactNode } from "react";
+import { CssBaseline, PaletteOptions } from "@mui/material";
+import { ThemeProvider, createTheme, StyledEngineProvider, Theme } from "@mui/material/styles";
+import { darkTheme, lightTheme } from "./themes";
 import { cloneDeep, merge } from "lodash";
 
-export const getTheme = (customThemeOptions: ThemeOptions = {}): Theme => {
-  const defaultPalette =
-    customThemeOptions.palette?.mode === "dark" ? cloneDeep(paletteDark) : cloneDeep(palette);
-  const themeOptions: ThemeOptions = {
-    palette: merge(defaultPalette, customThemeOptions?.palette),
-    shape,
-    typography,
-    mixins,
-  };
-
-  const theme = createTheme(themeOptions);
-  theme.components = componentsOverride(theme);
-  return theme;
+export const getCustomTheme = (customPalette: PaletteOptions): Theme => {
+  let themeOptions = customPalette.mode === "dark" ? cloneDeep(darkTheme) : cloneDeep(lightTheme);
+  themeOptions.palette = merge(themeOptions.palette, customPalette);
+  const customTheme = createTheme(themeOptions);
+  return customTheme;
 };
 
 export default function ThemeConfig({ children }: { children: ReactNode }) {
+  const theme = createTheme(lightTheme);
+
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={getTheme()}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </ThemeProvider>

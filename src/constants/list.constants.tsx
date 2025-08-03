@@ -2,13 +2,15 @@ import {
   ArrowDropDownCircleOutlined,
   CheckBoxOutlined,
   CommitOutlined,
+  GroupOutlined,
   RadioButtonCheckedOutlined,
-  TextFieldsOutlined,
+  ReceiptLongOutlined,
+  SettingsOutlined,
   TitleOutlined,
 } from "@mui/icons-material";
 import { SxProps } from "@mui/material";
 import React from "react";
-import { CheckGroupIcon } from "../components/CustomIcons";
+import { CheckGroupIcon, LongTextIcon, ShortTextIcon } from "../components/CustomIcons";
 
 export enum REQUEST_STATUS {
   IDLE = "idle",
@@ -18,6 +20,7 @@ export enum REQUEST_STATUS {
 }
 
 export enum FORM_ELEMENTS {
+  HEADING = "ctrl_heading",
   SHORT_TEXT = "ctrl_short_text",
   LONG_TEXT = "ctrl_long_text",
   RADIO = "ctrl_radio",
@@ -32,21 +35,48 @@ export enum FORM_ELEMENTS {
 }
 
 export enum ELEMENT_CATEGORIES {
+  STATIC = "static",
   TEXT = "text",
   CHOICE = "choice",
   RATING = "rating",
 }
 
+export const ORG_MEMBER_ROLES = [
+  { label: "Admin", description: "Can view/edit members, workspaces and billing plan" },
+  { label: "Editor", description: "Can view/edit workspaces, view members" },
+] as const;
+export type OrgMemberRole = (typeof ORG_MEMBER_ROLES)[number]["label"];
+
 export const getCategoryColor = (category: ELEMENT_CATEGORIES) => {
   switch (category) {
+    case ELEMENT_CATEGORIES.STATIC:
+      return "#777";
     case ELEMENT_CATEGORIES.TEXT:
-      return "#3F497F";
+      return "#777";
     case ELEMENT_CATEGORIES.CHOICE:
-      return "#7AA874";
+      return "#777";
     default:
-      return "#BFCCB5";
+      return "#777";
   }
 };
+
+export const ORG_MENU_ITEMS = [
+  {
+    id: "admin",
+    label: "Admin Settings",
+    icon: <SettingsOutlined />,
+  },
+  {
+    id: "members",
+    label: "Members",
+    icon: <GroupOutlined />,
+  },
+  {
+    id: "plan-and-billing",
+    label: "Plan & Billing",
+    icon: <ReceiptLongOutlined />,
+  },
+];
 
 export const FORM_ELEMENTS_LIST: {
   id: string;
@@ -56,12 +86,23 @@ export const FORM_ELEMENTS_LIST: {
   category: ELEMENT_CATEGORIES;
 }[] = [
   {
+    id: FORM_ELEMENTS.HEADING,
+    label: "Heading",
+    description: "Heading for the section",
+    icon: (sx?: SxProps) => (
+      <TitleOutlined
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.STATIC), ...sx }}
+      />
+    ),
+    category: ELEMENT_CATEGORIES.TEXT,
+  },
+  {
     id: FORM_ELEMENTS.SHORT_TEXT,
     label: "Short Text",
     description: "Single line text input",
     icon: (sx?: SxProps) => (
-      <TitleOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+      <ShortTextIcon
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.TEXT,
@@ -71,8 +112,8 @@ export const FORM_ELEMENTS_LIST: {
     label: "Long Text",
     description: "Multiple line text area input",
     icon: (sx?: SxProps) => (
-      <TextFieldsOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+      <LongTextIcon
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.TEXT,
@@ -83,7 +124,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Toggle state of a single item",
     icon: (sx?: SxProps) => (
       <CheckBoxOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.TEXT), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -94,7 +135,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one or more items from a set",
     icon: (sx?: SxProps) => (
       <CheckGroupIcon
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -105,7 +146,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one or more option from a dropdown list",
     icon: (sx?: SxProps) => (
       <ArrowDropDownCircleOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -116,7 +157,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one or more option from a searchable dropdown list",
     icon: (sx?: SxProps) => (
       <ArrowDropDownCircleOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -127,7 +168,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Select one option from a set",
     icon: (sx?: SxProps) => (
       <RadioButtonCheckedOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,
@@ -138,7 +179,7 @@ export const FORM_ELEMENTS_LIST: {
     description: "Make selections from a range of values on slider",
     icon: (sx?: SxProps) => (
       <CommitOutlined
-        sx={{ height: 35, width: 35, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
+        sx={{ height: 25, width: 25, color: getCategoryColor(ELEMENT_CATEGORIES.CHOICE), ...sx }}
       />
     ),
     category: ELEMENT_CATEGORIES.CHOICE,

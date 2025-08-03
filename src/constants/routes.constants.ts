@@ -1,1 +1,12 @@
 export const ROUTE_HOME = "/";
+export const ROUTE_LOGIN = "/login";
+export const ROUTE_SIGNUP = "/signup";
+export const ROUTE_CONFIRM_SIGNUP = "/confirmSignup";
+export const ROUTE_FORGOT_PASSWORD = "/forgotPassword";
+export const ROUTE_CONFIRM_FORGOT_PASSWORD = "/confirmForgotPassword";
+export const ROUTE_WORKSPACES = "/accounts/:orgId/workspaces";
+export const ROUTE_WORKSPACE = "/accounts/:orgId/workspaces/:workspaceId";
+export const ROUTE_FORM_BUILDER = "/accounts/:orgId/workspaces/:workspaceId/form/:formId/build";
+export const ROUTE_RESPONSES = "/accounts/:orgId/workspaces/:workspaceId/form/:formId/responses";
+export const ROUTE_USER_SETTINGS = "/user";
+export const ROUTE_ORGANIZATION_SETTINGS = "/accounts/:orgId";

@@ -1,21 +1,16 @@
 import { TextFieldProps } from "@mui/material";
+import { IFieldProps } from "./Common";
 
-export interface IShortTextProps {
-  fieldType: string | number;
-  hidden: boolean;
-  colSpan: 3 | 4 | 6 | 8 | 9 | 12;
-  id: string;
-  name: string;
+export interface IShortTextProps extends IFieldProps {
   defaultValue: string;
   value?: string;
   title?: string;
-  label: string;
   helperText?: string;
   placeholder?: string;
   margin: TextFieldProps["margin"];
   size: TextFieldProps["size"];
   type: TextFieldProps["type"];
-  variant: TextFieldProps["variant"];
+  variant: "top" | "standard" | "outlined" | "filled";
   required: TextFieldProps["required"];
   // Length Validation
   validateLength: boolean;

@@ -6,27 +6,41 @@ import { OpenWithOutlined } from "@mui/icons-material";
 import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay, useDndMonitor, defaultDropAnimationSideEffects, Active } from "@dnd-kit/core";
 import { DragCancelEvent, DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
-import { FieldProps, IFormDesignProps } from "../Types";
+import { IFieldProps, IFormDesignProps } from "../Types";
 import SortableItem from "./SortableItem";
 import BuildAreaHeader from "./BuildAreaHeader";
-import { getFieldBuilder } from "./FieldBuilders";
-import { getTheme } from "../../../theme";
+import { getBuilder } from "./FieldBuilders";
+import { getCustomTheme } from "../../../theme";
 import { cloneDeep } from "lodash";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { deselectFields } from "../../../store/features/form/formSlice";
+import { deselectFields } from "../../../store/features/formSlice";
+import { useParams } from "react-router-dom";
+import { useUpdateFormSchemaMutation } from "../../../store/features/api";
+import RemoveFieldDialog from "./RemoveFieldDialog";
 
 interface IBuildAreaProps {
-  formFields: FieldProps[];
+  formFields: IFieldProps[];
+  lastFieldId: number;
   formProperties: IFormDesignProps;
   onTogglePropertiesDrawer: () => void;
 }
 
-const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBuildAreaProps) => {
+const BuildArea = ({
+  formFields,
+  lastFieldId,
+  formProperties,
+  onTogglePropertiesDrawer,
+}: IBuildAreaProps) => {
   const dispatch = useAppDispatch();
-  const customTheme = getTheme({ palette: cloneDeep(formProperties.palette) });
+  const { orgId, formId, workspaceId } = useParams() as {
+    orgId: string;
+    workspaceId: string;
+    formId: string;
+  };
+  const customTheme = getCustomTheme({ ...cloneDeep(formProperties.palette) });
   const [active, setActive] = React.useState<Active | null>(null);
   const activeField = React.useMemo(
-    () => formFields.find((el) => el.id === active?.id),
+    () => formFields?.find((el) => el.id === active?.id),
     [formFields, active]
   );
 
@@ -46,8 +60,68 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
     }
   };
 
-  const handleDragCancel = (event: DragCancelEvent) => {
+  const [updateFormSchema] = useUpdateFormSchemaMutation();
+
+  const handleDragCancel = (_event: DragCancelEvent) => {
     setActive(null);
+  };
+
+  const handleDuplicateFields = async ({
+    placement,
+    afterElementId,
+  }: {
+    placement?: "bottom" | "top" | "after";
+    afterElementId?: string;
+  }) => {
+    const order = formFields.map((f) => f.id);
+    const placementIndex: number =
+      placement === "top"
+        ? 0
+        : placement === "bottom"
+        ? order.length
+        : order.findIndex((id) => id === (afterElementId || selected[0])) + 1;
+    const cloneFields: IFieldProps[] = [];
+    let updatedLastFieldId = lastFieldId;
+    selected.forEach((id) => {
+      const indexOfFieldToCopy = formFields.findIndex((f) => f.id === id);
+      if (indexOfFieldToCopy !== -1) {
+        const cloneField = cloneDeep(formFields[indexOfFieldToCopy]);
+        updatedLastFieldId += 1;
+        cloneField.id = cloneField.name = `q${updatedLastFieldId}`;
+        cloneFields.push(cloneField);
+      }
+    });
+
+    let updatedOrder = [...order];
+    updatedOrder.splice(placementIndex, 0, ...cloneFields.map((f) => f.id));
+
+    await updateFormSchema({
+      orgId,
+      workspaceId,
+      formId,
+      action: "ADD_FIELDS",
+      lastFieldId: updatedLastFieldId,
+      order: updatedOrder,
+      fields: cloneFields,
+    });
+  };
+
+  const handleRemoveFields = async (fieldIds: string[]) => {
+    let updatedOrder = [...formFields.map((f) => f.id)];
+    updatedOrder = updatedOrder.filter((id) => !fieldIds.includes(id));
+    // send update request to server
+    await updateFormSchema({
+      orgId,
+      workspaceId,
+      formId,
+      action: "DELETE_FIELDS",
+      order: updatedOrder,
+      fieldIds,
+    });
+  };
+
+  const handleShowDeleteFieldDialog = () => {
+    setConfirmDeleteFieldDialogOpen(true);
   };
 
   React.useEffect(() => {
@@ -65,6 +139,26 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
     onDragStart: handleDragStart,
     onDragEnd: handleDragEnd,
   });
+
+  const [confirmDeleteFieldDialogOpen, setConfirmDeleteFieldDialogOpen] =
+    React.useState<boolean>(false);
+  const [deleted, setDeleted] = React.useState<string[]>([]);
+  const renderRemoveFieldDialog = () => {
+    const fields = formFields.filter((f) => selected.includes(f.id));
+    return (
+      <RemoveFieldDialog
+        isOpen={confirmDeleteFieldDialogOpen}
+        fields={fields}
+        onClose={() => setConfirmDeleteFieldDialogOpen(false)}
+        onConfirm={async () => {
+          const toBeDeleted = [...selected];
+          setConfirmDeleteFieldDialogOpen(false);
+          setDeleted(toBeDeleted);
+          setTimeout(() => handleRemoveFields(toBeDeleted), 1000);
+        }}
+      />
+    );
+  };
 
   const renderFormArea = (): JSX.Element =>
     formFields.length === 0 ? (
@@ -85,20 +179,31 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
         </Stack>
       </Droppable>
     ) : (
-      <form>
+      <form
+        onKeyDown={(e: React.KeyboardEvent<HTMLFormElement> | undefined) => {
+          if (e?.key === "Delete" || e?.code === "Delete") {
+            console.log("Delete pressed");
+            setConfirmDeleteFieldDialogOpen(true);
+          }
+        }}
+      >
         <Grid
           container
           rowSpacing={`${formProperties.verticalSpacing}px`}
           columnSpacing={`${formProperties.horizontalSpacing}px`}
         >
           <SortableContext items={formFields.map((f) => f.id)}>
-            {formFields.map((field, index) => {
+            {formFields.map((field) => {
               return (
                 <SortableItem
-                  key={index}
+                  key={field.id}
+                  deleted={deleted.includes(field.id)}
                   field={field}
-                  renderElement={getFieldBuilder}
+                  order={formFields.map((f) => f.id)}
+                  onRenderField={getBuilder}
+                  onDuplicateField={() => handleDuplicateFields({})}
                   onTogglePropertiesDrawer={onTogglePropertiesDrawer}
+                  onShowDeleteFieldDialog={handleShowDeleteFieldDialog}
                 />
               );
             })}
@@ -127,7 +232,7 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
                 borderRadius: 2,
               }}
             >
-              {getFieldBuilder(activeField)}
+              {getBuilder(activeField)}
             </Box>
           ) : null}
         </DragOverlay>
@@ -146,8 +251,14 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
         position: "relative",
       }}
     >
-      <BuildAreaHeader formFields={formFields} formProperties={formProperties} />
+      <BuildAreaHeader
+        formFields={formFields}
+        formProperties={formProperties}
+        onDuplicate={handleDuplicateFields}
+        onShowDeleteFieldDialog={handleShowDeleteFieldDialog}
+      />
 
+      {renderRemoveFieldDialog()}
       <ThemeProvider theme={customTheme}>
         <Box
           sx={{
@@ -157,8 +268,8 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
             position: "relative",
             overflowY: "auto",
             overflowX: "hidden",
-            bgcolor: customTheme.palette?.background?.default,
-            backgroundImage: `url(${formProperties.pageImage})`,
+            bgcolor: (theme) => formProperties.formBgColor || theme.palette.background.default,
+            backgroundImage: `url(${formProperties.formBgImage})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "50% 50%",
@@ -173,17 +284,18 @@ const BuildArea = ({ formFields, formProperties, onTogglePropertiesDrawer }: IBu
           <Box
             sx={{
               margin: "24px auto",
+              overflowX: "hidden",
               padding: `${formProperties.verticalPadding}px ${formProperties.horizontalPadding}px`,
               height: "auto",
               width: "calc(100% - 48px)",
               maxWidth: formProperties.formWidth,
-              bgcolor: (theme) => theme.palette.background.paper,
+              bgcolor: (theme) => formProperties.pageBgColor || theme.palette.background.paper,
               boxShadow: (theme) => theme.shadows[1],
-              borderRadius: 2,
+              // borderRadius: 2,
               ".MuiTypography-root": {
                 color: (theme) => theme.palette.text.secondary,
               },
-              backgroundImage: `url(${formProperties.formImage})`,
+              backgroundImage: `url(${formProperties.pageBgImage})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
             }}

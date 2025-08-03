@@ -1,0 +1,163 @@
+import { DragOverlay, useDraggable } from "@dnd-kit/core";
+import { UniqueIdentifier } from "@dnd-kit/core/dist/types";
+import React from "react";
+import { Drawer, Typography, Divider, Grid, Box, IconButton } from "@mui/material";
+import { DRAWER_WIDTH_TABLET, FORM_ELEMENTS_LIST } from "../../constants";
+import {
+  StyledFormFieldItem,
+  StyledFormFieldItemDragOverlay,
+  StyledFormFieldItemPlaceholder,
+} from "./Styles";
+import { ChevronLeftOutlined } from "@mui/icons-material";
+import { useAppSelector } from "../../store/hooks";
+import { useParams } from "react-router-dom";
+import { getField } from "./Utility";
+import { useGetFormSchemaQuery, useUpdateFormSchemaMutation } from "../../store/features/api";
+
+interface IFormFieldsProps {
+  isOpen: boolean;
+  activeId?: UniqueIdentifier | null;
+  onDrawerClick: () => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const FormFieldsSidebar = ({ isOpen, activeId, onDrawerClick, setIsOpen }: IFormFieldsProps) => {
+  const { orgId, formId, workspaceId } = useParams() as {
+    orgId: string;
+    workspaceId: string;
+    formId: string;
+  };
+  const selected = useAppSelector((state) => state.form.selected);
+  const activeElement = FORM_ELEMENTS_LIST.find((e) => e.id === activeId);
+
+  const { data: formSchema } = useGetFormSchemaQuery(
+    { orgId, workspaceId, formId },
+    { skip: !(orgId && workspaceId && formId) }
+  );
+
+  const [updateFormSchema] = useUpdateFormSchemaMutation();
+
+  const handleAddField = async (elementType: string) => {
+    if (!formSchema) return;
+    const { fields, lastFieldId } = formSchema;
+    const fieldToAdd = getField(elementType, lastFieldId + 1);
+
+    if (fieldToAdd) {
+      const fieldId = fieldToAdd.id;
+      const addAfter = selected.length === 1 ? selected[0] : undefined;
+      let updatedOrder = [...fields.map((f) => f.id)];
+      if (addAfter) {
+        updatedOrder.splice(
+          updatedOrder.findIndex((id: string) => id === addAfter) + 1,
+          0,
+          fieldId
+        );
+      } else {
+        updatedOrder.push(fieldId);
+      }
+
+      await updateFormSchema({
+        orgId,
+        workspaceId,
+        formId,
+        action: "ADD_FIELDS",
+        lastFieldId: lastFieldId + 1,
+        order: updatedOrder,
+        fields: [fieldToAdd],
+      });
+    }
+  };
+  return (
+    <Drawer
+      open={isOpen}
+      onClick={onDrawerClick}
+      onKeyDown={(e: React.KeyboardEvent<HTMLDivElement> | undefined) => {
+        if (e?.key === "Escape" || e?.code === "Escape") {
+          onDrawerClick();
+        }
+      }}
+      anchor={"left"}
+      variant={isOpen ? "persistent" : "temporary"}
+      PaperProps={{
+        sx: {
+          width: DRAWER_WIDTH_TABLET,
+          ...(isOpen && { position: "relative" }),
+        },
+      }}
+    >
+      <Box
+        sx={{
+          height: 50,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            sx={{ height: 50, lineHeight: "50px" }}
+            variant="subtitle1"
+            textAlign={"center"}
+          >
+            Form Fields
+          </Typography>
+        </Box>
+        <IconButton onClick={() => setIsOpen(false)} sx={{ ml: "auto" }}>
+          <ChevronLeftOutlined />
+        </IconButton>
+      </Box>
+      <Divider />
+      <Grid container justifyContent="center" p={1}>
+        {FORM_ELEMENTS_LIST.map((element) => {
+          const { isDragging, attributes, listeners, setNodeRef } = useDraggable({
+            id: element.id,
+          });
+          return (
+            <Grid
+              item
+              ref={setNodeRef}
+              {...attributes}
+              {...listeners}
+              key={element.id}
+              sx={{ height: 80, width: 80 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddField(element.id);
+              }}
+            >
+              {isDragging ? (
+                <StyledFormFieldItemPlaceholder />
+              ) : (
+                <StyledFormFieldItem key={element.id}>
+                  {element.icon()}
+                  <Typography pt={1} variant="caption" textAlign={"center"}>
+                    {element.label}
+                  </Typography>
+                </StyledFormFieldItem>
+              )}
+            </Grid>
+          );
+        })}
+      </Grid>
+      <DragOverlay dropAnimation={null}>
+        {activeId && activeElement && activeId.toString().includes("ctrl_") ? (
+          <StyledFormFieldItemDragOverlay disablePadding sx={{ height: 84, width: 84 }}>
+            {activeElement.icon()}
+            <Typography pt={1} variant="caption" fontWeight={500} textAlign={"center"}>
+              {activeElement.label}
+            </Typography>
+          </StyledFormFieldItemDragOverlay>
+        ) : null}
+      </DragOverlay>
+    </Drawer>
+  );
+};
+
+export default FormFieldsSidebar;

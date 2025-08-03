@@ -1,17 +1,11 @@
 import { FormControlProps, SelectProps } from "@mui/material";
-import { ISelectableOptionProps } from "./Common";
+import { IFieldProps, ISelectableOptionProps } from "./Common";
 
-export interface IDropdownProps {
-  fieldType: string | number;
-  hidden: boolean;
-  colSpan: 3 | 4 | 6 | 8 | 9 | 12;
-  id: string;
+export interface IDropdownProps extends IFieldProps {
   title: string;
-  name: string;
-  variant: SelectProps["variant"];
+  variant: "top" | "standard" | "outlined" | "filled";
   error: FormControlProps["error"];
   helperText: string;
-  label: string;
   required: FormControlProps["required"];
   size: SelectProps["size"];
   options: ISelectableOptionProps[];

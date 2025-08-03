@@ -1,18 +1,13 @@
 import { SliderProps } from "@mui/material";
+import { IFieldProps } from "./Common";
 export type Mark = {
   value: number;
   label?: string;
 };
-export interface ISliderProps {
-  fieldType: string | number;
-  hidden: boolean;
-  colSpan: 3 | 4 | 6 | 8 | 9 | 12;
-  id: string;
-  name: string;
+export interface ISliderProps extends IFieldProps {
   defaultValue: number | number[];
   value?: SliderProps["value"];
   title: string;
-  label: string;
   helperText: string;
   size: SliderProps["size"];
   min: number;

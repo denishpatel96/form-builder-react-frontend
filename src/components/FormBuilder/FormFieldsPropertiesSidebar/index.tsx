@@ -16,9 +16,10 @@ import {
   SliderProperties,
   ShortTextProperties,
   LongTextProperties,
+  HeadingProperties,
 } from "./FieldProperties";
 import {
-  FieldProps,
+  IFieldProps,
   IShortTextProps,
   IRadioProps,
   ICheckboxProps,
@@ -27,17 +28,76 @@ import {
   ISliderProps,
   ICheckboxGroupProps,
   ILongTextProps,
+  IHeadingProps,
 } from "../Types";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import api, { useUpdateFormSchemaMutation } from "../../../store/features/api";
+import { useParams } from "react-router-dom";
+import { cloneDeep, set } from "lodash";
 
 type IFormFieldProps = {
-  field: FieldProps | undefined | null;
-  onTogglePin: () => void;
+  field: IFieldProps | undefined | null;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProps) => {
+  const dispatch = useAppDispatch();
+  const selected = useAppSelector((state) => state.form.selected);
+  const { orgId, formId, workspaceId } = useParams() as {
+    orgId: string;
+    workspaceId: string;
+    formId: string;
+  };
+
+  if (isOpen && !field) {
+    setIsOpen(false);
+  }
+
+  const [updateFormSchema] = useUpdateFormSchemaMutation();
+
+  const updatePaths = (item: any, path: string, value: any) => {
+    set(item, path, value);
+    if (path === "showMarks" && value === false) {
+      set(item, "customMarks", []);
+      set(item, "step", undefined);
+      set(item, "showCustomMarks", false);
+    }
+  };
+
+  const handleUpdate = async (path: string, value: any, isLocalUpdate: boolean = false) => {
+    if (selected.length === 1) {
+      if (isLocalUpdate) {
+        dispatch(
+          api.util.updateQueryData(
+            "getFormSchema",
+            { orgId, workspaceId, formId },
+            (draftedFormSchema) => {
+              const index = draftedFormSchema.fields.findIndex((f) => f.id === selected[0]);
+              updatePaths(draftedFormSchema.fields[index], path, value);
+            }
+          )
+        );
+      } else if (field) {
+        let updatedField = cloneDeep(field);
+        updatePaths(updatedField, path, value);
+        await updateFormSchema({
+          orgId,
+          workspaceId,
+          formId,
+          action: "UPDATE_FIELDS",
+          fields: [updatedField],
+        });
+      }
+    }
+  };
+
   const element = FORM_ELEMENTS_LIST.find((el) => el.id === field?.fieldType);
+
+  const commonProps = {
+    onUpdate: handleUpdate,
+  };
+
   return (
     <Drawer
       open={isOpen}
@@ -49,6 +109,7 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
           overflow: "hidden",
         },
       }}
+      variant={isOpen ? "persistent" : "temporary"}
       sx={{
         ".MuiBackdrop-root": {
           backgroundColor: "transparent",
@@ -97,29 +158,32 @@ const FormFieldPropertiesSidebar = ({ field, isOpen, setIsOpen }: IFormFieldProp
           </Typography>
         </Box>
       )}
+      {field && field.fieldType === FORM_ELEMENTS.HEADING && (
+        <HeadingProperties field={field as IHeadingProps} {...commonProps} />
+      )}
       {field && field.fieldType === FORM_ELEMENTS.SHORT_TEXT && (
-        <ShortTextProperties field={field as IShortTextProps} />
+        <ShortTextProperties field={field as IShortTextProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.LONG_TEXT && (
-        <LongTextProperties field={field as ILongTextProps} />
+        <LongTextProperties field={field as ILongTextProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.RADIO && (
-        <RadioProperties field={field as IRadioProps} />
+        <RadioProperties field={field as IRadioProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX && (
-        <CheckboxProperties field={field as ICheckboxProps} />
+        <CheckboxProperties field={field as ICheckboxProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.CHECKBOX_GROUP && (
-        <CheckboxGroupProperties field={field as ICheckboxGroupProps} />
+        <CheckboxGroupProperties field={field as ICheckboxGroupProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.DROPDOWN && (
-        <DropdownProperties field={field as IDropdownProps} />
+        <DropdownProperties field={field as IDropdownProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.COMBOBOX && (
-        <ComboboxProperties field={field as IComboboxProps} />
+        <ComboboxProperties field={field as IComboboxProps} {...commonProps} />
       )}
       {field && field.fieldType === FORM_ELEMENTS.SLIDER && (
-        <SliderProperties field={field as ISliderProps} />
+        <SliderProperties field={field as ISliderProps} {...commonProps} />
       )}
     </Drawer>
   );

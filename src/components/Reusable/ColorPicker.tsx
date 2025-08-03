@@ -1,6 +1,5 @@
-import { TagOutlined } from "@mui/icons-material";
 import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
-import { Box, rgbToHex } from "@mui/system";
+import { Box } from "@mui/system";
 import React, { CSSProperties, useRef, useState } from "react";
 import { SketchPicker, ColorResult } from "react-color";
 import MenuPopover from "./MenuPopover";
